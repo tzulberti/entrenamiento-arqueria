@@ -13,6 +13,7 @@ setup(
     install_requires=[
         "Flask",
         "requests",
+        "Flask-SQLAlchemy",
     ],
     packages=find_packages(),
     include_package_data=True,
