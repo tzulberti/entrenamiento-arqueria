@@ -14,6 +14,8 @@ setup(
         "Flask",
         "requests",
         "Flask-SQLAlchemy",
+        "flask-bcrypt",
+        "alembic",
     ],
     packages=find_packages(),
     include_package_data=True,
