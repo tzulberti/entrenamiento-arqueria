@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='entrenamiento-arqueria',
+    name='entrenamiento',
     version='0.0.1',
     description='Un sistema para manejar el enternamiento de arqueria',
     long_description=open('README.rst').read(-1),

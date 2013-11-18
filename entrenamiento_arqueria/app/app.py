@@ -5,7 +5,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from socket import gethostname
 
-from entrenamiento_arqueria.configuration import get_configuration
+from entrenamiento_arqueria.app.configuration import get_configuration
+from entrenamiento_arqueria.views.register import register
 
 def create_app():
     ''' Se encarga de crear la applicaciones de flask.
@@ -20,4 +21,4 @@ def create_app():
     return (app, db, bcrypt)
 
 app, db, bcrypt = create_app()
-
+register(app, '/api/v01')

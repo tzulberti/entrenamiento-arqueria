@@ -28,3 +28,9 @@ class Lugar(db.Model):
     latitud = db.Column(db.Float, nullable=False)
     longitud = db.Column(db.Float, nullable=False)
     es_de_entreamiento = db.Column(db.Boolean, nullable=False, default=True)
+
+    def to_json(self):
+        return dict(id=self.id,
+                    nombre=self.nombre,
+                    latitud=self.latitud,
+                    es_de_entrenamiento=self.es_de_entrenamiento)

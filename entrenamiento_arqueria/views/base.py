@@ -16,8 +16,12 @@ class BaseCrudView(MethodView):
         self.model_class = model_class
 
     def get(self):
-        res = self.model_class.query.all()
+        data = self.model_class.query.all()
+        res = [d.to_json() for d in data]
+        return res
+
 
     def post(self):
         model_instance = self.model_class.from_form_data(request.form)
+        pass
 
