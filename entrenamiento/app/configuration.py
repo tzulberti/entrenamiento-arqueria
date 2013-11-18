@@ -15,7 +15,7 @@ class Configuration(object):
 
     #: tiene el path seguns SQLAlchemy que se va a usar para conectarse
     #: a la base de datos.
-    DATABASE_PATH = None
+    SQLALCHEMY_DATABASE_URI = None
 
 class Development(Configuration):
     ''' Tiene la configuracion de cuando se esta trabajando en desarollo.
@@ -23,7 +23,10 @@ class Development(Configuration):
 
     #: hace que se conecte a una base de datos sqlite3 en donde se va a
     #: guardar toda la informacion
-    DATABASE_PATH = 'sqlite:////media/data/Proyectos/entrenamiento-arqueria/database/entrenamiento.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:////media/data/Proyectos/entrenamiento-arqueria/database/entrenamiento.db'
+
+    #: por default esta en modo debug
+    DEBUG = True
 
 
 

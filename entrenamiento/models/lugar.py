@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from entrenamiento_arqueria.app.app import db
+from entrenamiento.app.app import db
 
 class Lugar(db.Model):
     ''' Representa uno de los lugares en donde el arquero
@@ -27,7 +27,7 @@ class Lugar(db.Model):
     nombre = db.Column(db.String(1024), unique=True, nullable=False)
     latitud = db.Column(db.Float, nullable=False)
     longitud = db.Column(db.Float, nullable=False)
-    es_de_entreamiento = db.Column(db.Boolean, nullable=False, default=True)
+    es_de_entrenamiento = db.Column(db.Boolean, nullable=False, default=True)
 
     def to_json(self):
         return dict(id=self.id,

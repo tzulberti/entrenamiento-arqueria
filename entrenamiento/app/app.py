@@ -5,8 +5,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from socket import gethostname
 
-from entrenamiento_arqueria.app.configuration import get_configuration
-from entrenamiento_arqueria.views.register import register
+from entrenamiento.app.configuration import get_configuration
 
 def create_app():
     ''' Se encarga de crear la applicaciones de flask.
@@ -15,10 +14,12 @@ def create_app():
     al hostname que el mismo esta usando.
     '''
     configuration = get_configuration(gethostname())
-    app = Flask(configuration)
+    app = Flask(__name__,
+                template_folder='../templates/',
+                static_folder='../static')
+    app.config.from_object(configuration)
     db = SQLAlchemy(app)
     bcrypt = Bcrypt(app)
     return (app, db, bcrypt)
 
 app, db, bcrypt = create_app()
-register(app, '/api/v01')
