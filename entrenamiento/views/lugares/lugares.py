@@ -10,7 +10,7 @@ from entrenamiento.views.base import BaseCrudView
 class TemplateLugarView(MethodView):
 
     def get(self):
-        return render_template('base.html')
+        return render_template('lugar.html')
 
 class LugarView(BaseCrudView):
 

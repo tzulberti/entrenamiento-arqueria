@@ -30,9 +30,13 @@ class BaseModelListCrudView(MethodView):
         res = [d.to_json() for d in data]
         return jsonify(values=res)
 
+    def post(self):
+        ''' Esto es llamadao cuando el usuario quiere crear una instancia.
+        '''
+        pass
 
 
-class BaseCrudView(MethodView):
+class BaseModelCrudView(MethodView):
     ''' Clase base para todas las views que tengan que ver
     con el tema de CRUD (Create, Read, Update, Delete)
 
