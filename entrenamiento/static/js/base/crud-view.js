@@ -32,17 +32,44 @@ var CrudView = Class.$extend({
      * la URL es de una instancia o es generica para ver todas.
      */
     render: function() {
-        this.tableView.render();
-        this.formView.render();
-
         if (true) {
             this.tableView.$element.show();
             this.formView.$element.hide();
+            this.tableView.render();
         } else {
             this.tableView.$element.hide();
             this.formView.$element.show();
         }
+    },
+
+    /**
+     * Se encarga de mostrar el form para que el usuario
+     * pueda crear una nueva instancia.
+     */
+    createNew: function() {
+        this.tableView.$element.hide();
+        this.formView.$element.show();
+        this.formView.createNew();
+    },
+
+    /**
+     * Handler de cuando el objeto se creo bien.
+     */
+    createdObject: function() {
+        this.tableView.$element.show();
+        this.formView.$element.hide();
+        this.tableView.createdObject();
+    },
+
+    /**
+     * Esto es llamado por el table view para que se muestre el
+     * form para poder editar el objecto con el id indicado.
+     *
+     * @param {int} objectId: el id del objeto que se quiere editar.
+     */
+    editObject: function(objectId) {
+        this.tableView.$element.hide();
+        this.formView.$element.show();
+        this.formView.editObject(objectId);
     }
-
-
 });

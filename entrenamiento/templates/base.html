@@ -3,6 +3,7 @@
     <head>
         <title>Bootstrap 101 Template</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token() }}"> 
         <!-- Bootstrap -->
         <link href="/static/css/bootstrap.css" rel="stylesheet">
         {% block additional_css %}
@@ -61,6 +62,8 @@
         <script src="/static/js/vendor/classy.js"></script>
         <script src="/static/js/utils/javascript-extensions.js"></script>
         <script src="/static/js/utils/handlebars-extensions.js"></script>
+        <script src="/static/js/utils/jquery-extensions.js"></script>
+        <script src="/static/js/utils/consts.js"></script>
         {% block additional_javascript %}
         {% endblock %}
 

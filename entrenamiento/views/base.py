@@ -22,8 +22,10 @@ class BaseModelListCrudView(MethodView):
 
     '''
 
-    def __init__(self, model_class):
+    def __init__(self, db, model_class, form_class):
         self.model_class = model_class
+        self.form_class = form_class
+        self.db = db
 
     def get(self):
         data = self.model_class.query.all()
@@ -33,7 +35,13 @@ class BaseModelListCrudView(MethodView):
     def post(self):
         ''' Esto es llamadao cuando el usuario quiere crear una instancia.
         '''
-        pass
+        form = self.form_class(self.model_class)
+        if form.validate_on_submit():
+            self.db.session.add(form.instance)
+            self.db.session.commit()
+            return jsonify(id=form.instance.id)
+        else:
+            return jsonify(form.errors), 400
 
 
 class BaseModelCrudView(MethodView):
@@ -54,16 +62,27 @@ class BaseModelCrudView(MethodView):
                   para validar los datos de la misma.
     '''
 
-    def __init__(self, model_class):
+    def __init__(self, db, model_class, form_class):
         self.model_class = model_class
+        self.form_class = form_class
+        self.db = db
 
-    def get(self):
-        data = self.model_class.query.all()
-        res = [d.to_json() for d in data]
-        return jsonify(values=res)
+    def get(self, object_id):
+        query = self.model_class.query.filter(self.model_class.id == object_id)
+        data = query.first()
+        if not data:
+            return 'Ver mas adelante', 500
+        res = data.to_json()
+        return jsonify(res)
 
 
-    def post(self):
-        model_instance = self.model_class.from_form_data(request.form)
-        pass
+    def put(self, object_id):
+        form = self.form_class(self.model_class, object_id)
+        if form.validate_on_submit():
+            self.db.session.add(form.instance)
+            self.db.session.commit()
+            return jsonify(id=form.instance.id)
+        else:
+            return jsonify(form.errors), 400
+
 

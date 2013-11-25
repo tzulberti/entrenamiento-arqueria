@@ -37,7 +37,12 @@ var LugarApplication = Class.$extend({
                             '<label>' +
                                 '<input type="checkbox" name="es_de_entrenamiento" id="es_de_entrenamiento">Es de entrenamiento' +
                             '</label>' +
-                        '</div>'
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="form-group">' +
+                    '<div class="col-sm-10 col-sm-offset-2">' +
+                        '<button type="submit" class="btn btn-primary button-save">Grabar</button>' +
                     '</div>' +
                 '</div>' +
             '</form>';
@@ -46,9 +51,10 @@ var LugarApplication = Class.$extend({
                                        'lugar');
         this.formView = new FormView(this.$element.find('.form-container'),
                                      formTemplate,
-                                     'lugar',
-                                     null);
+                                     'lugar');
         this.crudView = new CrudView(this.tableView, this.formView);
+        this.tableView.crudView = this.crudView;
+        this.formView.crudView = this.crudView;
         this.crudView.render();
     }
 });

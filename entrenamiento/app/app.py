@@ -3,6 +3,7 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
+from flask.ext.wtf.csrf import CsrfProtect
 from socket import gethostname
 
 from entrenamiento.app.configuration import get_configuration
@@ -20,6 +21,8 @@ def create_app():
     app.config.from_object(configuration)
     db = SQLAlchemy(app)
     bcrypt = Bcrypt(app)
+    csrf = CsrfProtect()
+    csrf.init_app(app)
     return (app, db, bcrypt)
 
 app, db, bcrypt = create_app()

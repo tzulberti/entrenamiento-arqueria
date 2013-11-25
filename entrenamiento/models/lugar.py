@@ -33,4 +33,5 @@ class Lugar(db.Model):
         return dict(id=self.id,
                     nombre=self.nombre,
                     latitud=self.latitud,
+                    longitud=self.longitud,
                     es_de_entrenamiento=self.es_de_entrenamiento)

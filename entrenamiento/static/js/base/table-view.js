@@ -30,10 +30,37 @@ var TableView = Class.$extend({
     __init__: function(element, modelName) {
         this.$element = element;
         this.modelName = modelName;
+        // no lo puedo recivir por el constructor,
+        // por lo que lo tengo que recivir por aca...
+        this.crudView = null;
         this.filters = [];
         this.orderBy = null;
         this.orderDirection = 'ASC'
         this.currentPage = 0;
+
+        this.template = '' +
+            '<div class="alert alert-success hidden" id="created-instance">' +
+                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                'Se guardo la nueva informacion' +
+            '</div>' +
+            '<div class="alert alert-success hidden" id="updated-instance">' +
+                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                'Se guardaron los cambios' +
+            '</div>' +
+            '<div class="alert alert-success hidden" id="deleted-instance">' +
+                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                'Se borro la informacion' +
+            '</div>' +
+            '<div class="row">' +
+                '<button type="button" class="btn btn-primary button-create">' +
+                    '<span class=".glyphicon .glyphicon-plus">Crear uno nuevo</span>' +
+                '</button>' +
+            '</div>'  +
+            '<div class="row search-conditions">' +
+            '</div>' +
+            '<div class="row" id="information-container">' +
+            '</div>';
+
     },
 
 
@@ -44,8 +71,13 @@ var TableView = Class.$extend({
      * la parte de las condiciones de filtrado que tiene el usuario.
      */
     render: function() {
+        var baseHtml = Handlebars.render(this.template, {});
+        this.$element.html(baseHtml);
         this.renderSearchConditions();
         this.getData();
+
+        this.$element.off('click', '.button-create');
+        this.$element.on('click', '.button-create', $.proxy(this.createNew, this));
     },
 
 
@@ -75,7 +107,6 @@ var TableView = Class.$extend({
                 filters: this.filters
             },
             success: function(data, textStatus, jqXHR) {
-                console.log('Entro aca...');
                 self.renderInformation(data);
             }
         });
@@ -119,6 +150,12 @@ var TableView = Class.$extend({
     renderInformation: function(data) {
         this.renderTableInformation(data.values);
         this.renderPaginationInformation();
+
+        this.$element.off('click', '.button-edit');
+        this.$element.off('click', '.button-delete');
+
+        this.$element.on('click', '.button-edit', $.proxy(this.editValue, this));
+        this.$element.on('click', '.button-delete', $.proxy(this.deleteValue, this));
     },
 
 
@@ -173,7 +210,7 @@ var TableView = Class.$extend({
                     columnNames: columnNames,
                     values: values
             });
-            this.$element.html(html);
+            this.$element.find('#information-container').html(html);
         }
     },
 
@@ -182,5 +219,62 @@ var TableView = Class.$extend({
      * data.
      */
     renderPaginationInformation: function() {
+    },
+
+
+    /**
+     * Handler de cuando el usuario hace click en el boton para agregar
+     * un nuevo objecto.
+     */
+    createNew: function(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        this.crudView.createNew();
+    },
+
+    /**
+     * Handler de cuando se hace click en el boton de editar de alguna
+     * de las rows de la tabla.
+     */
+    editValue: function(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        var target = $(ev.target).parent('button');
+        var objectId = target.attr('id');
+        console.log(objectId);
+        objectId = objectId.replace('edit-', '');
+        objectId = parseInt(objectId, 10);
+        this.crudView.editObject(objectId);
+    },
+
+
+    /**
+     * Handler llamado por el crudView cuando el usuario pudo crear
+     * bien una nueva instancia del objeto que el mismo queria.
+     */
+    createdObject: function() {
+        this._hideMessages();
+        this.$element.find('#created-instance').removeClass('hidden');
+        this.getData();
+    },
+
+
+    /**
+     * Oculta todos los mensajes que se pueden leegar a estar mostrando
+     * por default de cosa de evitar que dos mensajes que muestren al
+     * mismo tiempo.
+     *
+     * Esto se refiere a los mensajes usados para mostrar que se pudo
+     * guardar los cambios o que la instancia fue borrada correctamente.
+     */
+    _hideMessages: function() {
+        this.$element.find('.alert').addClass('hidden');
     }
+
+
+
+
+
 })

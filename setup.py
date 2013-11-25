@@ -16,6 +16,8 @@ setup(
         "Flask-SQLAlchemy",
         "flask-bcrypt",
         "alembic",
+        "Flask-Restless",
+        "Flask-WTF",
     ],
     packages=find_packages(),
     include_package_data=True,
