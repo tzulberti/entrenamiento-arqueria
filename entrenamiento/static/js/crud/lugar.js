@@ -2,14 +2,9 @@
  * La applicacion que se encarga de todo el tema del CRUD
  * de lugares.
  */
-var LugarApplication = Class.$extend({
+var LugarApplication = BaseCrudApp.$extend({
 
-    __init__: function(element) {
-        this.$element = element;
-    },
-
-
-    start: function() {
+    __init__: function(historyManager, element) {
         var formTemplate = '' +
             '<form role="form" class="form-horizontal">' +
                 '<div class="form-group">' +
@@ -46,18 +41,17 @@ var LugarApplication = Class.$extend({
                     '</div>' +
                 '</div>' +
             '</form>';
-
-        this.tableView = new TableView(this.$element.find('.table-container'),
-                                       'lugar');
-        this.formView = new FormView(this.$element.find('.form-container'),
-                                     formTemplate,
-                                     'lugar');
-        this.crudView = new CrudView(this.tableView, this.formView);
-        this.tableView.crudView = this.crudView;
-        this.formView.crudView = this.crudView;
-        this.crudView.render();
+        var columnNames = [
+            'nombre',
+            'latitud',
+            'longitud',
+            'es_de_entrenamiento'
+        ];
+        this.$super(historyManager, 'lugar', formTemplate, element, columnNames);
     }
 });
 
-var app = LugarApplication($('.container'));
+
+
+var app = LugarApplication(historyManager, $('.container'));
 app.start();

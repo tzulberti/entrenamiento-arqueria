@@ -18,10 +18,15 @@ var CrudView = Class.$extend({
      * @param {FormView} formView: la view que se encarga de mostrar el
      *                             form para que el usuario pueda actualizar
      *                             un valor o para crear uno nuevo.
+     *
+     * @param {HisotryManager} historyManager: el que se va a encargar de
+     *                                         trabajar con todo el tema
+     *                                         del historial del browser.
      */
-    __init__: function(tableView, formView) {
+    __init__: function(tableView, formView, historyManager) {
         this.tableView = tableView;
         this.formView = formView;
+        this.historyManager = historyManager;
     },
 
 
@@ -32,14 +37,20 @@ var CrudView = Class.$extend({
      * la URL es de una instancia o es generica para ver todas.
      */
     render: function() {
-        if (true) {
-            this.tableView.$element.show();
-            this.formView.$element.hide();
-            this.tableView.render();
-        } else {
-            this.tableView.$element.hide();
-            this.formView.$element.show();
-        }
+        this.historyManager.pushNewStatus(this.tableView.modelName,
+                                          null);
+        this.tableView.$element.show();
+        this.formView.$element.hide();
+        this.tableView.render();
+    },
+
+    /**
+     * Se encarga de mostrar la tabla con toda la informacion
+     */
+    showTable: function() {
+        this.tableView.$element.show();
+        this.formView.$element.hide();
+        this.tableView.getData();
     },
 
     /**
@@ -54,8 +65,15 @@ var CrudView = Class.$extend({
 
     /**
      * Handler de cuando el objeto se creo bien.
+     *
+     * @param {int} objectId: el id del objeto que fue recien creado.
      */
-    createdObject: function() {
+    createdObject: function(objectId) {
+        this.historyManager.pushNewStatus(
+                this.tableView.modelName,
+                objectId);
+
+
         this.tableView.$element.show();
         this.formView.$element.hide();
         this.tableView.createdObject();

@@ -26,16 +26,20 @@ var TableView = Class.$extend({
      *
      * @param {Array(string)} columnNames: todas las columnas que esta viendo
      *                                     el usuario.
+     *
      */
-    __init__: function(element, modelName) {
+    __init__: function(element, modelName, columnNames) {
         this.$element = element;
         this.modelName = modelName;
+        this.columnNames = columnNames;
+
         // no lo puedo recivir por el constructor,
         // por lo que lo tengo que recivir por aca...
         this.crudView = null;
         this.filters = [];
         this.orderBy = null;
-        this.orderDirection = 'ASC'
+        this.orderDirection = 'ASC';
+        this.limit = 20;
         this.currentPage = 0;
 
         this.template = '' +
@@ -59,6 +63,10 @@ var TableView = Class.$extend({
             '<div class="row search-conditions">' +
             '</div>' +
             '<div class="row" id="information-container">' +
+                '<div class="row" id="table-information-container">'+
+                '</div>'+
+                '<div class="row" id="pagination-information-container">' +
+                '</div>' +
             '</div>';
 
     },
@@ -101,7 +109,7 @@ var TableView = Class.$extend({
             url: '/api/v01/' + this.modelName + '/',
             data: {
                 offset: this.currentPage * 20,
-                limit: 20,
+                limit: this.limit,
                 orderBy: this.orderBy,
                 orderDirection: this.orderDirection,
                 filters: this.filters
@@ -120,11 +128,6 @@ var TableView = Class.$extend({
      * {
      *      totalValues: X,
      *      filteredValues: Z,
-     *      columnNames: [
-     *          'foo',
-     *          'bar',
-     *          ...
-     *      ]
      *      values: [
      *          [1, ...],
      *          [2, ...],
@@ -141,21 +144,21 @@ var TableView = Class.$extend({
      *                     de datos teniendo en cuenta los filtros aplicados
      *                     por el usuario
      *
-     *      columnNames: es la lista de del nombre de las columnas que se van
-     *                   a mostrar.
      *
      *      values: es un array de array, donde cada array representa una
      *              linea de valores que se encontro en la base de datos.
      */
     renderInformation: function(data) {
         this.renderTableInformation(data.values);
-        this.renderPaginationInformation();
+        this.renderPaginationInformation(data.totalCount, data.filterCount);
 
         this.$element.off('click', '.button-edit');
         this.$element.off('click', '.button-delete');
+        this.$element.off('click', '.column-name');
 
         this.$element.on('click', '.button-edit', $.proxy(this.editValue, this));
         this.$element.on('click', '.button-delete', $.proxy(this.deleteValue, this));
+        this.$element.on('click', '.column-name', $.proxy(this.selectedOrderBy, this));
     },
 
 
@@ -168,17 +171,12 @@ var TableView = Class.$extend({
     renderTableInformation: function(values) {
         if (values.length === 0) {
         } else {
-            var value = values[0];
-            var columnNames = [];
-            for (var attr in value) {
-                columnNames.push(attr);
-            }
             var template = '' +
                 '<table class="table table-hover table-bordered table-striped">' +
                     '<thead>' +
                         '{{#each columnNames }}' +
                             '{{#ifCond this "!==" "id" }}' +
-                                '<th><a href="#" class="column-name">{{readableName this }}</a></th>' +
+                                '<th><a href="#" class="column-name" id="column-{{ this }}">{{readableName this }}</a></th>' +
                             '{{/ifCond}}' +
                         '{{/each}}' +
                         '<th>Edit</th>' +
@@ -187,40 +185,92 @@ var TableView = Class.$extend({
                     '<tbody>' +
                         '{{#each values}}' +
                             '<tr>' +
-                                '{{#each this }}' +
-                                    '{{#ifCond @key "!==" "id" }}' +
-                                        '<td>{{ this }}</td>' +
-                                    '{{/ifCond}}' +
-                                '{{/each}}' +
-                                '<td>'+
-                                    '<button type="button" class="btn btn-success btn-sm button-edit" id="edit-{{ this.id }}">' +
-                                        '<span class="glyphicon glyphicon-edit"></span>' +
-                                    '</button>' +
-                                '</td>'+
-                                '<td>' +
-                                    '<button type="button" class="btn btn-danger btn-sm button-delete" id="edit-{{ this.delete }}">' +
-                                        '<span class="glyphicon glyphicon-remove"></span>' +
-                                    '</button>' +
-                                '</td>' +
+                                '{{renderTableRow this ../columnNames }}' +
                             '</tr>' +
                         '{{/each}}'
                     '</tbody>' +
                 '</table>';
             var html = Handlebars.render(template, {
-                    columnNames: columnNames,
+                    columnNames: this.columnNames,
                     values: values
             });
-            this.$element.find('#information-container').html(html);
+            this.$element.find('#table-information-container').html(html);
         }
     },
 
     /**
      * Se encarga de renderar todo el tema de la paginacion de la
      * data.
+     *
+     * @param {int} totalCount: la informacion total que existen en la base
+     *                          de datos cuando no se tiene en cuenta
+     *                          los filtros aplicados.
+     *
+     * @param {int} filterCount: la canitdad totales de valores que existen
+     *                           teniendo en cuenta los filtro usados.
      */
-    renderPaginationInformation: function() {
+    renderPaginationInformation: function(totalCount, filterCount) {
+        var previousPages = 0;
+        var nextPages = 0;
+        var maxNumberOfPages = filterCount / this.limit;
+
+
+        if (this.currentPage === 0) {
+            // como estoy al principio de la pagina tengo que hacer
+            // que se muestre las paginas siguientes.
+            nextPages = 5;
+        } else if ((this.currentPage + 1 * limit) == totalCount) {
+            // en este caso estoy en la ultima pagina
+            previousPages = 5;
+        } else {
+            previousPages = 2;
+            nextPages = 3;
+        }
+
+        var html = '<ul class="pagination">';
+        for (var i = 1; i < previousPages; i++) {
+            if ((this.currentPage + 1 - i) < 1) {
+                break;
+            }
+
+            html += '<li><a href="#">' + (this.currentPage + 1 - i) + '</a></li>';
+        }
+        html += '<li class="active"><a href="#">' + (this.currentPage + 1) + '</a></li>';
+        for (var j = 1; j < nextPages; j++) {
+            if (this.currentPage + j > maxNumberOfPages) {
+                break;
+            }
+            html += '<li><a href="#">' + (this.currentPage + 1 + j) + '</a></li>';
+        }
+
+        html += '<ul>';
+        this.$element.find('#pagination-information-container').html(html);
     },
 
+
+    /**
+     * Handler de cuando el usuario hace click para ordenar los valores
+     * de la tabla en funcion de una columna.
+     */
+    selectedOrderBy: function(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        var target = $(ev.target);
+        var columnName = target.attr('id');
+        columnName = columnName.replace('column-', '');
+
+
+        this.currenPage = 0;
+        if (columnName === this.orderBy) {
+            this.orderDirection = 'DESC';
+        } else {
+            this.orderDirection = 'ASC';
+            this.orderBy = columnName;
+        }
+        this.getData();
+
+    },
 
     /**
      * Handler de cuando el usuario hace click en el boton para agregar
@@ -241,9 +291,8 @@ var TableView = Class.$extend({
         ev.stopPropagation();
         ev.preventDefault();
 
-        var target = $(ev.target).parent('button');
+        var target = $(ev.target);
         var objectId = target.attr('id');
-        console.log(objectId);
         objectId = objectId.replace('edit-', '');
         objectId = parseInt(objectId, 10);
         this.crudView.editObject(objectId);

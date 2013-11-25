@@ -104,7 +104,7 @@ var FormView = Class.$extend({
             url: consts.BASE_API_URL + url,
             data: data,
             success: function(responseData, text, jqXHR) {
-                self.crudView.createdObject();
+                self.crudView.createdObject(responseData.id);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 // tengo que borrar todos los errores anteriores...

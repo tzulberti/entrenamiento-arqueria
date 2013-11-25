@@ -19,6 +19,44 @@ Handlebars.registerHelper('readableName', function(columnName) {
 
 
 /**
+ * Se encarga de renderar una de la fila de las tablas que contiene
+ * toda la informacion que se le tiene que mostrar al usuario.
+ *
+ * Esto muestra toda la informacion en el orden correspondiente teniendo
+ * en cuenta ademas que se tiene que agregar las columnas de "edit" y
+ * "delete".
+ */
+Handlebars.registerHelper('renderTableRow', function(data, columnNames) {
+    var res = '';
+    console.log(columnNames);
+    console.log(data)
+    for (var index in columnNames) {
+        var columnName = columnNames[index];
+        var value = data[columnName];
+        if (value === true) {
+            value = '<span class="glyphicon glyphicon-ok"></span>';
+        } else if (value === false) {
+            value = '<span class="glyphicon glyphicon-minus"></span>';
+        }
+        res += '<td>' + value + '</td>';
+    }
+
+    res +=  '' +
+        '<td>'+
+            '<button type="button" class="btn btn-success btn-sm button-edit" id="edit-' + data.id + '">' +
+                '<span class="glyphicon glyphicon-edit"></span>' +
+            '</button>' +
+        '</td>'+
+        '<td>' +
+            '<button type="button" class="btn btn-danger btn-sm button-delete" id="edit-' + data.id +'">' +
+                '<span class="glyphicon glyphicon-remove"></span>' +
+            '</button>' +
+        '</td>';
+    return new Handlebars.SafeString(res);
+});
+
+
+/**
  * Hace la comparacion logica entre dos valores teniendo en cuenta el
  * operador especificado.
  *
