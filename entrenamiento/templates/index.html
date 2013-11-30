@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+
+{% block menu %}
+    <nav class="navbar navbar-default" role="navigation" id="main-menu">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">EDA</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Informacion<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Ver</a></li>
+                        <li><a href="#">Crear uno nuevo</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Cantidad de flechas por tipo de trabajo</a></li>
+                        <li><a href="#">Porcentajde de tipos de trabajos</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Otras Cosas<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" id="application-1" class="menu-option">Lugares</a></li>
+                        <li><a href="#">Clima</a></li>
+                        <li><a href="#" id="application-2" class="menu-option">Usuarios</a></li>
+                        <li><a href="#">Invitaciones</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="table-container">
+        </div>
+        <div class="form-container">
+        </div>
+    </div>
+{% endblock %}
+
+{% block additional_javascript %}
+    <script src="/static/js/base/table-view.js"></script>
+    <script src="/static/js/base/form-view.js"></script>
+    <script src="/static/js/base/crud-view.js"></script>
+    <script src="/static/js/base/history-manager.js"></script>
+    <script src="/static/js/base/app.js"></script>
+    <script src="/static/js/base/apps-manager.js"></script>
+    <!-- Aca van todas las opciones de cada una de los ABMS correspondientes -->
+    <script src="/static/js/crud/lugar.js"></script>
+
+    <!-- 
+        Esto tiene que ir ultimo para asegurarme de que 
+        todas las clases a las que hace referencia existan.
+    -->
+
+    <script src="/static/js/base/register.js"></script>
+    <script src="/static/js/main/menu-view.js"></script>
+    <script type="text/javascript">
+        var menuView = new MainMenuView($("#main-menu"),
+                                        appsManager);
+        menuView.render();
+    </script>
+{% endblock %}
+
+

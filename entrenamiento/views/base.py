@@ -3,6 +3,8 @@
 from flask import jsonify, request
 from flask.views import MethodView
 
+
+
 class BaseModelListCrudView(MethodView):
     ''' Clase base para todas las views que tengan que manejar el
     tema de no trabajar puntualmente con una instancia.

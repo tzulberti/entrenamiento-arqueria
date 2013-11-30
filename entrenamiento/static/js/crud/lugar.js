@@ -53,5 +53,3 @@ var LugarApplication = BaseCrudApp.$extend({
 
 
 
-var app = LugarApplication(historyManager, $('.container'));
-app.start();

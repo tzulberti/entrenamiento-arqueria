@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from entrenamiento_arqueria.app.app import db
+from entrenamiento.app.app import db
 
 class User(db.Model):
     ''' Representa toda la informacion de un usuario que se
@@ -29,4 +29,16 @@ class User(db.Model):
     email = db.Column(db.String(250), nullable=False, unique=True)
     nombre = db.Column(db.String(1024), nullable=False)
     apellido = db.Column(db.String(1024), nullable=False)
+    es_entrenador = db.Column(db.Boolean, nullable=False, default=False)
+    es_administrador = db.Column(db.Boolean, nullable=False, default=False)
+
+
+    def to_json(self):
+        return dict(id=self.id,
+                    username=self.username,
+                    email=self.email,
+                    nombre=self.nombre,
+                    appelido=self.apellido,
+                    es_entrenador=self.es_entrenador,
+                    es_administrador=self.es_administrador)
 

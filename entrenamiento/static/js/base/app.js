@@ -47,6 +47,8 @@ var BaseCrudApp = BaseApp.$extend({
     },
 
 
+    // Los metodos que figuran abajo son llamados por el history manager.
+    //
     renderTableInformation: function(orderBy, orderDirection, currentPage) {
         this.crudView.renderTableInformation(orderBy, orderDirection, currentPage);
     },
