@@ -17,6 +17,19 @@ Handlebars.registerHelper('readableName', function(columnName) {
     return columnName.toTitleCase();
 });
 
+Handlebars.registerHelper('renderColumnHeader', function(columnName, orderBy, orderDirection) {
+    var res = '<a href="#" class="column-name" id="column-' + columnName + '">';
+    res += columnName.toTitleCase();
+    if (columnName == orderBy) {
+        if (orderDirection === 'ASC') {
+            res += '<span class="glyphicon glyphicon-chevron-down"></span>';
+        } else {
+            res += '<span class="glyphicon glyphicon-chevron-up"></span>';
+        }
+    }
+    res += '</a>';
+    return new Handlebars.SafeString(res);
+});
 
 /**
  * Se encarga de renderar una de la fila de las tablas que contiene
@@ -28,8 +41,6 @@ Handlebars.registerHelper('readableName', function(columnName) {
  */
 Handlebars.registerHelper('renderTableRow', function(data, columnNames) {
     var res = '';
-    console.log(columnNames);
-    console.log(data)
     for (var index in columnNames) {
         var columnName = columnNames[index];
         var value = data[columnName];
@@ -48,7 +59,7 @@ Handlebars.registerHelper('renderTableRow', function(data, columnNames) {
             '</button>' +
         '</td>'+
         '<td>' +
-            '<button type="button" class="btn btn-danger btn-sm button-delete" id="edit-' + data.id +'">' +
+            '<button type="button" class="btn btn-danger btn-sm button-delete" id="delete-' + data.id +'">' +
                 '<span class="glyphicon glyphicon-remove"></span>' +
             '</button>' +
         '</td>';

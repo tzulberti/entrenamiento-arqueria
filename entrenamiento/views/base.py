@@ -2,7 +2,6 @@
 
 from flask import jsonify, request
 from flask.views import MethodView
-from sqlalchemy import func
 
 class BaseModelListCrudView(MethodView):
     ''' Clase base para todas las views que tengan que manejar el
@@ -120,5 +119,15 @@ class BaseModelCrudView(MethodView):
             return jsonify(id=form.instance.id)
         else:
             return jsonify(form.errors), 400
+
+    def delete(self, object_id):
+        query = self.model_class.query.filter(self.model_class.id == object_id)
+        data = query.first()
+        if not data:
+            return 'Ver mas adelante', 500
+        self.db.session.delete(data)
+        self.db.session.commit()
+        return jsonify(id=data.id)
+
 
 

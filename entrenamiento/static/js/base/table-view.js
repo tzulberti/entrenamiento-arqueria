@@ -85,8 +85,17 @@ var TableView = Class.$extend({
         this.getData();
 
         this.$element.off('click', '.button-create');
+        this.$element.off('click', '.pagination-page');
+        this.$element.off('click', '.button-edit');
+        this.$element.off('click', '.button-delete');
+        this.$element.off('click', '.column-name');
+
         this.$element.on('click', '.button-create', $.proxy(this.createNew, this));
-    },
+        this.$element.on('click', '.pagination-page', $.proxy(this.changePage, this));
+        this.$element.on('click', '.button-edit', $.proxy(this.editValue, this));
+        this.$element.on('click', '.button-delete', $.proxy(this.deleteValue, this));
+        this.$element.on('click', '.column-name', $.proxy(this.selectedOrderBy, this));
+   },
 
 
     /**
@@ -108,7 +117,7 @@ var TableView = Class.$extend({
             type: 'GET',
             url: '/api/v01/' + this.modelName + '/',
             data: {
-                offset: this.currentPage * 20,
+                offset: this.currentPage * this.limit,
                 limit: this.limit,
                 orderBy: this.orderBy,
                 orderDirection: this.orderDirection,
@@ -151,14 +160,6 @@ var TableView = Class.$extend({
     renderInformation: function(data) {
         this.renderTableInformation(data.values);
         this.renderPaginationInformation(data.totalCount, data.filterCount);
-
-        this.$element.off('click', '.button-edit');
-        this.$element.off('click', '.button-delete');
-        this.$element.off('click', '.column-name');
-
-        this.$element.on('click', '.button-edit', $.proxy(this.editValue, this));
-        this.$element.on('click', '.button-delete', $.proxy(this.deleteValue, this));
-        this.$element.on('click', '.column-name', $.proxy(this.selectedOrderBy, this));
     },
 
 
@@ -169,14 +170,18 @@ var TableView = Class.$extend({
      *                                       de datos.
      */
     renderTableInformation: function(values) {
+        var html = '';
         if (values.length === 0) {
+            html = '<h2>No Information was found</h2>';
         } else {
             var template = '' +
                 '<table class="table table-hover table-bordered table-striped">' +
                     '<thead>' +
                         '{{#each columnNames }}' +
                             '{{#ifCond this "!==" "id" }}' +
-                                '<th><a href="#" class="column-name" id="column-{{ this }}">{{readableName this }}</a></th>' +
+                                '<th>' +
+                                    '{{renderColumnHeader this ../../orderBy ../../orderDirection }}' +
+                                '</th>' +
                             '{{/ifCond}}' +
                         '{{/each}}' +
                         '<th>Edit</th>' +
@@ -190,12 +195,15 @@ var TableView = Class.$extend({
                         '{{/each}}'
                     '</tbody>' +
                 '</table>';
-            var html = Handlebars.render(template, {
+            html = Handlebars.render(template, {
                     columnNames: this.columnNames,
-                    values: values
+                    values: values,
+                    orderDirection: this.orderDirection,
+                    orderBy: this.orderBy
             });
-            this.$element.find('#table-information-container').html(html);
         }
+        this.$element.find('#table-information-container').html(html);
+
     },
 
     /**
@@ -213,13 +221,23 @@ var TableView = Class.$extend({
         var previousPages = 0;
         var nextPages = 0;
         var maxNumberOfPages = filterCount / this.limit;
+        if (filterCount % this.limit === 0) {
+            // en este caso le tengo que restar uno porque es justo cuando
+            // es multiplo de la cantidad de paginas que se estan mostrando.
+            maxNumberOfPages -= 1;
+        }
 
+        if (filterCount === 0) {
+            // en este caso no se tiene que mostrar informacion de paginacion
+            // porque no hay data teniendo en cuenta los filtros aplicados
+            return ;
+        }
 
         if (this.currentPage === 0) {
             // como estoy al principio de la pagina tengo que hacer
             // que se muestre las paginas siguientes.
             nextPages = 5;
-        } else if ((this.currentPage + 1 * limit) == totalCount) {
+        } else if (((this.currentPage + 1) * this.limit) == totalCount) {
             // en este caso estoy en la ultima pagina
             previousPages = 5;
         } else {
@@ -233,14 +251,14 @@ var TableView = Class.$extend({
                 break;
             }
 
-            html += '<li><a href="#">' + (this.currentPage + 1 - i) + '</a></li>';
+            html += '<li><a href="#" class="pagination-page">' + (this.currentPage + 1 - i) + '</a></li>';
         }
         html += '<li class="active"><a href="#">' + (this.currentPage + 1) + '</a></li>';
         for (var j = 1; j < nextPages; j++) {
             if (this.currentPage + j > maxNumberOfPages) {
                 break;
             }
-            html += '<li><a href="#">' + (this.currentPage + 1 + j) + '</a></li>';
+            html += '<li><a href="#" class="pagination-page">' + (this.currentPage + 1 + j) + '</a></li>';
         }
 
         html += '<ul>';
@@ -263,7 +281,11 @@ var TableView = Class.$extend({
 
         this.currenPage = 0;
         if (columnName === this.orderBy) {
-            this.orderDirection = 'DESC';
+            if (this.orderDirection === 'ASC') {
+                this.orderDirection = 'DESC';
+            } else {
+                this.orderDirection = 'ASC';
+            }
         } else {
             this.orderDirection = 'ASC';
             this.orderBy = columnName;
@@ -292,10 +314,43 @@ var TableView = Class.$extend({
         ev.preventDefault();
 
         var target = $(ev.target);
+        if (! target.hasClass('btn')) {
+            target = target.parent();
+        }
         var objectId = target.attr('id');
         objectId = objectId.replace('edit-', '');
         objectId = parseInt(objectId, 10);
         this.crudView.editObject(objectId);
+    },
+
+
+    /**
+     * Handler de cuando el usuario hace click para borrar un valor de la
+     * base de datos.
+     */
+    deleteValue: function(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        var target = $(ev.target);
+        if (! target.hasClass('btn')) {
+            target = target.parent();
+        }
+        var objectId = target.attr('id');
+        objectId = objectId.replace('delete-', '');
+        objectId = parseInt(objectId, 10);
+
+
+        var self = this;
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/v01/' + this.modelName + '/' + objectId + '/',
+            success: function(data, textStatus, jqXHR) {
+                self._hideMessages();
+                self.$element.find('#deleted-instance').removeClass('hidden');
+                self.getData();
+            }
+        })
     },
 
 
@@ -320,9 +375,22 @@ var TableView = Class.$extend({
      */
     _hideMessages: function() {
         this.$element.find('.alert').addClass('hidden');
+    },
+
+    /**
+     * Handler que se lo usa cuando el usuario quiere cambiar la pagina que el
+     * mismo esta viendo.
+     */
+    changePage: function(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        var target = $(ev.target);
+        var selectedPage = target.text();
+        selectedPage = parseInt(selectedPage, 10);
+        this.currentPage = selectedPage - 1;
+        this.getData();
     }
-
-
 
 
 
