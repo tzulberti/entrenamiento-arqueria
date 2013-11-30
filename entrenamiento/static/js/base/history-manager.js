@@ -10,7 +10,7 @@ var HistoryManager = Class.$extend({
     __init__: function() {
         this.applications = {};
 
-        window.addEventListener('popstate', $.proxy(this.returnedToPreviousState));
+        window.addEventListener('popstate', $.proxy(this.returnedToPreviousState, this));
     },
 
     /**
@@ -32,16 +32,72 @@ var HistoryManager = Class.$extend({
      * para atras.
      */
     returnedToPreviousState: function(ev) {
-        console.log('Entro aca....');
+        if (ev.state === null) {
+            return;
+        }
+        if (ev.state.type === 'table') {
+            var application = this.applications[ev.state.modelName];
+            application.renderTableInformation(ev.state.orderBy,
+                                               ev.state.orderDirection,
+                                               ev.state.currentPage);
+
+        } else if (ev.state.type === 'form') {
+            var application = this.applications[ev.state.modelName];
+            application.renderForm(ev.state.objectId);
+        }
     },
 
 
-    pushNewStatus: function(modelName, objectId) {
-        url = '#/' + modelName + '/';
-        if (objectId !== null) {
-            url += objectId + '/';
+    /**
+     * Se encarga de agregar al historial la informacion sobre la tabla
+     * que esta viendo el usuario.
+     *
+     * @param {String} modelName: el nombre del modelo que el usuario esta viendo.
+     *                            Se tiene que tener una applicacion asociada a
+     *                            este modelo.
+     *
+     * @param {String} orderBy: la columna por la que el usuario esta viendo
+     *                          toda la informacion.
+     *
+     * @param {String} orderDirection: la direccion en la que se esta ordenando
+     *                                 toda la informacion.
+     *
+     * @param {int} currentPage: la pagina actual que esta viendo el usuario de la
+     *                           tabla teniendo en cuenta la cantidad de info.
+     */
+    pushNewTableStatus: function(modelName, orderBy, orderDirection, currentPage) {
+        var url = '#/table/' + modelName + '/' + orderBy + '/' + orderDirection + '/' + currentPage + '/';
+        var stateData = {
+            type: 'table',
+            modelName: modelName,
+            orderBy: orderBy,
+            orderDirection: orderDirection,
+            currentPage: currentPage
         }
-        history.pushState({modelName: modelName, objectId: objectId}, null, url);
+        history.pushState(stateData, null, url);
+    },
+
+
+    /**
+     * Se encarga de agregar al history un nuevo estado que indica que el usuario
+     * quiere ver una nueva instancia o que quiere crear una nueva.
+     *
+     * @param {String} modelName: el nombre del modelo que el usuario esta creando
+     *                            o editando.
+     *
+     * @param {int} objectId: el identificador de la instancia que el usuario este
+     *                        editando. En caso de que este creando, este valor
+     *                        va a ser null.
+     */
+    pushNewInstanceStatus: function(modelName, objectId) {
+        var url = '#/instance/' + modelName + '/' + objectId + '/';
+        var stateData = {
+            type: 'form',
+            modelName: modelName,
+            objectId: objectId
+        };
+
+        history.pushState(stateData, null, url);
     }
 
 });

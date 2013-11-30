@@ -28,10 +28,15 @@ var TableView = Class.$extend({
      *                                     el usuario.
      *
      */
-    __init__: function(element, modelName, columnNames) {
+    __init__: function(element, modelName, columnNames, historyManager) {
         this.$element = element;
         this.modelName = modelName;
         this.columnNames = columnNames;
+        this.historyManager = historyManager;
+
+        // si este valor es false, entonces el siguiente cambio que haga a la
+        // tabla el usuario no se lo va a agregar al history
+        this.addToHistory = true;
 
         // no lo puedo recivir por el constructor,
         // por lo que lo tengo que recivir por aca...
@@ -113,6 +118,14 @@ var TableView = Class.$extend({
      */
     getData: function() {
         var self = this;
+        if (this.addToHistory) {
+            this.historyManager.pushNewTableStatus(this.modelName, this.orderBy,
+                                                   this.orderDirection, this.currentPage);
+        }
+
+        // le tengo que volver a setear el valor en true para que el proximo
+        // cambio que le haga, si lo agrugue al historial
+        this.addToHistory = true;
         $.ajax({
             type: 'GET',
             url: '/api/v01/' + this.modelName + '/',
@@ -135,7 +148,7 @@ var TableView = Class.$extend({
      * La respuesta del servidor tiene el siguiente formato:
      *
      * {
-     *      totalValues: X,
+           totalValues: X,
      *      filteredValues: Z,
      *      values: [
      *          [1, ...],
@@ -302,6 +315,7 @@ var TableView = Class.$extend({
         ev.stopPropagation();
         ev.preventDefault();
 
+        this.historyManager.pushNewInstanceStatus(this.modelName, null);
         this.crudView.createNew();
     },
 
@@ -320,6 +334,7 @@ var TableView = Class.$extend({
         var objectId = target.attr('id');
         objectId = objectId.replace('edit-', '');
         objectId = parseInt(objectId, 10);
+        this.historyManager.pushNewInstanceStatus(this.modelName, objectId);
         this.crudView.editObject(objectId);
     },
 

@@ -37,8 +37,6 @@ var CrudView = Class.$extend({
      * la URL es de una instancia o es generica para ver todas.
      */
     render: function() {
-        this.historyManager.pushNewStatus(this.tableView.modelName,
-                                          null);
         this.tableView.$element.show();
         this.formView.$element.hide();
         this.tableView.render();
@@ -69,11 +67,6 @@ var CrudView = Class.$extend({
      * @param {int} objectId: el id del objeto que fue recien creado.
      */
     createdObject: function(objectId) {
-        this.historyManager.pushNewStatus(
-                this.tableView.modelName,
-                objectId);
-
-
         this.tableView.$element.show();
         this.formView.$element.hide();
         this.tableView.createdObject();
@@ -89,5 +82,28 @@ var CrudView = Class.$extend({
         this.tableView.$element.hide();
         this.formView.$element.show();
         this.formView.editObject(objectId);
+    },
+
+
+    /**
+     * Llamado desde el APP para que se encargue de manejar todo el tema
+     * de mostrar la tabla con toda la informacion.
+     *
+     * Esta funcion solo se la usa cuando el usuario esta cambiando la parte
+     * del historial (haciendo Back o Forward), asique es importante tener
+     * en cuenta eso.
+     */
+    renderTableInformation: function(orderBy, orderDirection, currentPage) {
+        this.tableView.orderBy = orderBy;
+        this.tableView.orderDirection = orderDirection;
+        this.tableView.currentPage = currentPage;
+
+        this.formView.$element.hide();
+        this.tableView.$element.show();
+        this.tableView.addToHistory = false;
+
+        // necesito llamar al render para que cambie todo el tema
+        // de los eventos.
+        this.tableView.render();
     }
 });

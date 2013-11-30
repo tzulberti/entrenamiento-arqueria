@@ -35,7 +35,8 @@ var BaseCrudApp = BaseApp.$extend({
     start: function() {
         this.tableView = new TableView(this.$element.find('.table-container'),
                                        this.modelName,
-                                       this.columnNames);
+                                       this.columnNames,
+                                       this.historyManager);
         this.formView = new FormView(this.$element.find('.form-container'),
                                      this.formTemplate,
                                      this.modelName);
@@ -46,20 +47,16 @@ var BaseCrudApp = BaseApp.$extend({
     },
 
 
-    /**
-     * Se encarga de mostrar los cambios teniendo en cuenta lo que haya
-     * hecho el usuario.
-     *
-     * Esto lo ejecuta el historyMandler para poder volver a lo que estaba
-     * viendop antes el usuario.
-     */
-    handleHistoryChange: function(objectId) {
-        if (objectId !== null) {
-            this.crudView.editObject(objectId);
+    renderTableInformation: function(orderBy, orderDirection, currentPage) {
+        this.crudView.renderTableInformation(orderBy, orderDirection, currentPage);
+    },
+
+    renderForm: function(objectId) {
+        if (objectId === null) {
+            this.crudView.createNew();
         } else {
-            //this.crudView.
+            this.crudView.editObject(objectId);
         }
     }
-
 
 });
