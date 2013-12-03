@@ -38,7 +38,7 @@ class User(db.Model):
                     username=self.username,
                     email=self.email,
                     nombre=self.nombre,
-                    appelido=self.apellido,
+                    apellido=self.apellido,
                     es_entrenador=self.es_entrenador,
                     es_administrador=self.es_administrador)
 

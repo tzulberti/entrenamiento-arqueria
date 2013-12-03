@@ -93,7 +93,18 @@ class ValidationForm(Form):
         if self.object_id:
             model_attr = getattr(self.model_class, 'id')
             query = self.model_class.query.filter(model_attr == self.object_id)
-            return query.first()
+            res = query.first()
+            # ahora le tengo que setear todos los valores que fueron
+            # encontrador por el usuario
+            for attr_name in dir(self):
+                if attr_name == 'csrf_token':
+                    continue
+                attr = getattr(self, attr_name)
+                if isinstance(attr, Field):
+                    final_value = self.get_attr_value(attr_name, attr.data)
+                    setattr(res, attr_name, final_value)
+            return res
+
         else:
             kwargs = dict()
             for attr_name in dir(self):
@@ -101,10 +112,21 @@ class ValidationForm(Form):
                     continue
                 attr = getattr(self, attr_name)
                 if isinstance(attr, Field):
-                    kwargs[attr_name] = attr.data
+                    final_value = self.get_attr_value(attr_name, attr.data)
+                    kwargs[attr_name] = final_value
 
             return self.model_class(**kwargs)
 
+    def get_attr_value(self, attr_name, form_data):
+        ''' En funcion del form data convierte el valor de la forma en la
+        que el mismo se tiene que guardar en la base de datos.
+
+        :param str attr_name: el nombre del attributo que se quiere setear
+                              en la instnacia del modelo.
+
+        :param object form_data: el valor que fue leido del form.
+        '''
+        return form_data
 
 
 

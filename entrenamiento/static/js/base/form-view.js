@@ -70,7 +70,17 @@ var FormView = Class.$extend({
             url: consts.BASE_API_URL + this.modelName + '/' + objectId + '/',
             success: function(responseData, text, jqXHR) {
                 for (attributeName in responseData) {
-                    self.$element.find('input[name=' + attributeName + ']').val(responseData[attributeName]);
+                    var inputField = self.$element.find('input[name=' + attributeName + ']');
+                    var value = responseData[attributeName];
+                    if (inputField.attr('type') === 'text') {
+                        inputField.val(value);
+                    } else if (inputField.attr('type') === 'checkbox') {
+                        if (value === 1 || value) {
+                            inputField.prop('checked', true);
+                        } else {
+                            inputField.prop('checked', false);
+                        }
+                    }
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
