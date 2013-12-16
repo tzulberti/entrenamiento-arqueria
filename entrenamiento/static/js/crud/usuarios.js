@@ -8,31 +8,31 @@ var UsuariosCrudApplication = BaseCrudApp.$extend({
         var formTemplate = '' +
             '<form role="form" class="form-horizontal">' +
                 '<div class="form-group">' +
-                    '<label for="latitud" class="col-sm-2 control-label">Username</label>' +
+                    '<label for="username" class="col-sm-2 control-label">Username</label>' +
                     '<div class="col-sm-10">' +
                         '<input type="text" name="username" id="username" class="form-control">' +
                     '</div>' +
                 '</div>' +
                 '<div class="form-group">' +
-                    '<label for="latitud" class="col-sm-2 control-label">Email</label>' +
+                    '<label for="email" class="col-sm-2 control-label">Email</label>' +
                     '<div class="col-sm-10">' +
                         '<input type="text" name="email" id="email" class="form-control">' +
                     '</div>' +
                 '</div>' +
                 '<div class="form-group">' +
-                    '<label for="longitud" class="col-sm-2 control-label">Nombre</label>' +
+                    '<label for="nombre" class="col-sm-2 control-label">Nombre</label>' +
                     '<div class="col-sm-10">' +
                         '<input type="text" name="nombre" id="nombre" class="form-control">' +
                     '</div>' +
                 '</div>' +
                 '<div class="form-group">' +
-                    '<label for="longitud" class="col-sm-2 control-label">Apellido</label>' +
+                    '<label for="apellido" class="col-sm-2 control-label">Apellido</label>' +
                     '<div class="col-sm-10">' +
                         '<input type="text" name="apellido" id="apellido" class="form-control">' +
                     '</div>' +
                 '</div>' +
                 '<div class="form-group">' +
-                    '<label for="longitud" class="col-sm-2 control-label">Password</label>' +
+                    '<label for="password" class="col-sm-2 control-label">Password</label>' +
                     '<div class="col-sm-10">' +
                         '<input type="password" name="password" id="password" class="form-control">' +
                     '</div>' +
