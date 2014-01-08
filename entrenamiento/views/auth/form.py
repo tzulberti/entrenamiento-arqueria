@@ -12,7 +12,6 @@ class UserForm(ValidationForm):
 
     '''
 
-    username = StringField('username', [InputRequired()])
     email = StringField('email', [InputRequired()])
     nombre = StringField('nombre', [InputRequired()])
     apellido = StringField('apellido', [InputRequired()])
@@ -28,9 +27,6 @@ class UserForm(ValidationForm):
 
         # me fijo que no exista otro lugar con el mismo nombre
         if not self.validate_unique('email'):
-            return False
-
-        if not self.validate_unique('username'):
             return False
 
         self.instance = self.get_instance()

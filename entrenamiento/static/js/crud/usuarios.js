@@ -8,12 +8,6 @@ var UsuariosCrudApplication = BaseCrudApp.$extend({
         var formTemplate = '' +
             '<form role="form" class="form-horizontal">' +
                 '<div class="form-group">' +
-                    '<label for="username" class="col-sm-2 control-label">Username</label>' +
-                    '<div class="col-sm-10">' +
-                        '<input type="text" name="username" id="username" class="form-control">' +
-                    '</div>' +
-                '</div>' +
-                '<div class="form-group">' +
                     '<label for="email" class="col-sm-2 control-label">Email</label>' +
                     '<div class="col-sm-10">' +
                         '<input type="text" name="email" id="email" class="form-control">' +

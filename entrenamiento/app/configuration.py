@@ -23,7 +23,7 @@ class Development(Configuration):
 
     #: hace que se conecte a una base de datos sqlite3 en donde se va a
     #: guardar toda la informacion
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////media/data/Proyectos/entrenamiento-arqueria/database/entrenamiento.db'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://entrenamiento:Anime123@localhost/entrenamiento'
 
     #: por default esta en modo debug
     DEBUG = True

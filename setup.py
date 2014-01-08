@@ -17,6 +17,7 @@ setup(
         "flask-bcrypt",
         "Flask-Restless",
         "Flask-WTF",
+        "alembic",
     ],
     packages=find_packages(),
     include_package_data=True,

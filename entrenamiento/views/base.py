@@ -1,6 +1,6 @@
 # -*- coding: utf-8  -*-
 
-from flask import jsonify, request
+from flask import jsonify, request, session
 from flask.views import MethodView
 
 from entrenamiento.views.utils import LoggedUserData
@@ -85,7 +85,7 @@ class BaseModelListCrudView(MethodView):
         if form.validate_on_submit():
             # si tiene el usuario, entonces se lo tengo que agregar.
             if hasattr(self.model_class, 'usuario'):
-                logged_user = LoggedUserData(**self.session['logged_user'])
+                logged_user = LoggedUserData(**session['logged_user'])
                 form.instance.user = None
             self.db.session.add(form.instance)
             self.db.session.commit()
