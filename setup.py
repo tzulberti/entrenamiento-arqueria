@@ -15,7 +15,6 @@ setup(
         "requests",
         "Flask-SQLAlchemy",
         "flask-bcrypt",
-        "alembic",
         "Flask-Restless",
         "Flask-WTF",
     ],

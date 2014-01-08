@@ -3,6 +3,7 @@
 from flask import jsonify, request
 from flask.views import MethodView
 
+from entrenamiento.views.utils import LoggedUserData
 
 
 class BaseModelListCrudView(MethodView):
@@ -57,6 +58,13 @@ class BaseModelListCrudView(MethodView):
             offset = int(request.args['offset'])
             query = query.offset(offset)
 
+        # ahora solo tengo que filtrar por el usuario correspondiente.
+        # en caso de que el usuario logueado no sea entrenador o
+        # administrador entonces solo va a poder ver su informacion
+        if hasattr(self.model_class, 'usuario'):
+            logged_user = LoggedUserData(**self.session['logged_user'])
+            if not (logged_user.es_entrenador or logged_user.es_administrador):
+                query = query.filter(getattr(self.model_class, 'usuario') == logged_user.id)
 
         res = [d.to_json() for d in query.all()]
 
@@ -73,7 +81,12 @@ class BaseModelListCrudView(MethodView):
         ''' Esto es llamadao cuando el usuario quiere crear una instancia.
         '''
         form = self.form_class(self.model_class)
+
         if form.validate_on_submit():
+            # si tiene el usuario, entonces se lo tengo que agregar.
+            if hasattr(self.model_class, 'usuario'):
+                logged_user = LoggedUserData(**self.session['logged_user'])
+                form.instance.user = None
             self.db.session.add(form.instance)
             self.db.session.commit()
             return jsonify(id=form.instance.id)
@@ -108,6 +121,7 @@ class BaseModelCrudView(MethodView):
         query = self.model_class.query.filter(self.model_class.id == object_id)
         data = query.first()
         if not data:
+            # TODO ver que hacer...
             return 'Ver mas adelante', 500
         res = data.to_json()
         return jsonify(res)
@@ -126,10 +140,10 @@ class BaseModelCrudView(MethodView):
         query = self.model_class.query.filter(self.model_class.id == object_id)
         data = query.first()
         if not data:
+            # TODO tengo que ver que hacer en este caso
             return 'Ver mas adelante', 500
         self.db.session.delete(data)
         self.db.session.commit()
         return jsonify(id=data.id)
-
 
 

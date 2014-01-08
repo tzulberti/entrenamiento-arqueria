@@ -2,6 +2,7 @@
 
 from entrenamiento.app.app import db
 from entrenamiento.models.base import BaseModel
+from entrenamiento.models.user import Usuario
 
 class Arco(BaseModel):
     ''' Representa toda la informacion del arco que un usuario puede usar.
@@ -30,6 +31,7 @@ class Arco(BaseModel):
     __mapper_args__ = {'polymorphic_on': 'tipo_arco'}
 
     id = db.Column(db.Integer, primary_key=True)
+    usuario = db.relationship(Usuario)
     nombre = db.Column(db.Text, nullable=False)
     commentario = db.Column(db.Text)
     tipo_arco = db.Column(db.String(255), nullable=False)

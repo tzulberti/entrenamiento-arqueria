@@ -6,7 +6,7 @@ from flask import send_from_directory
 
 from entrenamiento.app.app import app, db
 from entrenamiento.models.lugar import Lugar
-from entrenamiento.models.user import User
+from entrenamiento.models.user import Usuario
 from entrenamiento.models.arco import ArcoRecurvado
 from entrenamiento.views.base import (BaseModelListCrudView,
                                       BaseModelCrudView)
@@ -38,12 +38,12 @@ app.add_url_rule(BASE_API_URL + 'lugar/<int:object_id>/',
 app.add_url_rule(BASE_API_URL + 'user/',
                  view_func=BaseModelListCrudView.as_view('api.user.list',
                                 db=db,
-                                model_class=User,
+                                model_class=Usuario,
                                 form_class=UserForm))
 app.add_url_rule(BASE_API_URL + 'user/<int:object_id>/',
                  view_func=BaseModelCrudView.as_view('api.user.instance',
                                 db=db,
-                                model_class=User,
+                                model_class=Usuario,
                                 form_class=UserForm))
 
 app.add_url_rule(BASE_API_URL + 'arco-recurvado/',

@@ -2,7 +2,7 @@
 
 from entrenamiento.app.app import db
 
-class User(db.Model):
+class Usuario(db.Model):
     ''' Representa toda la informacion de un usuario que se
     puede loguear a la aplicacion.
 
