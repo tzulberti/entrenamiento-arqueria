@@ -14,17 +14,17 @@ class ArcoForm(ValidationForm):
     '''
 
     nombre = StringField('nombre', [InputRequired()])
-    commentario = StringField('comentario')
+    comentario = StringField('comentario')
 
-    modelo_barra_larga_estabailizacion = StringField('modelo_barra_larga_estabilizacion')
-    largo_barrra_larga_estabilizacion = IntegerField('largo_barra_larga_estabilizacion', [Optional()])
+    modelo_barra_larga_estabilizacion = StringField('modelo_barra_larga_estabilizacion')
+    largo_barra_larga_estabilizacion = IntegerField('largo_barra_larga_estabilizacion', [Optional()])
     peso_adicional_barra_larga = IntegerField('peso_adicional_barra_larga', [Optional()])
 
-    modelo_barra_lateral_estabailizacion = StringField('modelo_barra_lateral_estabilizacion')
-    largo_barrra_lateral_estabilizacion = IntegerField('largo_barra_lateral_estabilizacion', [Optional()])
+    modelo_barra_lateral_estabilizacion = StringField('modelo_barra_lateral_estabilizacion')
+    largo_barra_lateral_estabilizacion = IntegerField('largo_barra_lateral_estabilizacion', [Optional()])
     peso_adicional_barra_lateral = IntegerField('peso_adicional_barra_lateral', [Optional()])
 
-    modelo_extender_estabailizacion = StringField('modelo_extender_estabilizacion')
+    modelo_extender_estabilizacion = StringField('modelo_extender_estabilizacion')
     largo_extender_estabilizacion = IntegerField('largo_extender_estabilizacion', [Optional()])
 
     modelo_vbar_estabilizacion = StringField('modelo_vbar_estabilizacion')
@@ -35,11 +35,16 @@ class ArcoRecurvadoForm(ArcoForm):
 
     modelo_raiser = StringField('modelo_raiser')
     largo_raiser = IntegerField('largo_raiser', [Optional()])
+
     modelo_palas = StringField('modelo_palas')
     libraje_palas = IntegerField('libraje_palas', [Optional()])
     largo_palas = IntegerField('largo_palas', [Optional()])
+
     modelo_clicker = StringField('modelo_clicker')
     modelo_mira = StringField('modelo_mira')
+    modelo_buttom = StringField('modelo_buttom')
+
+
 
     def validate(self):
         rv = super(ArcoRecurvadoForm, self).validate()

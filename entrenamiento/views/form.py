@@ -94,28 +94,23 @@ class ValidationForm(Form):
             model_attr = getattr(self.model_class, 'id')
             query = self.model_class.query.filter(model_attr == self.object_id)
             res = query.first()
-            # ahora le tengo que setear todos los valores que fueron
-            # encontrador por el usuario
-            for attr_name in dir(self):
-                if attr_name == 'csrf_token':
-                    continue
-                attr = getattr(self, attr_name)
-                if isinstance(attr, Field):
-                    final_value = self.get_attr_value(attr_name, attr.data)
-                    setattr(res, attr_name, final_value)
-            return res
 
         else:
-            kwargs = dict()
-            for attr_name in dir(self):
-                if attr_name == 'csrf_token':
-                    continue
-                attr = getattr(self, attr_name)
-                if isinstance(attr, Field):
-                    final_value = self.get_attr_value(attr_name, attr.data)
-                    kwargs[attr_name] = final_value
+            res = self.model_class()
 
-            return self.model_class(**kwargs)
+        # ahora le tengo que setear todos los valores que fueron
+        # encontrador por el usuario
+        for attr_name in dir(self):
+            if attr_name == 'csrf_token':
+                continue
+            attr = getattr(self, attr_name)
+
+            if isinstance(attr, Field):
+                final_value = self.get_attr_value(attr_name, attr.data)
+                if not hasattr(res, attr_name):
+                    raise Exception('Ocurrio un error con el campo: %s' % attr_name)
+                setattr(res, attr_name, final_value)
+        return res
 
     def get_attr_value(self, attr_name, form_data):
         ''' En funcion del form data convierte el valor de la forma en la

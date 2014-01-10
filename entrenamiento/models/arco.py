@@ -33,18 +33,18 @@ class Arco(BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     nombre = db.Column(db.Text, nullable=False)
-    commentario = db.Column(db.Text)
+    comentario = db.Column(db.Text)
     tipo_arco = db.Column(db.String(255), nullable=False)
 
-    modelo_barra_larga_estabailizacion = db.Column(db.Text)
-    largo_barrra_larga_estabilizacion = db.Column(db.Integer)
+    modelo_barra_larga_estabilizacion = db.Column(db.Text)
+    largo_barra_larga_estabilizacion = db.Column(db.Integer)
     peso_adicional_barra_larga = db.Column(db.Integer)
 
-    modelo_barra_lateral_estabailizacion = db.Column(db.Text)
-    largo_barrra_lateral_estabilizacion = db.Column(db.Integer)
+    modelo_barra_lateral_estabilizacion = db.Column(db.Text)
+    largo_barra_lateral_estabilizacion = db.Column(db.Integer)
     peso_adicional_barra_lateral = db.Column(db.Integer)
 
-    modelo_extender_estabailizacion = db.Column(db.Text)
+    modelo_extender_estabilizacion = db.Column(db.Text)
     largo_extender_estabilizacion = db.Column(db.Integer)
 
     modelo_vbar_estabilizacion = db.Column(db.Text)
@@ -61,13 +61,17 @@ class ArcoRecurvado(Arco):
     __mapper_args__ = {'polymorphic_identity': 'recurvado'}
 
     id = db.Column(db.Integer, db.ForeignKey('arco.id'), primary_key=True)
+
     modelo_raiser = db.Column(db.Text)
     largo_raiser = db.Column(db.Text)
+
     modelo_palas = db.Column(db.Text)
     libraje_palas = db.Column(db.Integer)
     largo_palas = db.Column(db.Text)
+
     modelo_clicker = db.Column(db.Text)
     modelo_mira = db.Column(db.Text)
+    modelo_buttom = db.Column(db.Text)
 
 
 class ArcoCompuesto(Arco):

@@ -105,9 +105,9 @@ var ArcosRecurvadosCrudApplication = BaseCrudApp.$extend({
                         '</div>' +
                     '</div>' +
                     '<div class="form-group">' +
-                        '<label for="peso_adicional_en_barra_larga" class="col-sm-2 control-label">Peso adicional</label>' +
+                        '<label for="peso_adicional_barra_larga" class="col-sm-2 control-label">Peso adicional</label>' +
                         '<div class="col-sm-10">' +
-                            '<input type="text" name="peso_adicional_en_barra_larga" id="peso_adicional_en_barra_larga" class="form-control">' +
+                            '<input type="text" name="peso_adicional_barra_larga" id="peso_adicional_barra_larga" class="form-control">' +
                             '<span class="help-block">Siempre que sea posible usar grames</span>' +
                         '</div>' +
                     '</div>' +
@@ -116,21 +116,21 @@ var ArcosRecurvadosCrudApplication = BaseCrudApp.$extend({
                 '<fieldset>' +
                     '<legend>VBar / Extender </legend>' +
                     '<div class="form-group">' +
-                        '<label for="modelo_vbar" class="col-sm-2 control-label">Modelo VBar</label>' +
+                        '<label for="modelo_vbar_estabilizacion" class="col-sm-2 control-label">Modelo VBar</label>' +
                         '<div class="col-sm-10">' +
-                            '<input type="text" name="modelo_vbar" id="modelo_vbar" class="form-control">' +
+                            '<input type="text" name="modelo_vbar_estabilizacion" id="modelo_vbar_estabilizacion" class="form-control">' +
                         '</div>' +
                     '</div>' +
                     '<div class="form-group">' +
-                        '<label for="modelo_extender" class="col-sm-2 control-label">Modelo extender</label>' +
+                        '<label for="modelo_extender_estabilizacion" class="col-sm-2 control-label">Modelo extender</label>' +
                         '<div class="col-sm-10">' +
-                            '<input type="text" name="modelo_extender" id="modelo_extender" class="form-control">' +
+                            '<input type="text" name="modelo_extender_estabilizacion" id="modelo_extender_estabilizacion" class="form-control">' +
                         '</div>' +
                     '</div>' +
                     '<div class="form-group">' +
-                        '<label for="largo_extender" class="col-sm-2 control-label">Largo extender</label>' +
+                        '<label for="largo_extender_estabilizacon" class="col-sm-2 control-label">Largo extender</label>' +
                         '<div class="col-sm-10">' +
-                            '<input type="text" name="largo_extender" id="largo_extender" class="form-control">' +
+                            '<input type="text" name="largo_extender_estabilizacion" id="largo_extender_estabilizacion" class="form-control">' +
                             '<span class="help-block">El mismo tiene que estar en pulgadas</span>' +
                         '</div>' +
                     '</div>' +
@@ -152,9 +152,9 @@ var ArcosRecurvadosCrudApplication = BaseCrudApp.$extend({
                         '</div>' +
                     '</div>' +
                     '<div class="form-group">' +
-                        '<label for="peso_adicional_en_barra_lateral" class="col-sm-2 control-label">Peso adicional</label>' +
+                        '<label for="peso_adicional_barra_lateral" class="col-sm-2 control-label">Peso adicional</label>' +
                         '<div class="col-sm-10">' +
-                            '<input type="text" name="peso_adicional_en_barra_lateral" id="peso_adicional_en_barra_lateral" class="form-control">' +
+                            '<input type="text" name="peso_adicional_barra_lateral" id="peso_adicional_barra_lateral" class="form-control">' +
                             '<span class="help-block">Siempre que sea posible usar grames</span>' +
                         '</div>' +
                     '</div>' +
