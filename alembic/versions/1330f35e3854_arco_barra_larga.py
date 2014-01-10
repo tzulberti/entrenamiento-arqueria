@@ -24,8 +24,8 @@ def upgrade():
 def downgrade():
     op.alter_column('arco',
                     'modelo_barra_larga_estabilizacion',
-                    'modelo_barra_larga_estabailizacion')
+                    new_column_name='modelo_barra_larga_estabailizacion')
     op.alter_column('arco',
                     'largo_barra_larga_estabilizacion',
-                    'largo_barrra_larga_estabilizacion')
+                    new_column_name='largo_barrra_larga_estabilizacion')
 
