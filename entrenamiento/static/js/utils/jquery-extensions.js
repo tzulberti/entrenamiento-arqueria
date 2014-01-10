@@ -27,4 +27,18 @@ $.ajaxSetup({
             xhr.setRequestHeader("X-CSRFToken", csrftoken)
         }
     }
-})
+});
+
+$(document).ajaxError(function(ev, jqXHR, ajaxSettings, thrownError) {
+    if (jqXHR.status === 401) {
+        // el usuario nunca se logueo, por lo que lo redirigo a la pagina
+        // correspondiente
+        window.location = '/login/';
+    } else if (jqXHR.status === 403) {
+        // en este caso el usuario no tiene el permiso para ver los datos
+        // de la persona en cuestion.
+    } else {
+        // en este caso ocurrio un error de javascript por lo que tengo
+        // que mostrar el mensaje de error por pantalla
+    }
+});

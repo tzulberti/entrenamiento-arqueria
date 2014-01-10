@@ -6,7 +6,6 @@ class Usuario(db.Model):
     ''' Representa toda la informacion de un usuario que se
     puede loguear a la aplicacion.
 
-    :param str username: el username que el mismo usa para loguearse
 
     :param str password: el password del usuario. El mismo esta
                          encryptado usando Bcrypt.
@@ -21,6 +20,15 @@ class Usuario(db.Model):
 
     :param str apellido: el/los apellido/s de la persona fisica que es
                          representado por este usuario.
+
+    :param bool es_entrenador: si es True, entonces el usuario en cuestion
+                               es un entrenador y puede ver la informacion
+                               y graficos de todos los usuarios. Sin embargo,
+                               no puede cargar ciertas cosas (como usuarios)
+
+    :param bool es_administrador: si es True, entonces puede ver la informacion
+                                  de los otros usuarios y ademas puede cargar
+                                  ciertas cosas que el entrenador no puede.
     '''
 
     id = db.Column(db.Integer, primary_key=True)

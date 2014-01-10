@@ -31,7 +31,7 @@ class Arco(BaseModel):
     __mapper_args__ = {'polymorphic_on': 'tipo_arco'}
 
     id = db.Column(db.Integer, primary_key=True)
-    usario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     nombre = db.Column(db.Text, nullable=False)
     commentario = db.Column(db.Text)
     tipo_arco = db.Column(db.String(255), nullable=False)
@@ -74,6 +74,7 @@ class ArcoCompuesto(Arco):
     '''
     '''
     __mapper_args__ = {'polymorphic_identity': 'compuesto'}
+
     id = db.Column(db.Integer, db.ForeignKey('arco.id'), primary_key=True)
 
 

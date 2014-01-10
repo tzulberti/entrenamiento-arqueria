@@ -4,9 +4,14 @@ from flask import jsonify, request, session
 from flask.views import MethodView
 
 from entrenamiento.views.utils import LoggedUserData
+from entrenamiento.views.decorators import user_required
+
+class BaseEntrenamientoView(MethodView):
+
+    decorators = [user_required]
 
 
-class BaseModelListCrudView(MethodView):
+class BaseModelListCrudView(BaseEntrenamientoView):
     ''' Clase base para todas las views que tengan que manejar el
     tema de no trabajar puntualmente con una instancia.
 
@@ -23,6 +28,7 @@ class BaseModelListCrudView(MethodView):
     '''
 
     def __init__(self, db, model_class, form_class):
+        super(BaseModelListCrudView, self).__init__()
         self.model_class = model_class
         self.form_class = form_class
         self.db = db
@@ -50,6 +56,15 @@ class BaseModelListCrudView(MethodView):
                 else:
                     query = query.order_by(column)
 
+
+        # ahora solo tengo que filtrar por el usuario correspondiente.
+        # en caso de que el usuario logueado no sea entrenador o
+        # administrador entonces solo va a poder ver su informacion
+        if hasattr(self.model_class, 'id_usuario'):
+            logged_user = LoggedUserData(*session['logged_user'])
+            if not (logged_user.es_entrenador or logged_user.es_administrador):
+                query = query.filter(getattr(self.model_class, 'id_usuario') == logged_user.id)
+
         if 'limit' in request.args:
             limit = int(request.args['limit'])
             query = query.limit(limit)
@@ -57,14 +72,6 @@ class BaseModelListCrudView(MethodView):
         if 'offset' in request.args:
             offset = int(request.args['offset'])
             query = query.offset(offset)
-
-        # ahora solo tengo que filtrar por el usuario correspondiente.
-        # en caso de que el usuario logueado no sea entrenador o
-        # administrador entonces solo va a poder ver su informacion
-        if hasattr(self.model_class, 'usuario'):
-            logged_user = LoggedUserData(**self.session['logged_user'])
-            if not (logged_user.es_entrenador or logged_user.es_administrador):
-                query = query.filter(getattr(self.model_class, 'usuario') == logged_user.id)
 
         res = [d.to_json() for d in query.all()]
 
@@ -84,9 +91,9 @@ class BaseModelListCrudView(MethodView):
 
         if form.validate_on_submit():
             # si tiene el usuario, entonces se lo tengo que agregar.
-            if hasattr(self.model_class, 'usuario'):
-                logged_user = LoggedUserData(**session['logged_user'])
-                form.instance.user = None
+            if hasattr(self.model_class, 'id_usuario'):
+                logged_user = LoggedUserData(*session['logged_user'])
+                form.instance.id_usuario = logged_user.id
             self.db.session.add(form.instance)
             self.db.session.commit()
             return jsonify(id=form.instance.id)
@@ -94,7 +101,7 @@ class BaseModelListCrudView(MethodView):
             return jsonify(form.errors), 400
 
 
-class BaseModelCrudView(MethodView):
+class BaseModelCrudView(BaseEntrenamientoView):
     ''' Clase base para todas las views que tengan que ver
     con el tema de CRUD (Create, Read, Update, Delete)
 
@@ -113,6 +120,7 @@ class BaseModelCrudView(MethodView):
     '''
 
     def __init__(self, db, model_class, form_class):
+        super(BaseModelCrudView, self).__init__()
         self.model_class = model_class
         self.form_class = form_class
         self.db = db

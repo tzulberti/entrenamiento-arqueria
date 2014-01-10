@@ -19,7 +19,12 @@ class BaseModel(db.Model):
         for attr_name in attributes:
             if attr_name in ('query', 'to_json', 'query_class', 'metadata'):
                 continue
-            res[attr_name] = getattr(self, attr_name)
+            if attr_name in ('usuario'):
+                # en este caso lo decodifico porque generalmente tengo que exportarlo
+                # para poder mostrarlo por la pantalla
+                res[attr_name] = getattr(self, attr_name).to_json()
+            else:
+                res[attr_name] = getattr(self, attr_name)
         return res
 
 

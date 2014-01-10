@@ -17,24 +17,24 @@ class LoginView(MethodView):
 
     def get(self):
         return render_template('login.html',
-                               username=None,
+                               email=None,
                                password=None)
 
     def post(self):
-        username = request.form.get('username')
+        email = request.form.get('email')
         password = request.form.get('password')
 
         query = Usuario.query
-        query = query.filter(Usuario.username == username)
+        query = query.filter(Usuario.email == email)
         user = query.first()
         if not user:
             return render_template('login.html',
-                                    username=username or " ",
+                                    username=email or " ",
                                     password=password)
         else:
             if bcrypt.check_password_hash(user.password, password):
                 logged_user_data = LoggedUserData(user.id,
-                                                  user.username,
+                                                  user.email,
                                                   user.nombre,
                                                   user.apellido,
                                                   user.es_entrenador,
@@ -43,6 +43,6 @@ class LoginView(MethodView):
                 return redirect(request.args.get('next') or url_for('index'))
             else:
                 return render_template('login.html',
-                                        username=username or " ",
+                                        username=email or " ",
                                         password=password)
 
