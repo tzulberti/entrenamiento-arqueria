@@ -11,6 +11,7 @@ from entrenamiento.models.arco import ArcoRecurvado
 from entrenamiento.views.base import (BaseModelListCrudView,
                                       BaseModelCrudView)
 from entrenamiento.views.auth.auth import LoginView
+from entrenamiento.views.auth.logout import LogoutView
 from entrenamiento.views.auth.form import UserForm
 from entrenamiento.views.arcos.form import ArcoRecurvadoForm
 from entrenamiento.views.index import IndexViewTemplate
@@ -22,6 +23,8 @@ BASE_API_URL = '/api/v01/'
 
 app.add_url_rule('/login/',
                  view_func=LoginView.as_view('auth.login'))
+app.add_url_rule('/logout/',
+                 view_func=LogoutView.as_view('auth.logout'))
 app.add_url_rule('/',
                  view_func=IndexViewTemplate.as_view('index'))
 app.add_url_rule(BASE_API_URL + 'lugar/',
@@ -63,5 +66,6 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static', 'images'),
                                'favicon.ico',
                                mimetype='image/vnd.microsoft.icon')
+
 if __name__ == '__main__':
     app.run()
