@@ -4,11 +4,25 @@
  */
 var MainMenuView = Class.$extend({
 
+    /**
+     * Creates the instance.
+     *
+     * @param {jQuery} element: el elemento del DOM que tiene el menu con las
+     *                          diferentes opciones que puede seleccionar el usuario.
+     *
+     * @param {ApplicationManager} appsManager: el manager que tiene registradas todas
+     *                                          las applicaciones que se pueden usar en la
+     *                                          página.
+     */
     __init__: function(element, appsManager) {
         this.$element = element;
         this.appsManager = appsManager;
     },
 
+    /**
+     * Registra el evento de escuchar una de las opciones que se eligen del
+     * menu principal de la aplicacion.
+     */
     render: function() {
         this.$element.off('click', '.menu-option');
         this.$element.on('click', '.menu-option', $.proxy(this.chosenMenuOption, this));

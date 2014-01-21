@@ -21,6 +21,9 @@ $.fn.serializeObject = function()
 
 var csrftoken = $('meta[name=csrf-token]').attr('content')
 
+/**
+ * Adds the CSRF token before the request is done.
+ */
 $.ajaxSetup({
     beforeSend: function(xhr, settings) {
         if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
@@ -29,6 +32,11 @@ $.ajaxSetup({
     }
 });
 
+/**
+ * Handles the different type of error when doing an ajax request.
+ *
+ * This won't be used when there is a form validation error.
+ */
 $(document).ajaxError(function(ev, jqXHR, ajaxSettings, thrownError) {
     if (jqXHR.status === 401) {
         // el usuario nunca se logueo, por lo que lo redirigo a la pagina
