@@ -8,6 +8,8 @@ from entrenamiento.app.app import app, db
 from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.user import Usuario
 from entrenamiento.models.arco import ArcoRecurvado
+from entrenamiento.models.torneo import Torneo
+
 from entrenamiento.views.base import (BaseModelListCrudView,
                                       BaseModelCrudView)
 from entrenamiento.views.auth.auth import LoginView
@@ -58,6 +60,17 @@ app.add_url_rule(BASE_API_URL + 'arco-recurvado/<int:object_id>/',
                  view_func=BaseModelCrudView.as_view('api.arco_recurvado.instance',
                                 db=db,
                                 model_class=ArcoRecurvado,
+                                form_class=ArcoRecurvadoForm))
+
+app.add_url_rule(BASE_API_URL + 'torneo/',
+                 view_func=BaseModelCrudView.as_view('api.torneo.list',
+                                db=db,
+                                model_class=Torneo,
+                                form_class=ArcoRecurvadoForm))
+app.add_url_rule(BASE_API_URL + 'torneo/<int:object_id>/',
+                 view_func=BaseModelCrudView.as_view('api.torneo.instance',
+                                db=db,
+                                model_class=Torneo,
                                 form_class=ArcoRecurvadoForm))
 
 
