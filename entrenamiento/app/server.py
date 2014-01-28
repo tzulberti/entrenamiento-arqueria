@@ -8,7 +8,7 @@ from entrenamiento.app.app import app, db
 from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.user import Usuario
 from entrenamiento.models.arco import ArcoRecurvado
-from entrenamiento.models.torneo import Torneo
+from entrenamiento.models.torneo import Torneo, Ronda, Serie
 
 from entrenamiento.views.base import (BaseModelListCrudView,
                                       BaseModelCrudView)
@@ -18,6 +18,7 @@ from entrenamiento.views.auth.form import UserForm
 from entrenamiento.views.arcos.form import ArcoRecurvadoForm
 from entrenamiento.views.index import IndexViewTemplate
 from entrenamiento.views.lugares.form import LugarForm
+from entrenamiento.views.torneo.forms import TorneoForm, RondaForm, SerieForm
 
 
 #: la url que forma parte de la base de las API Rest
@@ -66,13 +67,37 @@ app.add_url_rule(BASE_API_URL + 'torneo/',
                  view_func=BaseModelCrudView.as_view('api.torneo.list',
                                 db=db,
                                 model_class=Torneo,
-                                form_class=ArcoRecurvadoForm))
+                                form_class=TorneoForm))
+
 app.add_url_rule(BASE_API_URL + 'torneo/<int:object_id>/',
                  view_func=BaseModelCrudView.as_view('api.torneo.instance',
                                 db=db,
                                 model_class=Torneo,
-                                form_class=ArcoRecurvadoForm))
+                                form_class=TorneoForm))
 
+app.add_url_rule(BASE_API_URL + 'ronda/',
+                 view_func=BaseModelCrudView.as_view('api.ronda.list',
+                                db=db,
+                                model_class=Ronda,
+                                form_class=RondaForm))
+
+app.add_url_rule(BASE_API_URL + 'ronda/<int:object_id>/',
+                 view_func=BaseModelCrudView.as_view('api.ronda.instance',
+                                db=db,
+                                model_class=Ronda,
+                                form_class=RondaForm))
+
+app.add_url_rule(BASE_API_URL + 'serie/',
+                 view_func=BaseModelCrudView.as_view('api.serie.list',
+                                db=db,
+                                model_class=Serie,
+                                form_class=SerieForm))
+
+app.add_url_rule(BASE_API_URL + 'serie/<int:object_id>/',
+                 view_func=BaseModelCrudView.as_view('api.serie.instance',
+                                db=db,
+                                model_class=Serie,
+                                form_class=SerieForm))
 
 @app.route('/favicon.ico')
 def favicon():
