@@ -1,3 +1,59 @@
+
+/**
+ * View basica que se encarga de todo el tema del form cuando el usuario quiere
+ * ver el detalle, editar, o crear una instancia del objeto.
+ *
+ * .. note: Esta clase es una clase abstracta por lo que la misma tiene que
+ *          ser extendida e implementada para los diferentes casos.
+ */
+var BaseFormView = Class.$extend({
+
+    __init__: functon(element) {
+        this.$element = $element;
+    },
+
+    /**
+     * Se encarga de renderar el form en la ventana correspondiente.
+     */
+    renderForm: function() {
+        this.$element.empty();
+        this.$element.html(this.renderBaseHtml());
+
+        this.$element.off('click', '.button-save');
+        this.$element.on('click', '.button-save', $.proxy(this.saveInformation, this));
+    },
+
+    /**
+     * Se encarga de obtener el html que se tiene que mostrar del form,
+     * cuando el mismo esta vacio.
+     */
+    renderBaseHtml: function() {
+        throw new Error('Se tiene que implementar este metodo');
+    },
+
+    /**
+     * Llamado por el CrudView cuando el usuario quiere crear una nueva instancia
+     * del objeto.
+     */
+    createNew: function() {
+        this.objectId = null;
+        // esto ese va a ocupar de borrar todos los datos del form
+        // anterior si es que habia...
+        this.renderForm();
+    },
+
+    saveInformation: function(ev) {
+        throw new Error('Se tiene que implementar este metodo');
+    },
+
+    editObject: function(objectId) {
+        throw new Error('SE tiene que implementar este metodo');
+    }
+
+
+
+});
+
 /**
  * View que se encarga de renderar el form para el usuario.
  *
@@ -6,7 +62,7 @@
  * tambien va a ser el encargado de mostrarle los errores por pantalla
  * al usuario.
  */
-var FormView = Class.$extend({
+var TemplateFormView = BaseFormView.$extend({
 
     /**
      * Inicializa la instancia.
@@ -27,32 +83,20 @@ var FormView = Class.$extend({
      *                        cuando esta creando, este valor es Null.
      */
     __init__: function(element, formTemplate, modelName) {
-        this.$element = element;
+        this.super(element);
         this.formTemplate = formTemplate;
         this.modelName = modelName;
     },
 
     /**
-     * Se encarga de renderar el form en la ventana correspondiente.
+     * Se encarga de obtener el html que se tiene que mostrar del form,
+     * cuando el mismo esta vacio.
      */
-    renderForm: function() {
+    renderBaseHtml: function() {
         var html = Handlebars.render(this.formTemplate, {});
-        this.$element.html(html);
-
-        this.$element.off('click', '.button-save');
-        this.$element.on('click', '.button-save', $.proxy(this.saveInformation, this));
+        return html;
     },
 
-    /**
-     * Llamado por el CrudView cuando el usuario quiere crear una nueva instancia
-     * del objeto.
-     */
-    createNew: function() {
-        this.objectId = null;
-        // esto ese va a ocupar de borrar todos los datos del form
-        // anterior si es que habia...
-        this.renderForm();
-    },
 
     /**
      * Se encarga de buscar el objecto en cuestion en la base de datos,
