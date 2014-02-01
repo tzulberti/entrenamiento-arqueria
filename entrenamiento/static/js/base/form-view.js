@@ -8,8 +8,8 @@
  */
 var BaseFormView = Class.$extend({
 
-    __init__: functon(element) {
-        this.$element = $element;
+    __init__: function(element) {
+        this.$element = element;
     },
 
     /**
@@ -83,7 +83,7 @@ var TemplateFormView = BaseFormView.$extend({
      *                        cuando esta creando, este valor es Null.
      */
     __init__: function(element, formTemplate, modelName) {
-        this.super(element);
+        this.$super(element);
         this.formTemplate = formTemplate;
         this.modelName = modelName;
     },

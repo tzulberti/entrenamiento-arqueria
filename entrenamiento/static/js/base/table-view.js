@@ -148,7 +148,7 @@ var TableView = Class.$extend({
      * La respuesta del servidor tiene el siguiente formato:
      *
      * {
-           totalValues: X,
+     *      totalValues: X,
      *      filteredValues: Z,
      *      values: [
      *          [1, ...],

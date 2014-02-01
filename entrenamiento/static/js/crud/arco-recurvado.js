@@ -2,7 +2,7 @@
  * La applicacion que se encarga de todo el tema del CRUD
  * de arcos recurvados
  */
-var ArcosRecurvadosCrudApplication = BaseCrudApp.$extend({
+var ArcosRecurvadosCrudApplication = BaseTemplateCrudApp.$extend({
 
     __init__: function(historyManager, element) {
         var formTemplate = '' +

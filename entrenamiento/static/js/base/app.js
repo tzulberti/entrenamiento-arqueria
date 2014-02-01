@@ -16,36 +16,17 @@ var BaseApp = Class.$extend({
     }
 });
 
-/**
- * Aplicacion base con todo lo que tiene que ver con el CRUD
- * (alta, baja y modificacion).
- */
+
 var BaseCrudApp = BaseApp.$extend({
 
-    __init__: function(historyManager, modelName, formTemplate, element, columnNames) {
+    __init__: function(historyManager, crudView) {
         this.$super(historyManager);
-        this.modelName = modelName;
-        this.formTemplate = formTemplate;
-        this.$element = element;
-        this.columnNames = columnNames;
-        this.historyManager.addApplicationForModel(modelName, this);
+        this.crudView = crudView;
     },
-
 
     start: function() {
-        this.tableView = new TableView(this.$element.find('.table-container'),
-                                       this.modelName,
-                                       this.columnNames,
-                                       this.historyManager);
-        this.formView = new FormView(this.$element.find('.form-container'),
-                                     this.formTemplate,
-                                     this.modelName);
-        this.crudView = new CrudView(this.tableView, this.formView, this.historyManager);
-        this.tableView.crudView = this.crudView;
-        this.formView.crudView = this.crudView;
         this.crudView.render();
     },
-
 
     // Los metodos que figuran abajo son llamados por el history manager.
     //
@@ -59,6 +40,35 @@ var BaseCrudApp = BaseApp.$extend({
         } else {
             this.crudView.editObject(objectId);
         }
+    }
+
+});
+
+/**
+ * Aplicacion base con todo lo que tiene que ver con el CRUD
+ * (alta, baja y modificacion).
+ */
+var BaseTemplateCrudApp = BaseCrudApp.$extend({
+
+    __init__: function(historyManager, modelName, formTemplate, element, columnNames) {
+        this.modelName = modelName;
+        this.formTemplate = formTemplate;
+        this.$element = element;
+        this.columnNames = columnNames;
+        historyManager.addApplicationForModel(modelName, this);
+
+
+        var tableView = new TableView(this.$element.find('.table-container'),
+                                       this.modelName,
+                                       this.columnNames,
+                                       historyManager);
+        var formView = new TemplateFormView(this.$element.find('.form-container'),
+                                             this.formTemplate,
+                                             this.modelName);
+        var crudView = new CrudView(tableView, formView, historyManager);
+        tableView.crudView = crudView;
+        formView.crudView = crudView;
+        this.$super(historyManager, crudView);
     }
 
 });

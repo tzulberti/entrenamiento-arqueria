@@ -2,7 +2,7 @@
  * La applicacion que se encarga de todo el tema del CRUD
  * de usarios.
  */
-var UsuariosCrudApplication = BaseCrudApp.$extend({
+var UsuariosCrudApplication = BaseTemplateCrudApp.$extend({
 
     __init__: function(historyManager, element) {
         var formTemplate = '' +

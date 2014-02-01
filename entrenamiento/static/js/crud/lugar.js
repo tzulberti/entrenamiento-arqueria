@@ -2,7 +2,7 @@
  * La applicacion que se encarga de todo el tema del CRUD
  * de lugares.
  */
-var LugarApplication = BaseCrudApp.$extend({
+var LugarApplication = BaseTemplateCrudApp.$extend({
 
     __init__: function(historyManager, element) {
         var formTemplate = '' +

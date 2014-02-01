@@ -64,7 +64,7 @@ app.add_url_rule(BASE_API_URL + 'arco-recurvado/<int:object_id>/',
                                 form_class=ArcoRecurvadoForm))
 
 app.add_url_rule(BASE_API_URL + 'torneo/',
-                 view_func=BaseModelCrudView.as_view('api.torneo.list',
+                 view_func=BaseModelListCrudView.as_view('api.torneo.list',
                                 db=db,
                                 model_class=Torneo,
                                 form_class=TorneoForm))
@@ -76,7 +76,7 @@ app.add_url_rule(BASE_API_URL + 'torneo/<int:object_id>/',
                                 form_class=TorneoForm))
 
 app.add_url_rule(BASE_API_URL + 'ronda/',
-                 view_func=BaseModelCrudView.as_view('api.ronda.list',
+                 view_func=BaseModelListCrudView.as_view('api.ronda.list',
                                 db=db,
                                 model_class=Ronda,
                                 form_class=RondaForm))
@@ -88,7 +88,7 @@ app.add_url_rule(BASE_API_URL + 'ronda/<int:object_id>/',
                                 form_class=RondaForm))
 
 app.add_url_rule(BASE_API_URL + 'serie/',
-                 view_func=BaseModelCrudView.as_view('api.serie.list',
+                 view_func=BaseModelListCrudView.as_view('api.serie.list',
                                 db=db,
                                 model_class=Serie,
                                 form_class=SerieForm))
