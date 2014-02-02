@@ -96,3 +96,65 @@ Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
     }
 });
 
+
+/**
+ * Iteracion usada para trabajar con el tema de un rango de valores en vez
+ * de una lista.
+ *
+ * @param {int} maxValue: la cantidad de elementos que va a a tener la lista.
+ */
+Handlebars.registerHelper('rangeEach', function(maxValue, options) {
+    var res = '';
+    var data = null;
+    if (options.data) {
+        data = Handlebars.createFrame(options.data);
+    }
+
+    for (var i = 0; i < maxValue; i++) {
+        if (data) {
+            data.index = i;
+            data.first = (i === 0);
+            data.last = (i === (maxValue - 1));
+        }
+        // lo tengo que llamar con un objecto porque si dentro del
+        // mismo llamo a setIndex, el mismo no funciona
+        res += options.fn({i: i}, {data: data});
+    }
+    return res;
+});
+
+
+/**
+ * Helper para cuando se tiene un each anidado dentro de otro.
+ *
+ * Se lo usa para conservar el indice del padre.
+ * Ver: http://stackoverflow.com/questions/14854491
+ */
+Handlebars.registerHelper('setIndex', function(name, value) {
+    this[name] = parseInt(value, 10);
+});
+
+
+/**
+ * Hace la operacion matematica entre dos numeros cualquiera.
+ *
+ * @param {float} lvalue: el valor de la izquierda de la operacion.
+ *
+ * @param {String} operator: el operador de la operacion. Es importante
+ *                           tener en cuenta que en el template este se lo
+ *                           tiene que poner como un string.
+ *
+ * @param {float} rvalue: el valor de la derecha de la operacion
+ */
+Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
+    lvalue = parseFloat(lvalue);
+    rvalue = parseFloat(rvalue);
+
+    return {
+        "+": lvalue + rvalue,
+        "-": lvalue - rvalue,
+        "*": lvalue * rvalue,
+        "/": lvalue / rvalue,
+        "%": lvalue % rvalue
+    }[operator];
+});

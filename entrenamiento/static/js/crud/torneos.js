@@ -3,66 +3,80 @@ var TorneoFormView = BaseFormView.$extend({
     __init__: function(element) {
         this.$super(element);
 
-        this.serieTemplate = '' +
-            '{{#ifCond numeroSerie "===" 1 }}' +
-                '<tr>' +
-                    '<th>Fue de practica?</th>' +
-                    '{{#each cantidadFlechas }}' +
-                        '<th>Puntaje flecha {{ this }}</th>' +
-                    '{{/each}}' +
-                    '<th>Puntaje total</th>' +
-                '</tr>' +
-            '{{/ifCond}}' +
-            '<tr>' +
-                '<td>' +
-                    '{{#ifCond numeroSerie "<=" 3 }}' +
-                        '<input type="checkbox" name="fue-de-practica-serie-{{ numeroSerie}}" id="fue-de-practica-serie-{{ numeroSerie }}">' +
-                    '{{/ifCond}}' +
-                '</td>' +
-                '{{#each cantidadFlechas }}'+
-                    '<td>' +
-                        '<input type="text" name="puntaje-flecha-{{ this }}-serie-{{../numeroSerie}}" id="puntaje-flecha-{{ this }}-serie-{{ ../numeroSerie }}">' +
-                    '</td>' +
-                '{{/each }}' +
-                '<td>' +
-                    '<input type="text" name="puntaje-total-serie-{{numeroSerie}}" id="puntaje-total-serie-{{ numeroSerie }}">' +
-                '</td>' +
-            '</tr>';
-
-
-        this.rondaTemplate = '' +
-            '<formset>' +
-                '<h3>Ronda {{ numeroRonda }}</h3>' +
-                '<div class="form-group">' +
-                    '<label for="distancia-ronda-{{ numeroRonda }}">Distancia</label>' +
-                    '<div class="col-sm-10">' +
-                        '<select name="distancia-ronda-{{ numeroRonda }}">' +
-                            '<option value="18">18</option>' +
-                            '<option value="20">20</option>' +
-                            '<option value="30">30</option>' +
-                            '<option value="50">50</option>' +
-                            '<option value="60">60</option>' +
-                            '<option value="70">70</option>' +
-                            '<option value="90">90</option>' +
-                        '</select>' +
+        this.rondasTemplate = '' +
+            '{{#each rondas }}' +
+                '{{setIndex "indexRonda" @index}}' +
+                '<formset>' +
+                    '<h3>Ronda {{ @index }}</h3>' +
+                    '<div class="form-group">' +
+                        '<label for="distancia-ronda-{{@index }}" class="col-sm-2 control-label">Distancia</label>' +
+                        '<div class="col-sm-10">' +
+                            '<input type="text" name="distancia-ronda-{{@index}}" class="form-control" disabled value="{{ this.distancia }}">'+
+                        '</div>' +
                     '</div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                    '<label for="puntaje-ronda-{{ numeroRonda }}">Puntaje final</label>' +
-                    '<div class="col-sm-10">' +
-                        '<input type="text" name="puntaje-ronda-{{ numeroDeRonda }}" id="puntaje-ronda-{{ numeroDeRonda }}"/>' +
-                        '<span class="help-block">El puntaje que hiciste en esta ronda sin tener en cuenta las series de practica</span>' +
+                    '<div class="form-group">' +
+                        '<label for="puntaje-ronda-{{@index }}" class="col-sm-2 control-label">Puntaje final</label>' +
+                        '<div class="col-sm-10">' +
+                            '<input type="text" name="puntaje-ronda-{{ @index }}" id="puntaje-ronda-{{ @index }}" class="form-control"/>' +
+                            '<span class="help-block">El puntaje que hiciste en esta ronda sin tener en cuenta las series de practica</span>' +
+                        '</div>' +
                     '</div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                    '<label for="foto-planilla-ronda-{{ numeroRonda }}">Foto planilla</label>' +
-                    '<div class="clo-sm-10">' +
-                        '<input type="file" name="foto-planilla-ronda-{{ numeroRonda }}" id="foto-planilla-ronda-{{ numeroRonda }}" />' +
+                    '<div class="form-group">' +
+                        '<label for="foto-planilla-ronda-{{ @index }}" class="col-sm-2 control-label">Foto planilla</label>' +
+                        '<div class="col-sm-10">' +
+                            '<input type="file" name="foto-planilla-ronda-{{ @index }}" id="foto-planilla-ronda-{{ @index }}" class="form-control" />' +
+                        '</div>' +
                     '</div>' +
-                '</div>' +
-                '<table class="table puntajes-serie">' +
-                '</table>' +
-            '</formset>' ;
+                    '<table class="table puntajes-serie">' +
+                        '<tr>' +
+                            '<th>Numero de serie</th>' +
+                            '<th>Fue de practica?</th>' +
+                            '{{#rangeEach ../numeroDeFlechas }}' +
+                                '<th>Puntaje flecha {{ this }}</th>' +
+                            '{{/rangeEach}}' +
+                            '<th>Puntaje total</th>' +
+                        '</tr>' +
+                        '{{#rangeEach this.seriesDePractica }}' +
+                            '{{setIndex "indexSeriePractica" @index }}' +
+                            '<tr>' +
+                                '<td>' +
+                                    'Practica {{ @index }}' +
+                                '</td>' +
+                                '<td>' +
+                                    '<input type="checkbox" name="fue-de-practica-serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}" id="fue-de-practica-serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}" checked disabled>' +
+                                '</td>' +
+                                '{{#rangeEach ../../numeroDeFlechas }}'+
+                                    '<td>' +
+                                        '<input type="text" name="puntaje-flecha-{{ @index }}-serie-{{ ../indexSeriePractica }}-ronda-{{ ../../indexRonda }}" id="puntaje-flecha-{{ @index }}-serie-{{ ../indexSeriePractica }}-ronda-{{ ../../indexRonda }}">' +
+                                    '</td>' +
+                                '{{/rangeEach }}' +
+                                '<td>' +
+                                    '<input type="text" name="puntaje-total-serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}" id="puntaje-total-serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}">' +
+                                '</td>' +
+                            '</tr>' +
+                         '{{/rangeEach}}' +
+                         '{{#rangeEach ../numeroDeSeries }}' +
+                            '{{setIndex "indexSerie" @index }}' +
+                            '<tr>' +
+                                '<td>' +
+                                    'Serie {{ @index }}' +
+                                '</td>' +
+                                '<td>' +
+                                    '<input type="checkbox" name="fue-de-practica-serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}" id="fue-de-practica-serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}" disabled>' +
+                                '</td>' +
+                                '{{#rangeEach ../../numeroDeFlechas }}'+
+                                    '<td>' +
+                                        '<input type="text" name="puntaje-flecha-{{ @index }}-serie-{{ ../indexSerie }}-ronda-{{ ../../indexRonda }}" id="puntaje-flecha-{{ @index }}-serie-{{ ../indexSerie }}-ronda-{{ ../../indexRonda }}">' +
+                                    '</td>' +
+                                '{{/rangeEach }}' +
+                                '<td>' +
+                                    '<input type="text" name="puntaje-total-serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}" id="puntaje-total-serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}">' +
+                                '</td>' +
+                            '</tr>' +
+                         '{{/rangeEach}}' +
+                    '</table>' +
+                '</formset>' +
+            '{{/each}}';
 
         this.torneoTemplate = '' +
             '<form role="form" class="form-horizontal">' +
@@ -83,26 +97,16 @@ var TorneoFormView = BaseFormView.$extend({
                     '<div class="form-group">'+
                         '<label for="tipo_de_torneo" class="col-sm-2 control-label">Tipo de torneo</label>' +
                         '<div class="col-sm-10">' +
-                            '<select name="tipo_de_toneo" id="tipo_de_toneo" class="form-control">' +
-                                '<optgroup label="Indoor">' +
-                                    '<option value="18">18m</option>' +
-                                    '<option value="25">25m</option>' +
-                                '</optgroup>' +
-                                '<optgroup label="Outdoor 1440">' +
-                                    '<option value="90-70-50-30">90-70-50-30</option>' +
-                                    '<option value="70-60-50-30">70-60-50-30</option>' +
-                                    '<option value="50-50-30-30">50-50-30-30</option>' +
-                                    '<option value="30-30-20-20">30-30-20-20</option>' +
-                                '</optgroup>' +
-                                '<optgroup label="Outdoor 70-70">' +
-                                    '<option value="70-70">70-70</option>' +
-                                    '<option value="60-60">60-60</option>' +
-                                    '<option value="50-50">50-50</option>' +
-                                    '<option value="30-30">30-30</option>' +
-                                    '<option value="20-20">20-20</option>' +
-                                '</optgroup>' +
+                            '<select name="tipo_de_torneo" id="tipo_de_torneo" class="form-control">' +
+                                '{{#each tipoTorneoGroup}}' +
+                                    '<optgroup label="{{ this.groupLabel }}">' +
+                                        '{{#each this.tipoTorneos}}' +
+                                            '<option value="{{ this.id }}">{{ this.nombre }}</option>' +
+                                        '{{/each}}'+
+                                    '</optgroup>' +
+                                '{{/each}}' +
                             '</select>' +
-                        '</div>'
+                        '</div>'+
                     '</div>' +
                     '<div class="form-group">' +
                         '<label for="puntaje_final" class="col-sm-2 control-label">Puntaje</label>' +
@@ -122,6 +126,8 @@ var TorneoFormView = BaseFormView.$extend({
                         '</div>' +
                     '</div>' +
                 '</formset>' +
+                '<div class="rondas-information">' +
+                '</div>' +
             '</form>';
     },
 
@@ -151,9 +157,37 @@ var TorneoFormView = BaseFormView.$extend({
     renderInformation: function(data, textStatus, jqXHR) {
         var lugares = data.values;
         var html = Handlebars.render(this.torneoTemplate, {
-            lugares: lugares
+            lugares: lugares,
+            tipoTorneoGroup: consts.tipoTorneos.ordenarForTemplate()
         });
         this.$element.html(html);
+
+        this.$element.off('change', '#tipo_de_torneo');
+        this.$element.on('change', '#tipo_de_torneo', $.proxy(this.changedTorneoType, this));
+    },
+
+    /**
+     * Handler de cuando el usuario elige cambiar el tipo de torneo.
+     *
+     * Se encarga de mostrar toda la informacion de las series y de ls rondas
+     * teniendo en cuenta la informacion del torneo.
+     */
+    changedTorneoType: function(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        var $target = $(ev.target);
+        var idTipoTorneo = $target.val();
+        idTipoTorneo = parseInt(idTipoTorneo, 10);
+
+        var tipoTorneo = consts.tipoTorneos.getById(idTipoTorneo);
+        var rondasHtml = Handlebars.render(this.rondasTemplate, {
+                rondas: tipoTorneo.rondas,
+                numeroDeSeries: tipoTorneo.numeroDeSeries,
+                numeroDeFlechas: tipoTorneo.numeroDeFlechas
+        });
+        this.$element.find('.rondas-information').empty();
+        this.$element.find('.rondas-information').html(rondasHtml);
     }
 
 });
