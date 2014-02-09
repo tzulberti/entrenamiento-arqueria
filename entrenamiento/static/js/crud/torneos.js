@@ -164,6 +164,9 @@ var TorneoFormView = BaseFormView.$extend({
 
         this.$element.off('change', '#tipo_de_torneo');
         this.$element.on('change', '#tipo_de_torneo', $.proxy(this.changedTorneoType, this));
+        this.$element.find('#cuando').datepicker({
+            format: 'dd/mm/yyyy'
+        });
     },
 
     /**
