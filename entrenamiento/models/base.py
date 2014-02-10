@@ -1,5 +1,6 @@
 # -*- coding: utf-8- -*-
 
+from datetime import datetime, date
 from entrenamiento.app.app import db
 
 class BaseModel(db.Model):
@@ -24,7 +25,10 @@ class BaseModel(db.Model):
                 # para poder mostrarlo por la pantalla
                 res[attr_name] = getattr(self, attr_name).to_json()
             else:
-                res[attr_name] = getattr(self, attr_name)
+                value = getattr(self, attr_name)
+                if isinstance(value, (date, datetime)):
+                    value = value.strftime('%d/%m/%Y')
+                res[attr_name] = value
         return res
 
 
