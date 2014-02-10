@@ -38,7 +38,7 @@ class TorneoForm(ValidationForm):
 
     '''
 
-    cuando = DateField('cuando', [InputRequired()])
+    cuando = DateField('cuando', [InputRequired()], format='%d/%m/%Y')
     id_lugar = IntegerField('id_lugar', [Optional()])
     tipo_de_torneo = StringField('tipo_de_torneo', [InputRequired()])
     puntaje_final_torneo = IntegerField('puntaje_final_torneo', [Optional()])
