@@ -26,6 +26,5 @@ class LugarForm(ValidationForm):
             return False
 
 
-        self.instance = self.get_instance()
         return True
 

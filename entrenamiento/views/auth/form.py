@@ -29,7 +29,6 @@ class UserForm(ValidationForm):
         if not self.validate_unique('email'):
             return False
 
-        self.instance = self.get_instance()
         return True
 
     def get_attr_value(self, attr_name, form_data):

@@ -20,6 +20,14 @@ class ValidationForm(Form):
         self.object_id = object_id
 
 
+    def validate(self):
+        res = super(ValidationForm, self).validate()
+        self.instance = self.get_instance()
+        if not res:
+            return False
+        return True
+
+
     def validate_unique(self, attr_name, message=None):
         ''' Valida que el campo sea unico teniendo en cuenta
         si se estaba editando una instancia o si se estaba
