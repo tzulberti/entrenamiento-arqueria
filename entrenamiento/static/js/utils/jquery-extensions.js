@@ -19,6 +19,11 @@ $.fn.serializeObject = function()
    return o;
 };
 
+/**
+ * Chequea si elemento del DOM existe.
+ */
+jQuery.fn.exists = function(){return this.length>0;}
+
 var csrftoken = $('meta[name=csrf-token]').attr('content')
 
 /**
