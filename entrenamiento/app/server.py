@@ -19,6 +19,7 @@ from entrenamiento.views.arcos.form import ArcoRecurvadoForm
 from entrenamiento.views.index import IndexViewTemplate
 from entrenamiento.views.lugares.form import LugarForm
 from entrenamiento.views.torneo.forms import TorneoForm, RondaForm, SerieForm
+from entrenamiento.views.upload import UploadFileView
 
 
 #: la url que forma parte de la base de las API Rest
@@ -98,6 +99,11 @@ app.add_url_rule(BASE_API_URL + 'serie/<int:object_id>/',
                                 db=db,
                                 model_class=Serie,
                                 form_class=SerieForm))
+
+app.add_url_rule(BASE_API_URL + 'upload/foto-ronda/',
+                 view_func=UploadFileView.as_view('api.upload.foto_ronda',
+                                                  file_extensions=['bmp', 'jpg', 'gif', 'png', 'psd', 'jpeg', 'svg'],
+                                                  upload_folder='uploads/'))
 
 @app.route('/favicon.ico')
 def favicon():
