@@ -20,15 +20,27 @@ class BaseModel(db.Model):
         for attr_name in attributes:
             if attr_name in ('query', 'to_json', 'query_class', 'metadata'):
                 continue
-            if attr_name in ('usuario'):
+            value = getattr(self, attr_name)
+            if isinstance(value, BaseModel):
                 # en este caso lo decodifico porque generalmente tengo que exportarlo
                 # para poder mostrarlo por la pantalla
-                res[attr_name] = getattr(self, attr_name).to_json()
-            else:
-                value = getattr(self, attr_name)
-                if isinstance(value, (date, datetime)):
-                    value = value.strftime('%d/%m/%Y')
-                res[attr_name] = value
+                value = value.to_json()
+            elif isinstance(value, (date, datetime)):
+                value = value.strftime('%d/%m/%Y')
+
+            elif isinstance(value, list):
+                if value:
+                    if isinstance(value[0], BaseModel):
+                        # en caso de que se quiera mandar informacion sobre la lista
+                        # de relaciones eso no me interesa para la tabla, asique
+                        # las ignoro
+                        value = []
+                    else:
+                        # sino es una lista de relaciones, es algo muy raro por lo que
+                        # envio la informacion por si las moscas
+                        value = value
+
+            res[attr_name] = value
         return res
 
 

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from entrenamiento.app.app import db
+from entrenamiento.models.base import BaseModel
 
-class Usuario(db.Model):
+class Usuario(BaseModel):
     ''' Representa toda la informacion de un usuario que se
     puede loguear a la aplicacion.
 
