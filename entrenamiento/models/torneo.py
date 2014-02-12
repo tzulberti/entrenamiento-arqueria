@@ -43,6 +43,10 @@ class Torneo(BaseModel):
     lugar = db.relationship(Lugar)
     usuario = db.relationship(Usuario)
 
+    rondas = db.relationship('Ronda',
+                             backref='torneo',
+                             cascade='all,delete')
+
 class Ronda(BaseModel):
     ''' Tiene toda la informacion de una ronda del torneo.
 
@@ -70,8 +74,6 @@ class Ronda(BaseModel):
     distancia = db.Column(db.Integer)
     foto = db.Column(db.Text)
 
-    torneo = db.relationship(Torneo,
-                             backref='rondas')
 
 class Serie(BaseModel):
     ''' Tiene toda la informacion para una de las series del
