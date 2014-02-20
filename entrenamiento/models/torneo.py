@@ -73,6 +73,9 @@ class Ronda(BaseModel):
     puntaje = db.Column(db.Integer)
     distancia = db.Column(db.Integer)
     foto = db.Column(db.Text)
+    series= db.relationship('Serie',
+                            backref='ronda',
+                            cascade='all,delete')
 
 
 class Serie(BaseModel):
@@ -110,6 +113,4 @@ class Serie(BaseModel):
     id_ronda = db.Column(db.Integer,
                          db.ForeignKey('ronda.id'),
                          nullable=False)
-    ronda = db.relationship(Ronda,
-                            backref='series')
 
