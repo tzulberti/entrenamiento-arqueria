@@ -19,6 +19,14 @@ var BaseFormView = Class.$extend({
         this.$element.empty();
         this.$element.html(this.renderBaseHtml());
 
+        this.$element.find('textarea').cleditor({
+            controls: "bold italic underline | " +
+                      "font size | "  +
+                      "color highlight | " +
+                      "alignleft center alignright justify | " +
+                      "bullets numbering"
+        });
+
         this.$element.off('click', '.button-save');
         this.$element.on('click', '.button-save', $.proxy(this.saveInformation, this));
     },
@@ -116,13 +124,23 @@ var TemplateFormView = BaseFormView.$extend({
                 for (attributeName in responseData) {
                     var inputField = self.$element.find('input[name=' + attributeName + ']');
                     var value = responseData[attributeName];
-                    if (inputField.attr('type') === 'text') {
-                        inputField.val(value);
-                    } else if (inputField.attr('type') === 'checkbox') {
-                        if (value === 1 || value) {
-                            inputField.prop('checked', true);
+                    if (inputField.exists()) {
+                        if (inputField.attr('type') === 'text') {
+                            inputField.val(value);
+                        } else if (inputField.attr('type') === 'checkbox') {
+                            if (value === 1 || value) {
+                                inputField.prop('checked', true);
+                            } else {
+                                inputField.prop('checked', false);
+                            }
+                        }
+                    } else if (self.$element.find('#' + attributeName ).exists()) {
+                        var formInput = self.$element.find('#' + attributeName);
+                        if (formInput.is("textarea")) {
+                            formInput.val(value);
+                            formInput.blur();
                         } else {
-                            inputField.prop('checked', false);
+                            // TODO en este caso estoy en un select...
                         }
                     }
                 }
@@ -173,6 +191,6 @@ var TemplateFormView = BaseFormView.$extend({
                     formElement.after('<span class="help-block error-message">' + formErrors[fieldName] + '</span>');
                 }
             }
-        })
+        });
     }
 });
