@@ -16,7 +16,7 @@ var ArcosRecurvadosCrudApplication = BaseTemplateCrudApp.$extend({
                 '<div class="form-group">' +
                     '<label for="comentario" class="col-sm-2 control-label">Comentario</label>' +
                     '<div class="col-sm-10">' +
-                        '<input type="text" name="comentario" id="comentario" class="form-control">' +
+                        '<textarea name="comentario" id="comentario" class="form-control"></textarea>' +
                     '</div>' +
                 '</div>' +
                 '<fieldset>' +
