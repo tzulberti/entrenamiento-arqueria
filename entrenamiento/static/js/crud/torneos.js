@@ -99,6 +99,12 @@ var TorneoFormView = BaseFormView.$extend({
                             '<input type="text" name="cuando" id="cuando" class="form-control">' +
                         '</div>' +
                     '</div>' +
+                    '<div class="form-group">' +
+                        '<label for="comentario" class="col-sm-2 control-label">Comentario</label>' +
+                        '<div class="col-sm-10">' +
+                            '<textarea name="comentario" id="comentario" class="form-control"></textarea>' +
+                        '</div>' +
+                    '</div>' +
                     '<div class="form-group">'+
                         '<label for="tipo_de_torneo" class="col-sm-2 control-label">Tipo de torneo</label>' +
                         '<div class="col-sm-10">' +
@@ -120,6 +126,17 @@ var TorneoFormView = BaseFormView.$extend({
                             '<span class="help-block">El puntaje final hecho teniendo en cuenta todas las series</span>' +
                         '</div>'+
                     '</div>'+
+                    '<div class="form-group">'+
+                        '<label for="id_arco" class="col-sm-2 control-label">Arco</label>' +
+                        '<div class="col-sm-10">' +
+                            '<select name="id_arco" id="id_arco" class="form-control">' +
+                                '<option value=""></option>' +
+                                '{{#each arcos}}' +
+                                    '<option value="{{ this.id }}">{{ this.nombre }}</option>' +
+                                '{{/each}}'+
+                            '</select>' +
+                        '</div>'+
+                    '</div>' +
                     '<div class="form-group">' +
                         '<label for="id_lugar" class="col-sm-2 control-label">Donde fue el torneo?</label>' +
                         '<div class="col-sm-10">' +
@@ -150,14 +167,30 @@ var TorneoFormView = BaseFormView.$extend({
      */
     renderBaseHtml: function() {
         var self = this;
+        this.lugaresData = [];
+        this.arcosData = [];
+        this.missingCallbacks = [true, true];
+
         $.ajax({
             type: 'GET',
             url: '/api/v01/lugar/',
             success: function(data, textStatus, jqXHR) {
+                self.missingCallbacks[0] = false;
+                self.lugaresData = data.values;
                 self.renderInformation(data);
             }
         });
+        $.ajax({
+            type: 'GET',
+            url: '/api/v01/arco/',
+            success: function(data, textStatus, jqXHR) {
+                self.missingCallbacks[1] = false;
+                self.arcosData = data.values;
+                self.renderInformation();
+            }
+        });
     },
+
 
     /**
      * Callback de cuando se hace el llamadao para obtener la informacion de los
@@ -165,10 +198,22 @@ var TorneoFormView = BaseFormView.$extend({
      *
      * El mismo se va a ocupar de renderar el html.
      */
-    renderInformation: function(data, textStatus, jqXHR) {
-        var lugares = data.values;
+    renderInformation: function() {
+        // me fijo si me falta obtener la informacion de algun callback para
+        // poder renderar toda la informacion
+        var canContinue = true;
+        for (var i = 0; i < this.missingCallbacks.length; i++) {
+            if (this.missingCallbacks[i]) {
+                canContinue = false;
+                break;
+            }
+        }
+        if (! canContinue) {
+            return;
+        }
         var html = Handlebars.render(this.torneoTemplate, {
-            lugares: lugares,
+            lugares: this.lugaresData,
+            arcos: this.arcosData,
             tipoTorneoGroup: consts.tipoTorneos.ordenarForTemplate()
         });
         this.$element.empty();
@@ -185,6 +230,14 @@ var TorneoFormView = BaseFormView.$extend({
             format: 'dd/mm/yyyy'
         });
         this.$element.find('#tipo_de_torneo').change();
+        this.$element.find('textarea').cleditor({
+            controls: "bold italic underline | " +
+                      "font size | "  +
+                      "color highlight | " +
+                      "alignleft center alignright justify | " +
+                      "bullets numbering"
+        });
+
     },
 
     /**

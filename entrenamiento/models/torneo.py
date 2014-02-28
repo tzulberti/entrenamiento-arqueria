@@ -4,6 +4,7 @@ from entrenamiento.app.app import db
 from entrenamiento.models.base import BaseModel
 from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.user import Usuario
+from entrenamiento.models.arco import Arco
 
 class Torneo(BaseModel):
     ''' Tiene toda la informacion sobre el tipo de resultado.
@@ -28,6 +29,7 @@ class Torneo(BaseModel):
     :param boolean fue_practica: si es True, entonces esto no fue un torneo
                                  en si, sino que fue una practica.
 
+    :param str comentario: el comentario que quiere poner el usuario en cuestion.
     '''
 
     id = db.Column(db.Integer, primary_key=True)
@@ -35,13 +37,16 @@ class Torneo(BaseModel):
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'),
                            nullable=False)
     id_lugar = db.Column(db.Integer, db.ForeignKey('lugar.id'))
+    id_arco = db.Column(db.Integer, db.ForeignKey('arco.id'))
 
     tipo_de_torneo = db.Column(db.Text)
+    comentario = db.Column(db.Text)
     puntaje_final_torneo = db.Column(db.Integer)
     fue_practica = db.Column(db.Boolean)
 
     lugar = db.relationship(Lugar)
     usuario = db.relationship(Usuario)
+    arco = db.relationship(Arco)
 
     rondas = db.relationship('Ronda',
                              backref='torneo',

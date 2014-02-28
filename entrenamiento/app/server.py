@@ -7,7 +7,7 @@ from flask import send_from_directory
 from entrenamiento.app.app import app, db
 from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.user import Usuario
-from entrenamiento.models.arco import ArcoRecurvado
+from entrenamiento.models.arco import Arco, ArcoRecurvado
 from entrenamiento.models.torneo import Torneo, Ronda, Serie
 
 from entrenamiento.views.base import (BaseModelListCrudView,
@@ -52,6 +52,14 @@ app.add_url_rule(BASE_API_URL + 'user/<int:object_id>/',
                                 db=db,
                                 model_class=Usuario,
                                 form_class=UserForm))
+
+# TODO en esta view solo se deberia permitir el tema de la lectura
+# del GET
+app.add_url_rule(BASE_API_URL + 'arco/',
+                 view_func=BaseModelListCrudView.as_view('api.arco.list',
+                                db=db,
+                                model_class=Arco,
+                                form_class=ArcoRecurvadoForm))
 
 app.add_url_rule(BASE_API_URL + 'arco-recurvado/',
                  view_func=BaseModelListCrudView.as_view('api.arco_recurvado.list',
