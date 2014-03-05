@@ -102,7 +102,7 @@ class BaseModelListCrudView(BaseEntrenamientoView):
             elif operator == 'get':
                 query = query.filter(column >= value)
             elif operator == 'in':
-                query = query.filter(column in value.split(','))
+                query = query.filter(column.in_(value.split(',')))
             else:
                 raise Exception('Todavia me falta manejar este caso')
             filter_index +=1
