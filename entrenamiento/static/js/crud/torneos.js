@@ -48,15 +48,15 @@ var TorneoFormView = BaseFormView.$extend({
                                         'Practica {{ @index }}' +
                                     '</td>' +
                                     '<td>' +
-                                        '<input type="checkbox" name="serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}-practica-fue-de-practica" id="serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}-practica-fue-de-practica" checked disabled>' +
+                                        '<input type="checkbox" name="serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}-practica-fue_de_practica" id="serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}-practica-fue_de_practica" checked disabled>' +
                                     '</td>' +
                                     '{{#rangeEach ../../numeroDeFlechas }}'+
                                         '<td>' +
-                                            '<input type="text" name="serie-{{ ../indexSeriePractica }}-ronda-{{ ../../indexRonda }}-practica-puntaje-flecha-{{ @index }}" id="serie-{{ ../indexSeriePractica }}-ronda-{{ ../../indexRonda }}-practica-puntaje-flecha-{{ @index }}">' +
+                                            '<input type="text" name="serie-{{ ../indexSeriePractica }}-ronda-{{ ../../indexRonda }}-practica-puntaje_flecha_{{math @index "+" 1}}" id="serie-{{ ../indexSeriePractica }}-ronda-{{ ../../indexRonda }}-practica-puntaje_flecha_{{math @index "+" 1}}">' +
                                         '</td>' +
                                     '{{/rangeEach }}' +
                                     '<td>' +
-                                        '<input type="text" name="serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}-practica-puntaje-total" id="serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}-practica-puntaje-total">' +
+                                        '<input type="text" name="serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}-practica-puntaje_total" id="serie-{{ indexSeriePractica }}-ronda-{{ ../indexRonda }}-practica-puntaje_total">' +
                                     '</td>' +
                                 '</tr>' +
                             '{{/rangeEach}}' +
@@ -67,15 +67,15 @@ var TorneoFormView = BaseFormView.$extend({
                                         'Serie {{ @index }}' +
                                     '</td>' +
                                     '<td>' +
-                                        '<input type="checkbox" name="serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}-fue-de-practica" id="serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}-fue-de-practica" disabled>' +
+                                        '<input type="checkbox" name="serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}-fue_de_practica" id="serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}-fue_de_practica" disabled>' +
                                     '</td>' +
                                     '{{#rangeEach ../../numeroDeFlechas }}'+
                                         '<td>' +
-                                            '<input type="text" name="serie-{{ ../indexSerie }}-ronda-{{ ../../indexRonda }}-puntaje-flecha-{{ @index}}" id="serie-{{ ../indexSerie }}-ronda-{{ ../../indexRonda }}-puntaje-flecha-{{ @index }}">' +
+                                            '<input type="text" name="serie-{{ ../indexSerie }}-ronda-{{ ../../indexRonda }}-puntaje_flecha_{{math @index "+" 1}}" id="serie-{{ ../indexSerie }}-ronda-{{ ../../indexRonda }}-puntaje_flecha_{{math @index "+" 1}}">' +
                                         '</td>' +
                                     '{{/rangeEach }}' +
                                     '<td>' +
-                                        '<input type="text" name="serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}-puntaje-total" id="serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}-puntaje-total">' +
+                                        '<input type="text" name="serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}-puntaje_total" id="serie-{{ indexSerie }}-ronda-{{ ../indexRonda }}-puntaje_total">' +
                                     '</td>' +
                                 '</tr>' +
                             '{{/rangeEach}}' +
@@ -334,9 +334,31 @@ var TorneoFormView = BaseFormView.$extend({
 
         // ahora me fijo de renderar toda la informacion de las ronda
         for (var i = 0; i < this.rondasData.length; i++) {
-            utils.renderFormData(this.$element.find('ronda-' + i + '-form'),
+            var rondaForm = this.$element.find('.ronda-' + i + '-form');
+            utils.renderFormData(rondaForm,
                                  this.rondasData[i],
-                                 'ronda-' + i + '-');
+                                 'ronda-' + i );
+            // ahora tengo que buscar todas las series que pertenzcan a esta
+            // ronda y renderar la informacion de las mismas
+            var indexSerie = 0;
+            var indexPractica = 0;
+            for (var j = 0; j < this.seriesData.length; j++) {
+                if (this.seriesData[j].id_ronda === this.rondasData[i].id) {
+                    var indexValue = indexSerie;
+                    var practicaPrefix = '';
+                    if (this.seriesData[j].fue_de_practica) {
+                        practicaPrefix += '-practica';
+                        indexValue = indexPractica;
+                        indexPractica += 1;
+                    } else {
+                        indexSerie += 1;
+                    }
+                    var prefix = 'serie-' + indexValue + '-ronda-' + i + practicaPrefix;
+                    utils.renderFormData(rondaForm,
+                                         this.seriesData[j],
+                                         prefix);
+                }
+            }
         }
     },
 
@@ -541,7 +563,7 @@ var TorneoFormView = BaseFormView.$extend({
             id_ronda: rondaId
         };
         // ahora me encargo de guardar el puntaje de cada una de las series
-        for (var i = 0; i < 6; i++) {
+        for (var i = 1; i <= 6; i++) {
             var element = rondaForm.find(baseSelector + '-puntaje-flecha-' + i);
             if (! element.exists()){
                 // en este caso ya guarde la informacion de todas las flechas
@@ -549,7 +571,7 @@ var TorneoFormView = BaseFormView.$extend({
             }
             var puntaje = element.val();
             if (puntaje !== '') {
-                serieData['puntaje_flecha_' + (i + 1)] = puntaje;
+                serieData['puntaje_flecha_' + i] = puntaje;
             }
         }
 
