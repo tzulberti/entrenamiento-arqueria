@@ -3,31 +3,33 @@ var TorneoFormView = BaseFormView.$extend({
     __init__: function(element) {
         this.$super(element);
 
+        this.objectId = null;
+
         this.rondasTemplate = '' +
             '{{#each rondas }}' +
                 '<form role="form" class="form-horizontal ronda-{{ @index }}-form" enctype="multipart/form-data">' +
-                    '<input type="hidden" name="id-ronda-{{ @index }}" id="id-ronda-{{ @index }}"></input>' +
+                    '<input type="hidden" name="ronda-{{ @index }}-id" id="id-ronda-{{ @index }}"></input>' +
                     '<input type="hidden" name="foto-ronda-{{ @index }}" id="foto-ronda-{{ @index }}"></input>' +
                     '{{setIndex "indexRonda" @index}}' +
                     '<formset>' +
                         '<h3>Ronda {{ @index }}</h3>' +
                         '<div class="form-group">' +
-                            '<label for="distancia-ronda-{{ @index }}" class="col-sm-2 control-label">Distancia</label>' +
+                            '<label for="ronda-{{ @index }}-distancia" class="col-sm-2 control-label">Distancia</label>' +
                             '<div class="col-sm-10">' +
-                                '<input type="text" name="distancia-ronda-{{ @index}}" class="form-control" disabled value="{{ this.distancia }}">'+
+                                '<input type="text" name="ronda-{{ @index }}-distancia" class="form-control" disabled value="{{ this.distancia }}">'+
                             '</div>' +
                         '</div>' +
                         '<div class="form-group">' +
-                            '<label for="puntaje-ronda-{{ @index }}" class="col-sm-2 control-label">Puntaje final</label>' +
+                            '<label for="ronda-{{ @index }}-puntaje" class="col-sm-2 control-label">Puntaje final</label>' +
                             '<div class="col-sm-10">' +
-                                '<input type="text" name="puntaje-ronda-{{ @index }}" id="puntaje-ronda-{{ @index }}" class="form-control"/>' +
+                                '<input type="text" name="ronda-{{ @index }}-puntaje" id="ronda-{{ @index }}-puntaje" class="form-control"/>' +
                                 '<span class="help-block">El puntaje que hiciste en esta ronda sin tener en cuenta las series de practica</span>' +
                             '</div>' +
                         '</div>' +
                         '<div class="form-group">' +
-                            '<label for="foto_planilla-ronda-{{ @index }}" class="col-sm-2 control-label">Foto planilla</label>' +
+                            '<label for="ronda-{{ @index }}-foto_planilla" class="col-sm-2 control-label">Foto planilla</label>' +
                             '<div class="col-sm-10">' +
-                                '<input type="file" name="foto_planilla-ronda-{{ @index }}" id="foto_planilla-ronda-{{ @index }}" class="form-control" />' +
+                                '<input type="file" name="ronda-{{ @index }}-foto_planilla" id="ronda-{{ @index }}-foto_planilla" class="form-control" />' +
                             '</div>' +
                         '</div>' +
                         '<table class="table puntajes-serie">' +
@@ -85,7 +87,7 @@ var TorneoFormView = BaseFormView.$extend({
         this.torneoTemplate = '' +
             '<form role="form" class="form-horizontal torneo-information">' +
                 '<formset>' +
-                    '<input type="hidden" name="torneo_id" id="torneo_id"></input>' +
+                    '<input type="hidden" name="id" id="id"></input>' +
                     '<h3>Informacion del torneo</h3>' +
                     '<div class="checkbox">' +
                         '<label>' +
@@ -157,6 +159,17 @@ var TorneoFormView = BaseFormView.$extend({
                     '<button type="submit" class="btn btn-primary button-save">Grabar</button>' +
                 '</div>' +
             '</div>';
+    },
+
+    /**
+     * Se encarga de obtener toda la informacion para poder renderar
+     * el torneo y todas las series del mismo.
+     *
+     * @param {int} objectId: el id del objeto que el usuario quiere editar.
+     */
+    editObject: function(objectId) {
+        this.objectId = objectId;
+        this.renderBaseHtml();
     },
 
     /**
@@ -238,6 +251,93 @@ var TorneoFormView = BaseFormView.$extend({
                       "bullets numbering"
         });
 
+        if (this.objectId === null) {
+            // sino esta editando la informacion de un torneo entonces no tengo
+            // nada mas que hacer
+            return;
+        }
+
+        // si esta editando un objeto en cuestion, entonces tengo que hacer
+        // los llamados ajax para obtener la informacion de las rondas
+        // y series del mismo.
+        this.missingDataCallbacks = [true, true, true];
+        var self = this;
+        $.ajax({
+            type: 'GET',
+            url: '/api/v01/torneo/' + this.objectId + '/' ,
+            success: function(data, textStatus, jqXHR) {
+                self.torneoData = data;
+                self.missingDataCallbacks[0] = false;
+                self.renderTorneoData();
+            }
+        });
+
+        // tambien busco la informacion de las ronda para ese torneo
+        $.ajax({
+            type: 'GET',
+            url: '/api/v01/ronda/',
+            data: {
+                'f-0': 'ronda;id_torneo;eq;' + self.objectId,
+                'orderBy': 'id'
+
+            },
+            success: function(data, textStatus, jqXHR) {
+                self.missingDataCallbacks[1] = false;
+                self.rondasData = data.values;
+
+                // ahora, para cada una de esas series, tengo que obtener la informacion
+                var ids = [];
+                for (var i = 0; i < self.rondasData.length; i++) {
+                    ids.push(self.rondasData[i].id);
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/v01/serie/',
+                    data: {
+                        'f-0': 'serie;id_ronda;in;' + ids,
+                        'orderBy': 'id'
+                    },
+                    success: function(data, textStatus, jqXHR) {
+                        self.seriesData = data.values;
+                        self.missingDataCallbacks[2] = false;
+                        self.renderTorneoData();
+                    }
+                });
+            }
+        });
+    },
+
+    /**
+     * Una vez que se obtuvo toda la informacion del torneo, se encarga de renderar
+     * la misma.
+     */
+    renderTorneoData: function() {
+        // antes de renderar la informacion me tengo que asegurar de
+        // no tener ningun callback pendiente
+        var canContinue = true;
+        for (var i = 0; i < this.missingDataCallbacks.length; i++) {
+            if (this.missingDataCallbacks[i]) {
+                canContinue = false;
+                break;
+            }
+        }
+
+        if (! canContinue) {
+            return;
+        }
+
+        // primero rendero la informacion del torneo
+        utils.renderFormData(this.$element,
+                             this.torneoData,
+                             '');
+
+        // ahora me fijo de renderar toda la informacion de las ronda
+        for (var i = 0; i < this.rondasData.length; i++) {
+            utils.renderFormData(this.$element.find('ronda-' + i + '-form'),
+                                 this.rondasData[i],
+                                 'ronda-' + i + '-');
+        }
     },
 
     /**
@@ -288,8 +388,8 @@ var TorneoFormView = BaseFormView.$extend({
 
         var torneoData = this.$element.find('.torneo-information').serializeObject();
         var torneoId = '';
-        if ('torneo_id' in torneoData) {
-            torneoId = torneoData['torneo_id'];
+        if ('id' in torneoData) {
+            torneoId = torneoData['id'];
         }
         var httpMethod = null;
         var url = 'torneo/';
@@ -347,8 +447,8 @@ var TorneoFormView = BaseFormView.$extend({
         var rondaData = rondaForm.serializeObject();
         disabled.attr('disabled', 'disabled');
         var rondaId = '';
-        if (('id-ronda-' + numeroRonda) in rondaData) {
-            rondaId = rondaData['id-ronda-' + numeroRonda];
+        if (('ronda-' + numeroRonda + '-id') in rondaData) {
+            rondaId = rondaData['ronda-' + numeroRonda + '-id'];
         }
 
 
@@ -366,7 +466,7 @@ var TorneoFormView = BaseFormView.$extend({
         var finalRondaData = {};
         for (var attributeName in rondaData) {
             var value = rondaData[attributeName];
-            finalRondaData[attributeName.replace('-ronda-' + numeroRonda, '')] = value;
+            finalRondaData[attributeName.replace('ronda-' + numeroRonda + '-', '')] = value;
         }
         finalRondaData.id_torneo = idTorneo;
 

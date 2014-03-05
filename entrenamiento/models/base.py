@@ -21,10 +21,17 @@ class BaseModel(db.Model):
             if attr_name in ('query', 'to_json', 'query_class', 'metadata'):
                 continue
             value = getattr(self, attr_name)
+            # TODO: ver si aca ya no estoy levantando toda la informacion
+            # de la base de datos.
             if isinstance(value, BaseModel):
-                # en este caso lo decodifico porque generalmente tengo que exportarlo
-                # para poder mostrarlo por la pantalla
-                value = value.to_json()
+                # si es un objeto referenciado, entonces solo lo muestro
+                # el dato del usuario. Esto es para evitar levantar toda
+                # la base de datos cada vez que se pide algo de informacion.
+                if attr_name in ('usuario'):
+                    value = value.to_json()
+                else:
+                    continue
+
             elif isinstance(value, (date, datetime)):
                 value = value.strftime('%d/%m/%Y')
 

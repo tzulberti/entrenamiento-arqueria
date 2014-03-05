@@ -43,6 +43,27 @@ class BaseModelListCrudView(BaseEntrenamientoView):
           espeficiada en el request. Si es ascendenete o descendente
           tambien esta indicado en el request.
         - Pueden existir diferentes filtros para la informacion.
+
+        Los filtros tienen que tener el siguiente formato:
+
+        ::
+
+            f-0=tableName;columnName;operator;value
+
+        donde:
+
+        tableName:
+            es el nombre de la tabla por la que se quiere filtrar
+
+        operator:
+            es el operador por el que se quiere filtrar. Este viene dado
+            en formato html, y se lo tiene que traducir al operador
+            correspondiente. Por ejemplo: si el valor es eq entonces
+            en la query se lo tiene que poner como "="
+
+        value:
+            es el valor por el que se quiere filtrar la informacion.
+
         '''
         query = self.model_class.query
 
@@ -55,6 +76,37 @@ class BaseModelListCrudView(BaseEntrenamientoView):
                     query = query.order_by(column.desc())
                 else:
                     query = query.order_by(column)
+
+
+        # entones de setear el tema de los limit, me fijo el tema
+        # de los filtros de las cosas que puede ver el usuario.
+        filter_index = 0
+        while True:
+            current_filter_key = 'f-%s' % filter_index
+            if not (current_filter_key in request.args):
+                break
+
+            filter_data = request.args[current_filter_key]
+            table_name, column_name, operator, value = filter_data.split(';')
+
+
+            column = getattr(self.model_class, column_name)
+            if operator == 'eq':
+                query = query.filter(column == value)
+            elif operator == 'lt':
+                query = query.filter(column < value)
+            elif operator == 'let':
+                query = query.filter(column <= value)
+            elif operator == 'gt':
+                query = query.filter(column > value)
+            elif operator == 'get':
+                query = query.filter(column >= value)
+            elif operator == 'in':
+                query = query.filter(column in value.split(','))
+            else:
+                raise Exception('Todavia me falta manejar este caso')
+            filter_index +=1
+
 
 
         # ahora solo tengo que filtrar por el usuario correspondiente.
