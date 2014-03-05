@@ -50,7 +50,9 @@ class Arco(BaseModel):
     modelo_vbar_estabilizacion = db.Column(db.Text)
     modelo_rest = db.Column(db.Text)
 
-    usuario = db.relationship(Usuario)
+    torneos = db.relationship('Torneo',
+                              backref='arco')
+
 
 
 class ArcoRecurvado(Arco):

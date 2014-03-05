@@ -44,7 +44,6 @@ class Torneo(BaseModel):
     puntaje_final_torneo = db.Column(db.Integer)
     fue_practica = db.Column(db.Boolean)
 
-    lugar = db.relationship(Lugar)
     usuario = db.relationship(Usuario)
     arco = db.relationship(Arco)
 

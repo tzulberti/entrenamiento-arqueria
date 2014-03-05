@@ -29,3 +29,6 @@ class Lugar(BaseModel):
     latitud = db.Column(db.Float, nullable=False)
     longitud = db.Column(db.Float, nullable=False)
     es_de_entrenamiento = db.Column(db.Boolean, nullable=False, default=True)
+
+    torneos = db.relationship('Torneo',
+                              backref='lugar')

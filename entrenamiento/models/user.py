@@ -40,6 +40,9 @@ class Usuario(BaseModel):
     es_entrenador = db.Column(db.Boolean, nullable=False, default=False)
     es_administrador = db.Column(db.Boolean, nullable=False, default=False)
 
+    arcos = db.relationship('Arco',
+                            backref='usuario',
+                            cascade='all,delete')
 
     def to_json(self):
         return dict(id=self.id,
