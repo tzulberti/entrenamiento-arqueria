@@ -1,3 +1,11 @@
+/**
+ * Form especial para ver cargar toda la informacion de los torneos.
+ *
+ * A diferencia de otros modelos, se necesita hacer uno custom porque:
+ *
+ * - el mismo renderea varios forms
+ * - dependiendo de lo que el usuario elija, se renderan ciertos forms o no.
+ */
 var TorneoFormView = BaseFormView.$extend({
 
     __init__: function(element) {
@@ -615,6 +623,7 @@ var TorneosCrudApplication = BaseCrudApp.$extend({
         tableView.crudView = crudView;
         formView.crudView = crudView;
         this.$super(historyManager, crudView);
+        this.historyManager.addApplicationForModel('torneo', this);
     }
 });
 
