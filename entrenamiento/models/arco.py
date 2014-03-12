@@ -2,7 +2,6 @@
 
 from entrenamiento.app.app import db
 from entrenamiento.models.base import BaseModel
-from entrenamiento.models.user import Usuario
 
 class Arco(BaseModel):
     ''' Representa toda la informacion del arco que un usuario puede usar.

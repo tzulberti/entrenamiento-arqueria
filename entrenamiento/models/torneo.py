@@ -2,9 +2,7 @@
 
 from entrenamiento.app.app import db
 from entrenamiento.models.base import BaseModel
-from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.user import Usuario
-from entrenamiento.models.arco import Arco
 
 class Torneo(BaseModel):
     ''' Tiene toda la informacion sobre el tipo de resultado.
@@ -45,8 +43,6 @@ class Torneo(BaseModel):
     fue_practica = db.Column(db.Boolean)
 
     usuario = db.relationship(Usuario)
-    arco = db.relationship(Arco)
-
     rondas = db.relationship('Ronda',
                              backref='torneo',
                              cascade='all,delete')
