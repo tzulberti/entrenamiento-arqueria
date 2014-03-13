@@ -4,9 +4,7 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.wtf.csrf import CsrfProtect
-from socket import gethostname
 
-from entrenamiento.app.configuration import get_configuration
 
 def create_app():
     ''' Se encarga de crear la applicaciones de flask.
@@ -14,15 +12,15 @@ def create_app():
     Para esto, va a usar la configuracion correspondiente
     al hostname que el mismo esta usando.
     '''
-    configuration = get_configuration(gethostname())
     app = Flask(__name__,
                 template_folder='../templates/',
                 static_folder='../static')
-    app.config.from_object(configuration)
+    app.config.from_envvar('ENTRENAMIENTO_CONFIGURATION')
     db = SQLAlchemy(app)
     bcrypt = Bcrypt(app)
     csrf = CsrfProtect()
     csrf.init_app(app)
     return (app, db, bcrypt)
+
 
 app, db, bcrypt = create_app()
