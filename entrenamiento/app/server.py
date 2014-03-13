@@ -5,6 +5,8 @@ from flask import send_from_directory
 
 
 from entrenamiento.app.app import app, db
+from entrenamiento.app.singleton import mail_sender
+from entrenamiento.models.invitacion import Invitacion
 from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.user import Usuario
 from entrenamiento.models.arco import Arco, ArcoRecurvado
@@ -17,6 +19,8 @@ from entrenamiento.views.auth.logout import LogoutView
 from entrenamiento.views.auth.form import UserForm
 from entrenamiento.views.arcos.form import ArcoRecurvadoForm
 from entrenamiento.views.index import IndexViewTemplate
+from entrenamiento.views.invitacion.crud import InvitacionListCrudView
+from entrenamiento.views.invitacion.form import InvitacionForm
 from entrenamiento.views.lugares.form import LugarForm
 from entrenamiento.views.torneo.forms import TorneoForm, RondaForm, SerieForm
 from entrenamiento.views.upload import UploadFileView
@@ -31,6 +35,20 @@ app.add_url_rule('/logout/',
                  view_func=LogoutView.as_view('auth.logout'))
 app.add_url_rule('/',
                  view_func=IndexViewTemplate.as_view('index'))
+
+
+app.add_url_rule(BASE_API_URL + 'invitacion/',
+                 view_func=InvitacionListCrudView.as_view('api.invitacion.list',
+                                mail_sender=mail_sender,
+                                db=db,
+                                model_class=Invitacion,
+                                form_class=InvitacionForm))
+app.add_url_rule(BASE_API_URL + 'invitacion/<int:object_id>/',
+                 view_func=BaseModelCrudView.as_view('api.invitacion.instance',
+                                db=db,
+                                model_class=Invitacion,
+                                form_class=InvitacionForm))
+
 app.add_url_rule(BASE_API_URL + 'lugar/',
                  view_func=BaseModelListCrudView.as_view('api.lugar.list',
                                 db=db,
