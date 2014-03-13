@@ -29,12 +29,33 @@ from entrenamiento.views.upload import UploadFileView
 #: la url que forma parte de la base de las API Rest
 BASE_API_URL = '/api/v01/'
 
+def register_url(model_name, model_class, form_class,
+                 list_crud_view_class=BaseModelListCrudView,
+                 instance_crud_view_class=BaseModelCrudView,
+                 list_crud_view_kwargs=dict(),
+                 instance_crud_view_kwargs=dict()):
+
+    app.add_url_rule(BASE_API_URL + model_name + '/',
+                     view_func=list_crud_view_class.as_view('api.%s.list' % model_name,
+                                                            db=db,
+                                                            model_class=model_class,
+                                                            form_class=form_class,
+                                                            **list_crud_view_kwargs))
+    app.add_url_rule(BASE_API_URL +  model_name + '/<int:object_id>/',
+                     view_func=instance_crud_view_class.as_view('api.%s.instance' % model_name,
+                                                                db=db,
+                                                                model_class=Lugar,
+                                                                form_class=LugarForm,
+                                                                **instance_crud_view_kwargs))
+
+
 app.add_url_rule('/login/',
                  view_func=LoginView.as_view('auth.login'))
 app.add_url_rule('/logout/',
                  view_func=LogoutView.as_view('auth.logout'))
 app.add_url_rule('/',
                  view_func=IndexViewTemplate.as_view('index'))
+
 
 
 app.add_url_rule(BASE_API_URL + 'invitacion/',
@@ -49,82 +70,16 @@ app.add_url_rule(BASE_API_URL + 'invitacion/<int:object_id>/',
                                 model_class=Invitacion,
                                 form_class=InvitacionForm))
 
-app.add_url_rule(BASE_API_URL + 'lugar/',
-                 view_func=BaseModelListCrudView.as_view('api.lugar.list',
-                                db=db,
-                                model_class=Lugar,
-                                form_class=LugarForm))
-app.add_url_rule(BASE_API_URL + 'lugar/<int:object_id>/',
-                 view_func=BaseModelCrudView.as_view('api.lugar.instance',
-                                db=db,
-                                model_class=Lugar,
-                                form_class=LugarForm))
-
-app.add_url_rule(BASE_API_URL + 'user/',
-                 view_func=BaseModelListCrudView.as_view('api.user.list',
-                                db=db,
-                                model_class=Usuario,
-                                form_class=UserForm))
-app.add_url_rule(BASE_API_URL + 'user/<int:object_id>/',
-                 view_func=BaseModelCrudView.as_view('api.user.instance',
-                                db=db,
-                                model_class=Usuario,
-                                form_class=UserForm))
-
+register_url('lugar', Lugar, LugarForm)
+register_url('user', Usuario, UserForm)
 # TODO en esta view solo se deberia permitir el tema de la lectura
 # del GET
-app.add_url_rule(BASE_API_URL + 'arco/',
-                 view_func=BaseModelListCrudView.as_view('api.arco.list',
-                                db=db,
-                                model_class=Arco,
-                                form_class=ArcoRecurvadoForm))
+register_url('arco', Arco, ArcoRecurvadoForm)
+register_url('arco-recurvado', ArcoRecurvado, ArcoRecurvadoForm)
+register_url('torneo', Torneo, TorneoForm)
+register_url('ronda', Ronda, RondaForm)
+register_url('serie', Serie, SerieForm)
 
-app.add_url_rule(BASE_API_URL + 'arco-recurvado/',
-                 view_func=BaseModelListCrudView.as_view('api.arco_recurvado.list',
-                                db=db,
-                                model_class=ArcoRecurvado,
-                                form_class=ArcoRecurvadoForm))
-app.add_url_rule(BASE_API_URL + 'arco-recurvado/<int:object_id>/',
-                 view_func=BaseModelCrudView.as_view('api.arco_recurvado.instance',
-                                db=db,
-                                model_class=ArcoRecurvado,
-                                form_class=ArcoRecurvadoForm))
-
-app.add_url_rule(BASE_API_URL + 'torneo/',
-                 view_func=BaseModelListCrudView.as_view('api.torneo.list',
-                                db=db,
-                                model_class=Torneo,
-                                form_class=TorneoForm))
-
-app.add_url_rule(BASE_API_URL + 'torneo/<int:object_id>/',
-                 view_func=BaseModelCrudView.as_view('api.torneo.instance',
-                                db=db,
-                                model_class=Torneo,
-                                form_class=TorneoForm))
-
-app.add_url_rule(BASE_API_URL + 'ronda/',
-                 view_func=BaseModelListCrudView.as_view('api.ronda.list',
-                                db=db,
-                                model_class=Ronda,
-                                form_class=RondaForm))
-
-app.add_url_rule(BASE_API_URL + 'ronda/<int:object_id>/',
-                 view_func=BaseModelCrudView.as_view('api.ronda.instance',
-                                db=db,
-                                model_class=Ronda,
-                                form_class=RondaForm))
-
-app.add_url_rule(BASE_API_URL + 'serie/',
-                 view_func=BaseModelListCrudView.as_view('api.serie.list',
-                                db=db,
-                                model_class=Serie,
-                                form_class=SerieForm))
-
-app.add_url_rule(BASE_API_URL + 'serie/<int:object_id>/',
-                 view_func=BaseModelCrudView.as_view('api.serie.instance',
-                                db=db,
-                                model_class=Serie,
-                                form_class=SerieForm))
 
 app.add_url_rule(BASE_API_URL + 'upload/foto-ronda/',
                  view_func=UploadFileView.as_view('api.upload.foto_ronda',
