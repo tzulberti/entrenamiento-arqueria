@@ -30,6 +30,12 @@ class Usuario(BaseModel):
     :param bool es_administrador: si es True, entonces puede ver la informacion
                                   de los otros usuarios y ademas puede cargar
                                   ciertas cosas que el entrenador no puede.
+
+    :param str foto: el path en donde se encuentra la foto del arquero.
+
+    :param float latitud: la latitud de donde vive el arquero en cuestion.
+
+    :param float longitud: la longitud de donde vive el arquero.
     '''
 
     id = db.Column(db.Integer, primary_key=True)
@@ -39,6 +45,11 @@ class Usuario(BaseModel):
     apellido = db.Column(db.String(1024), nullable=False)
     es_entrenador = db.Column(db.Boolean, nullable=False, default=False)
     es_administrador = db.Column(db.Boolean, nullable=False, default=False)
+    foto = db.Column(db.String(1024))
+    latitud = db.Column(db.Float)
+    longitud = db.Column(db.Float)
+
+
 
     arcos = db.relationship('Arco',
                             backref='usuario',
@@ -50,5 +61,8 @@ class Usuario(BaseModel):
                     nombre=self.nombre,
                     apellido=self.apellido,
                     es_entrenador=self.es_entrenador,
-                    es_administrador=self.es_administrador)
+                    es_administrador=self.es_administrador,
+                    foto=self.foto,
+                    latitud=self.latitud,
+                    longitud=self.longitud)
 
