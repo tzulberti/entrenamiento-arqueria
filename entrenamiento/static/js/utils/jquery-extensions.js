@@ -50,8 +50,9 @@ $(document).ajaxError(function(ev, jqXHR, ajaxSettings, thrownError) {
     } else if (jqXHR.status === 403) {
         // en este caso el usuario no tiene el permiso para ver los datos
         // de la persona en cuestion.
-    } else {
+    } else if (jqXHR.status === 500) {
         // en este caso ocurrio un error de javascript por lo que tengo
         // que mostrar el mensaje de error por pantalla
+        $("#javascript-error").show();
     }
 });

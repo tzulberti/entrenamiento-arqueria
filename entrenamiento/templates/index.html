@@ -56,6 +56,12 @@
 
 {% block content %}
     <div class="container">
+        <div class="alert alert-danger" id="javascript-error" style="display: none;">
+            <strong>Error en la aplicacion</strong> Ocurrio un error en la aplicacion. Por favor <a href="/">refresca la pagina</a>
+        </div>
+        <div class="alert alert-danger" id="server-error" style="display: none;">
+            <strong>Error en la aplicacion</strong> Ya se le notifico a los developers del mismo.
+        </div>
         <div class="table-container">
         </div>
         <div class="form-container">
