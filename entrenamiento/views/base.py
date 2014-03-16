@@ -6,12 +6,19 @@ from flask.views import MethodView
 from entrenamiento.views.utils import LoggedUserData
 from entrenamiento.views.decorators import user_required
 
+
 class BaseEntrenamientoView(MethodView):
+    ''' Clase base desde la cual todas las views tienen que extender.
+    '''
+    pass
+
+
+class UserRequiredView(BaseEntrenamientoView):
 
     decorators = [user_required]
 
 
-class BaseModelListCrudView(BaseEntrenamientoView):
+class BaseModelListCrudView(UserRequiredView):
     ''' Clase base para todas las views que tengan que manejar el
     tema de no trabajar puntualmente con una instancia.
 
@@ -153,7 +160,7 @@ class BaseModelListCrudView(BaseEntrenamientoView):
             return jsonify(form.errors), 400
 
 
-class BaseModelCrudView(BaseEntrenamientoView):
+class BaseModelCrudView(UserRequiredView):
     ''' Clase base para todas las views que tengan que ver
     con el tema de CRUD (Create, Read, Update, Delete)
 
