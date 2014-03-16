@@ -84,12 +84,13 @@ register_url('serie', Serie, SerieForm)
 
 app.add_url_rule('/crear/usuario/invitacion/<hash_invitacion>/',
                  view_func=CrearUsuarioDesdeInvitacionView.as_view('auth.usuario.invitacion',
-                                                                   db=db))
+                                                                   db=db,
+                                                                   base_upload_folder=app.config['UPLOAD_FOLDER']))
 
 app.add_url_rule(BASE_API_URL + 'upload/foto-ronda/',
                  view_func=UploadFileView.as_view('api.upload.foto_ronda',
                                                   file_extensions=['bmp', 'jpg', 'gif', 'png', 'psd', 'jpeg', 'svg'],
-                                                  upload_folder='uploads/'))
+                                                  upload_folder=app.config['UPLOAD_FOLDER']))
 
 @app.route('/favicon.ico')
 def favicon():
