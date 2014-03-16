@@ -7,8 +7,10 @@
         <meta name="csrf-token" content="{{ csrf_token() }}"> 
         <!-- Bootstrap -->
         <link href="/static/css/bootstrap.css" rel="stylesheet">
+        <!-- Other vendor things -->
         <link href="/static/css/jquery.cleditor.css" rel="stylesheet">
         <link href="/static/css/datepicker3.css" rel="stylesheet">
+        <link href="/static/css/jquery.loadmask.css" rel="stylesheet">
         {% block additional_css %}
         {% endblock %}
 
@@ -34,6 +36,7 @@
         <script src="/static/js/vendor/bootstrap-datepicker.js"></script>
         <script src="/static/js/vendor/pekeUpload.js"></script>
         <script src="/static/js/vendor/jquery.cleditor.min.js"></script>
+        <script src="/static/js/vendor/jquery.loadmask.min.js"></script>
 
         <script src="/static/js/utils/javascript-extensions.js"></script>
         <script src="/static/js/utils/handlebars-extensions.js"></script>
