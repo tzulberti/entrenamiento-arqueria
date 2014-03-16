@@ -14,7 +14,7 @@ from entrenamiento.models.torneo import Torneo, Ronda, Serie
 
 from entrenamiento.views.base import (BaseModelListCrudView,
                                       BaseModelCrudView)
-from entrenamiento.views.auth.auth import LoginView
+from entrenamiento.views.auth.login import LoginView
 from entrenamiento.views.auth.logout import LogoutView
 from entrenamiento.views.arcos.form import ArcoRecurvadoForm
 from entrenamiento.views.index import IndexViewTemplate
