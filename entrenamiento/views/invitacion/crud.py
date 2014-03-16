@@ -10,11 +10,16 @@ class InvitacionListCrudView(BaseModelListCrudView):
     invitacion se tiene que enviar un email a la persona a quien se le creo
     la invitacion.
 
+
+    :param mail_sender: la instancia del que se va a encargar de mandar el mail.
+
+    :param str running_host: la direccion HTTP en donde esta corriendo la aplicacion.
     '''
 
-    def __init__(self, mail_sender, **kwargs):
+    def __init__(self, mail_sender, running_host, **kwargs):
         super(InvitacionListCrudView, self).__init__(**kwargs)
         self.mail_sender = mail_sender
+        self.running_host = running_host
 
     def post(self):
         form = self.form_class(self.model_class)
@@ -24,7 +29,7 @@ class InvitacionListCrudView(BaseModelListCrudView):
 
             self.mail_sender.send_mail([form.instance.email],
                                        'Invitacion al sistema de la EDA',
-                                       'http://localhost:5000/')
+                                       self.running_host + '/crear/usuario/invitacion/' + form.instance.codigo + '/')
 
             self.db.session.add(form.instance)
             self.db.session.commit()
