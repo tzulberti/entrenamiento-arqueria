@@ -1,4 +1,3 @@
-
 /**
  * View basica que se encarga de todo el tema del form cuando el usuario quiere
  * ver el detalle, editar, o crear una instancia del objeto.
@@ -117,6 +116,7 @@ var TemplateFormView = BaseFormView.$extend({
         var self = this;
         this.objectId = objectId;
         this.renderForm();
+        this.$element.find('form').mask('Loading');
         $.ajax({
             type: 'GET',
             url: consts.BASE_API_URL + this.modelName + '/' + objectId + '/',
@@ -124,6 +124,7 @@ var TemplateFormView = BaseFormView.$extend({
                 utils.renderFormData(self.$element,
                                      responseData,
                                      '');
+                self.$element.unmask();
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert('Algo salio mal');
@@ -142,6 +143,7 @@ var TemplateFormView = BaseFormView.$extend({
         var httpMethod = '';
         var url = this.modelName + '/';
         var data = this.$element.find('form').serializeObject();
+        this.$element.mask('Saving');
         if (this.objectId === null) {
             httpMethod = 'POST';
         } else {
@@ -162,6 +164,7 @@ var TemplateFormView = BaseFormView.$extend({
                 // tengo que borrar todos los errores anteriores...
                 self.$element.find('.form-group').removeClass('has-error');
                 self.$element.find('.error-message').remove();
+                self.$element.unmask();
 
                 var formErrors = JSON.parse(jqXHR.responseText);
                 for (var fieldName in formErrors) {
@@ -170,6 +173,7 @@ var TemplateFormView = BaseFormView.$extend({
                     formGroupElement.addClass('has-error');
                     formElement.after('<span class="help-block error-message">' + formErrors[fieldName] + '</span>');
                 }
+
             }
         });
     }
