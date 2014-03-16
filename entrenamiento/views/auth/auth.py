@@ -7,7 +7,7 @@ from flask import request, redirect, url_for, render_template, session
 from flask.views import MethodView
 
 from entrenamiento.app.app import bcrypt
-from entrenamiento.models.user import Usuario
+from entrenamiento.models.usuario import Usuario
 from entrenamiento.views.utils import LoggedUserData
 
 class LoginView(MethodView):

@@ -8,7 +8,7 @@ from entrenamiento.app.app import app, db
 from entrenamiento.app.singleton import mail_sender
 from entrenamiento.models.invitacion import Invitacion
 from entrenamiento.models.lugar import Lugar
-from entrenamiento.models.user import Usuario
+from entrenamiento.models.usuario import Usuario
 from entrenamiento.models.arco import Arco, ArcoRecurvado
 from entrenamiento.models.torneo import Torneo, Ronda, Serie
 
@@ -16,7 +16,6 @@ from entrenamiento.views.base import (BaseModelListCrudView,
                                       BaseModelCrudView)
 from entrenamiento.views.auth.auth import LoginView
 from entrenamiento.views.auth.logout import LogoutView
-from entrenamiento.views.auth.form import UserForm
 from entrenamiento.views.arcos.form import ArcoRecurvadoForm
 from entrenamiento.views.index import IndexViewTemplate
 from entrenamiento.views.invitacion.crud import InvitacionListCrudView
@@ -24,6 +23,8 @@ from entrenamiento.views.invitacion.form import InvitacionForm
 from entrenamiento.views.lugares.form import LugarForm
 from entrenamiento.views.torneo.forms import TorneoForm, RondaForm, SerieForm
 from entrenamiento.views.upload import UploadFileView
+from entrenamiento.views.usuarios.form import UserForm
+from entrenamiento.views.usuarios.crear_desde_invitacion import CrearUsuarioDesdeInvitacionView
 
 
 #: la url que forma parte de la base de las API Rest
@@ -60,15 +61,16 @@ app.add_url_rule('/',
 
 app.add_url_rule(BASE_API_URL + 'invitacion/',
                  view_func=InvitacionListCrudView.as_view('api.invitacion.list',
-                                mail_sender=mail_sender,
-                                db=db,
-                                model_class=Invitacion,
-                                form_class=InvitacionForm))
+                                                          mail_sender=mail_sender,
+                                                          running_host=app.config['RUNNING_HOST'],
+                                                          db=db,
+                                                          model_class=Invitacion,
+                                                          form_class=InvitacionForm))
 app.add_url_rule(BASE_API_URL + 'invitacion/<int:object_id>/',
                  view_func=BaseModelCrudView.as_view('api.invitacion.instance',
-                                db=db,
-                                model_class=Invitacion,
-                                form_class=InvitacionForm))
+                                                     db=db,
+                                                     model_class=Invitacion,
+                                                     form_class=InvitacionForm))
 
 register_url('lugar', Lugar, LugarForm)
 register_url('user', Usuario, UserForm)
@@ -80,6 +82,9 @@ register_url('torneo', Torneo, TorneoForm)
 register_url('ronda', Ronda, RondaForm)
 register_url('serie', Serie, SerieForm)
 
+app.add_url_rule('/crear/usuario/invitacion/<hash_invitacion>/',
+                 view_func=CrearUsuarioDesdeInvitacionView.as_view('auth.usuario.invitacion',
+                                                                   db=db))
 
 app.add_url_rule(BASE_API_URL + 'upload/foto-ronda/',
                  view_func=UploadFileView.as_view('api.upload.foto_ronda',

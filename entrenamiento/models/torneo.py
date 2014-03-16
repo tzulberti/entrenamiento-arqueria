@@ -2,7 +2,6 @@
 
 from entrenamiento.app.app import db
 from entrenamiento.models.base import BaseModel
-from entrenamiento.models.user import Usuario
 
 class Torneo(BaseModel):
     ''' Tiene toda la informacion sobre el tipo de resultado.
@@ -42,10 +41,6 @@ class Torneo(BaseModel):
     puntaje_final_torneo = db.Column(db.Integer)
     fue_practica = db.Column(db.Boolean)
 
-    usuario = db.relationship(Usuario)
-    rondas = db.relationship('Ronda',
-                             backref='torneo',
-                             cascade='all,delete')
 
 class Ronda(BaseModel):
     ''' Tiene toda la informacion de una ronda del torneo.
