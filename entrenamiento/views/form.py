@@ -22,9 +22,9 @@ class ValidationForm(Form):
 
     def validate(self):
         res = super(ValidationForm, self).validate()
-        self.instance = self.get_instance()
         if not res:
             return False
+        self.instance = self.get_instance()
         return True
 
 
@@ -93,7 +93,7 @@ class ValidationForm(Form):
         return True
 
 
-    def get_instance(self):
+    def get_instance(self, skip_fieldnames=[]):
         ''' Se encarga de crear una instancia una vez que se hayan validado todas
         las cosas teniendo en cuenta de si el usuario quiere crear una nueva
         o si simplemente quiere editar una.
@@ -111,8 +111,9 @@ class ValidationForm(Form):
         for attr_name in dir(self):
             if attr_name == 'csrf_token':
                 continue
+            if attr_name in skip_fieldnames:
+                continue
             attr = getattr(self, attr_name)
-
             if isinstance(attr, Field):
                 final_value = self.get_attr_value(attr_name, attr.data)
                 if not hasattr(res, attr_name):
