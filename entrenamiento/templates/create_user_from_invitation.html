@@ -42,7 +42,7 @@
                 <strong>La invitacion no existe o ya fue usada</strong>
             </div>
         {% endif %}
-        <form role="form" class="form-horizontal" method="POST" action="/crear/usuario/invitacion/{{ hash_invitacion}}/">
+        <form role="form" class="form-horizontal" method="POST" action="/crear/usuario/invitacion/{{ hash_invitacion}}/" enctype="multipart/form-data">
             <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
             <h3>Crear nuevo usuario</h3>
             {{ form_field(form.email) }} 
