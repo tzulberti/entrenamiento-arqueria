@@ -38,15 +38,16 @@ class CrearUsuarioDesdeInvitacionView(BaseEntrenamientoView):
             if 'foto_archivo' in request.files:
                 filename = None
                 foto_stream = request.files['foto_archivo']
-                extension = foto_stream.filename.rsplit('.', 1)[1]
-                extension = extension.lower()
+                if foto_stream.content_length:
+                    extension = foto_stream.filename.rsplit('.', 1)[1]
+                    extension = extension.lower()
 
-                while True:
-                    filename = '%s.%s' % (random_text(), extension)
-                    if not os.path.exists(os.path.join(self.upload_folder, filename)):
-                        break
-                form_usuario.instance.foto = filename
-                foto_stream.save(os.path.join(self.upload_folder, filename))
+                    while True:
+                        filename = '%s.%s' % (random_text(), extension)
+                        if not os.path.exists(os.path.join(self.upload_folder, filename)):
+                            break
+                    form_usuario.instance.foto = filename
+                    foto_stream.save(os.path.join(self.upload_folder, filename))
 
             self.db.session.add(invitacion)
             self.db.session.add(form_usuario.instance)
