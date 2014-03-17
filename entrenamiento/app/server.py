@@ -10,6 +10,7 @@ from entrenamiento.models.invitacion import Invitacion
 from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.usuario import Usuario
 from entrenamiento.models.arco import Arco, ArcoRecurvado
+from entrenamiento.models.pago import Pago
 from entrenamiento.models.torneo import Torneo, Ronda, Serie
 
 from entrenamiento.views.base import (BaseModelListCrudView,
@@ -21,6 +22,7 @@ from entrenamiento.views.index import IndexViewTemplate
 from entrenamiento.views.invitacion.crud import InvitacionListCrudView
 from entrenamiento.views.invitacion.form import InvitacionForm
 from entrenamiento.views.lugares.form import LugarForm
+from entrenamiento.views.pago.form import PagoForm
 from entrenamiento.views.torneo.forms import TorneoForm, RondaForm, SerieForm
 from entrenamiento.views.upload import UploadFileView
 from entrenamiento.views.usuarios.form import UserForm
@@ -45,8 +47,8 @@ def register_url(model_name, model_class, form_class,
     app.add_url_rule(BASE_API_URL +  model_name + '/<int:object_id>/',
                      view_func=instance_crud_view_class.as_view('api.%s.instance' % model_name,
                                                                 db=db,
-                                                                model_class=Lugar,
-                                                                form_class=LugarForm,
+                                                                model_class=model_class,
+                                                                form_class=form_class,
                                                                 **instance_crud_view_kwargs))
 
 
@@ -81,6 +83,7 @@ register_url('arco-recurvado', ArcoRecurvado, ArcoRecurvadoForm)
 register_url('torneo', Torneo, TorneoForm)
 register_url('ronda', Ronda, RondaForm)
 register_url('serie', Serie, SerieForm)
+register_url('pago', Pago, PagoForm)
 
 app.add_url_rule('/crear/usuario/invitacion/<hash_invitacion>/',
                  view_func=CrearUsuarioDesdeInvitacionView.as_view('auth.usuario.invitacion',

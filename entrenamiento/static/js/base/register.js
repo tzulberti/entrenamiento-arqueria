@@ -9,6 +9,7 @@ var crudUsuariosApp = new UsuariosCrudApplication(historyManager, $('.container'
 var crudArcosRecurvadosApp = new ArcosRecurvadosCrudApplication(historyManager, $('.container'));
 var crudTorneosApp = new TorneosCrudApplication(historyManager, $('.container'));
 var crudInvitacionApp = new InvitacionCrudApplication(historyManager, $('.container'));
+var crudPagoApp = new PagoCrudApplication(historyManager, $('.container'));
 
 var appsManager = new AppsManager();
 appsManager.addApplication(1, crudLugarApp);
@@ -16,4 +17,5 @@ appsManager.addApplication(2, crudUsuariosApp);
 appsManager.addApplication(3, crudArcosRecurvadosApp);
 appsManager.addApplication(4, crudTorneosApp);
 appsManager.addApplication(5, crudInvitacionApp);
+appsManager.addApplication(6, crudPagoApp);
 
