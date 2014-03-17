@@ -18,6 +18,7 @@ setup(
         "Flask-Restless",
         "Flask-WTF",
         "alembic",
+        "psycopg2",
     ],
     packages=find_packages(),
     include_package_data=True,
