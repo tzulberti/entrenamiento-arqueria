@@ -1,7 +1,7 @@
 # -*- coding: utf-8- -*-
 
 from wtforms.fields import (StringField, BooleanField, DateField,
-                            FileField, PasswordField)
+                            FileField, PasswordField, SelectField)
 from wtforms.validators import InputRequired, Email, Optional, EqualTo
 
 from entrenamiento.app.app import bcrypt
@@ -38,6 +38,14 @@ class UserForm(ValidationForm):
     direccion = StringField('direccion')
     localidad = StringField('localidad')
     apodo_eda = StringField('apodo_eda')
+    dominancia_ojo = SelectField('dominancia_ojo',
+                                 choices=[('diestro', 'Diestro'),
+                                          ('zurdo', 'Zurdo')],
+                                 description='Cual es el ojo con el que apuntas?')
+    dominancia_mano = SelectField('dominancia_mano',
+                                 choices=[('diestro', 'Diestro'),
+                                          ('zurdo', 'Zurdo')],
+                                 description='Con cual mano agarras el arco?')
 
 
     def validate(self):

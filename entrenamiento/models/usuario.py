@@ -36,6 +36,12 @@ class Usuario(BaseModel):
     :param float latitud: la latitud de donde vive el arquero en cuestion.
 
     :param float longitud: la longitud de donde vive el arquero.
+
+    :param str dominancia_ojo: indica si el ojo con el que apunta el arquero
+                               es distro o zurdo
+
+    :param str dominancia_mano: indica con cual de las dos manos el arquero
+                                agarra la cuerda del arco.
     '''
 
     id = db.Column(db.Integer, primary_key=True)
@@ -55,6 +61,8 @@ class Usuario(BaseModel):
     localidad = db.Column(db.String(1024))
     dni = db.Column(db.String(20))
     apodo_eda = db.Column(db.String(1024))
+    dominancia_ojo = db.Column(db.String(20))
+    dominancia_mano = db.Column(db.String(20))
 
 
     foto = db.Column(db.String(1024))
