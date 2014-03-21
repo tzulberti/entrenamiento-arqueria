@@ -20,17 +20,17 @@ var ArcosRecurvadosCrudApplication = BaseTemplateCrudApp.$extend({
                     '</div>' +
                 '</div>' +
                 '<fieldset>' +
-                    '<legend>Raiser</legend>' +
+                    '<legend>Riser</legend>' +
                     '<div class="form-group">' +
-                        '<label for="modelo_raiser" class="col-sm-2 control-label">Modelo</label>' +
+                        '<label for="modelo_riser" class="col-sm-2 control-label">Modelo</label>' +
                         '<div class="col-sm-10">' +
-                            '<input type="text" name="modelo_raiser" id="modelo_raiser" class="form-control">' +
+                            '<input type="text" name="modelo_riser" id="modelo_riser" class="form-control">' +
                         '</div>' +
                     '</div>' +
                     '<div class="form-group">' +
-                        '<label for="largo_raiser" class="col-sm-2 control-label">Largo</label>' +
+                        '<label for="largo_riser" class="col-sm-2 control-label">Largo</label>' +
                         '<div class="col-sm-10">' +
-                            '<input type="text" name="largo_raiser" id="largo_raiser" class="form-control">' +
+                            '<input type="text" name="largo_riser" id="largo_riser" class="form-control">' +
                             '<span class="help-block">El mismo tiene que estar en pulgadas</span>' +
                         '</div>' +
                     '</div>' +
@@ -81,9 +81,9 @@ var ArcosRecurvadosCrudApplication = BaseTemplateCrudApp.$extend({
                         '</div>' +
                     '</div>' +
                     '<div class="form-group">' +
-                        '<label for="modelo_buttom" class="col-sm-2 control-label">Modelo buttom</label>' +
+                        '<label for="modelo_cushion_plunger" class="col-sm-2 control-label">Modelo Cushion Plunger</label>' +
                         '<div class="col-sm-10">' +
-                            '<input type="text" name="modelo_buttom" id="modelo_buttom" class="form-control">' +
+                            '<input type="text" name="modelo_cushion_plunger" id="modelo_cushion_plunger" class="form-control">' +
                         '</div>' +
                     '</div>' +
                 '</fieldset>' +
@@ -168,7 +168,7 @@ var ArcosRecurvadosCrudApplication = BaseTemplateCrudApp.$extend({
             '</form>';
         var columnNames = [
             'nombre',
-            'modelo_raiser',
+            'modelo_riser',
             'modelo_palas'
         ];
         this.$super(historyManager, 'arco-recurvado', formTemplate, element, columnNames);

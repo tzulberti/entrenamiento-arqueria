@@ -33,8 +33,8 @@ class ArcoForm(ValidationForm):
 
 class ArcoRecurvadoForm(ArcoForm):
 
-    modelo_raiser = StringField('modelo_raiser')
-    largo_raiser = IntegerField('largo_raiser', [Optional()])
+    modelo_riser = StringField('modelo_riser')
+    largo_riser = IntegerField('largo_riser', [Optional()])
 
     modelo_palas = StringField('modelo_palas')
     libraje_palas = IntegerField('libraje_palas', [Optional()])
@@ -42,7 +42,7 @@ class ArcoRecurvadoForm(ArcoForm):
 
     modelo_clicker = StringField('modelo_clicker')
     modelo_mira = StringField('modelo_mira')
-    modelo_buttom = StringField('modelo_buttom')
+    modelo_cushion_plunger = StringField('modelo_cushion_plunger')
 
 
 

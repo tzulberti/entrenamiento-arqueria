@@ -63,8 +63,8 @@ class ArcoRecurvado(Arco):
 
     id = db.Column(db.Integer, db.ForeignKey('arco.id'), primary_key=True)
 
-    modelo_raiser = db.Column(db.Text)
-    largo_raiser = db.Column(db.Text)
+    modelo_riser = db.Column(db.Text)
+    largo_riser = db.Column(db.Text)
 
     modelo_palas = db.Column(db.Text)
     libraje_palas = db.Column(db.Integer)
@@ -72,7 +72,7 @@ class ArcoRecurvado(Arco):
 
     modelo_clicker = db.Column(db.Text)
     modelo_mira = db.Column(db.Text)
-    modelo_buttom = db.Column(db.Text)
+    modelo_cushion_plunger = db.Column(db.Text)
 
 
 class ArcoCompuesto(Arco):
