@@ -63,9 +63,11 @@ class ArcoRecurvado(Arco):
 
     id = db.Column(db.Integer, db.ForeignKey('arco.id'), primary_key=True)
 
+    marca_riser = db.Column(db.Text)
     modelo_riser = db.Column(db.Text)
     largo_riser = db.Column(db.Text)
 
+    marca_palas = db.Column(db.Text)
     modelo_palas = db.Column(db.Text)
     libraje_palas = db.Column(db.Integer)
     largo_palas = db.Column(db.Text)
