@@ -2,6 +2,72 @@
 
 from flask.ext.wtf import Form
 from wtforms.fields import Field
+from wtforms.validators import ValidationError
+
+
+class ValidateUnique(object):
+    ''' Valida que el campo sea unico teniendo en cuenta
+    si se estaba editando una instancia o si se estaba
+    creando una nueva instancia.
+    '''
+
+    def __init__(self, message=None):
+        self.message = message or 'Este campo tiene que ser unico'
+
+    def __call__(self, form, field):
+        model_attr = getattr(form.model_class, field.name)
+        query = form.model_class.query
+        query = query.filter(model_attr == field.data)
+        data = query.first()
+        if not data:
+            # sino existe un valor, entonces no se puede estar
+            # rompiendo el caso de unique
+            return True
+
+        if not form.object_id:
+            # en este caso el usuario estaba creando una instancia
+            # y ya existe un valor en la base de datos con esa informacion
+            raise ValidationError(self.message)
+
+        if data.id != form.object_id:
+            # en este caso el usuario estaba editando una instancia
+            # pero le puso el valor de otra instancia de la base de
+            # datos.
+            raise ValidationError(self.message)
+
+class ValidateUniques(object):
+    ''' Similar al anterior, pero esto se basa en que dos o mas campos
+    juntos tienen que ser unicos.
+    '''
+
+    def __init__(self, attr_names, message=None):
+        self.attr_names = attr_names
+        self.message = message or ('Ya existe un valor con la data de %s' % (', '.join(attr_names)))
+
+    def __call__(self, form, field):
+        model_attrs = []
+        form_attrs = []
+        for attr_name in self.attr_names:
+            model_attrs.append(getattr(self.model_class, attr_name))
+            form_attrs.append(getattr(self, attr_name))
+
+        query = self.model_class.query
+        # usar itertools
+        for index in range(len(self.attr_names)):
+            query = query.filter(model_attrs[index] == form_attrs[index].data)
+        data = query.first()
+        if not data:
+            return True
+
+
+        if not self.object_id:
+            # en este caso el usuario estaba creando una nueva instancia,
+            # pero ya existe una con esos datos.
+            raise ValidationError(self.message)
+
+        if data.id != self.object_id:
+            raise ValidationError(self.message)
+
 
 class ValidationForm(Form):
     ''' Form basico para validar todos los casos para tener en cuenta el
@@ -28,69 +94,8 @@ class ValidationForm(Form):
         return True
 
 
-    def validate_unique(self, attr_name, message=None):
-        ''' Valida que el campo sea unico teniendo en cuenta
-        si se estaba editando una instancia o si se estaba
-        creando una nueva instancia.
-        '''
-        model_attr = getattr(self.model_class, attr_name)
-        form_attr = getattr(self, attr_name)
-        query = self.model_class.query
-        query = query.filter(model_attr == form_attr.data)
-        data = query.first()
-        if not data:
-            # sino existe un valor, entonces no se puede estar
-            # rompiendo el caso de unique
-            return True
-
-        if not self.object_id:
-            # en este caso el usuario estaba creando una instancia
-            # y ya existe un valor en la base de datos con esa informacion
-            form_attr.errors.append(message or 'Este campo tiene que ser unico')
-            return False
-
-        if data.id != self.object_id:
-            # en este caso el usuario estaba editando una instancia
-            # pero le puso el valor de otra instancia de la base de
-            # datos.
-            form_attr.errors.append(message or 'Este campo tiene que ser unico')
-            return False
-
-        return True
 
 
-    def validate_uniques(self, attr_names, message=None):
-        ''' Similar al anterior, pero esto se basa en que dos o mas campos
-        juntos tienen que ser unicos.
-        '''
-        model_attrs = []
-        form_attrs = []
-        for attr_name in attr_names:
-            model_attrs.append(getattr(self.model_class, attr_name))
-            form_attrs.append(getattr(self, attr_name))
-
-        query = self.model_class.query
-        # usar itertools
-        for index in range(len(attr_names)):
-            query = query.filter(model_attrs[index] == form_attrs[index].data)
-        data = query.first()
-        if not data:
-            return True
-
-
-        error_message = 'Ya existe un valor con la data de %s' % (', '.join(attr_names))
-        if not self.object_id:
-            # en este caso el usuario estaba creando una nueva instancia,
-            # pero ya existe una con esos datos.
-            for form_attr in form_attrs:
-                form_attr.errors.append(error_message)
-                return False
-
-        if data.id != self.object_id:
-            for form_attr in form_attrs:
-                form_attr.errors.append(error_message)
-                return False
-        return True
 
 
     def get_instance(self, skip_fieldnames=[]):

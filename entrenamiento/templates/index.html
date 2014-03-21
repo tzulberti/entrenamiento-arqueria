@@ -1,5 +1,36 @@
 {% extends "base.html" %}
 
+{% macro form_field(field) -%}
+    {% set with_label = kwargs.pop('with_label', True) %}
+    {% set placeholder = '' %}
+    {% if not with_label %}
+        {% set placeholder = field.label.text %}
+    {% endif %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+        {% if with_label %}
+            <label for="{{ field.id }}" class="control-label col-sm-2">
+                {{ field.label.text|replace('_', ' ')|title }}{% if field.flags.required %}*{% endif %}
+            </label>
+        {% endif %}
+        <div class="col-sm-10">
+            {% if field.type == 'BooleanField' %}
+                <label class="checkbox">
+                    {{ field(class_=class_, **kwargs) }}
+                    {{ field.label.text|safe }}
+                </label>
+            {% else %}
+                {{ field(class_='form-control', placeholder=placeholder, **kwargs) }}
+            {% endif %}
+            {% if field.errors %}
+                <span class="help-block">{{ field.errors|join(', ') }}</span>
+            {% endif %}
+            {% if field.description %}
+                <span class="help-block">{{ field.description|safe }}</span>
+            {% endif %}
+        </div>
+    </div>
+{%- endmacro %}
+
 
 {% block menu %}
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -73,6 +104,58 @@
 {% endblock %}
 
 {% block additional_javascript %}
+    <script id="arco-recurvado-form-handlebars-template" type="text/x-handlebars-template">
+        <form role="form" class="form-horizontal">
+            {{ form_field(arco_recurvado_form.nombre) }} 
+            {{ form_field(arco_recurvado_form.comentario) }} 
+            <fieldset>
+                <legend>Riser</legend>
+                {{ form_field(arco_recurvado_form.marca_riser) }} 
+                {{ form_field(arco_recurvado_form.modelo_riser) }} 
+                {{ form_field(arco_recurvado_form.largo_riser) }} 
+            </fieldset>
+            <fieldset>
+                <legend>Palas</legend>
+                {{ form_field(arco_recurvado_form.marca_palas) }} 
+                {{ form_field(arco_recurvado_form.modelo_palas) }} 
+                {{ form_field(arco_recurvado_form.largo_palas) }} 
+                {{ form_field(arco_recurvado_form.libraje_palas) }} 
+            </fieldset>
+
+            <fieldset>
+                <legend>Otras cosas</legend>
+                {{ form_field(arco_recurvado_form.modelo_mira) }} 
+                {{ form_field(arco_recurvado_form.modelo_clicker) }} 
+                {{ form_field(arco_recurvado_form.modelo_rest) }} 
+                {{ form_field(arco_recurvado_form.modelo_cushion_plunger) }} 
+            </fieldset>
+            <fieldset>
+                <legend>Barra Principal</legend>
+                {{ form_field(arco_recurvado_form.modelo_barra_larga_estabilizacion) }} 
+                {{ form_field(arco_recurvado_form.largo_barra_larga_estabilizacion) }} 
+                {{ form_field(arco_recurvado_form.peso_adicional_barra_larga) }} 
+            </fieldset>
+            <fieldset>
+                <legend>V-Bar / Extender </legend>
+                {{ form_field(arco_recurvado_form.modelo_vbar_estabilizacion) }} 
+                {{ form_field(arco_recurvado_form.modelo_extender_estabilizacion) }} 
+                {{ form_field(arco_recurvado_form.largo_extender_estabilizacion) }} 
+            </fieldset>
+            <fieldset>
+                <legend>Barras Laterales</legend>
+                {{ form_field(arco_recurvado_form.modelo_barra_lateral_estabilizacion) }} 
+                {{ form_field(arco_recurvado_form.largo_barra_lateral_estabilizacion) }} 
+                {{ form_field(arco_recurvado_form.peso_adicional_barra_lateral) }} 
+            </fieldset>
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <button type="submit" class="btn btn-primary button-save">Grabar</button>
+                </div>
+            </div>        
+        </form>        
+    </script>
+
+
     <script src="/static/js/consts/tipo_torneos.js"></script>
     <script src="/static/js/consts/singleton.js"></script>
 
@@ -97,6 +180,7 @@
 
     <script src="/static/js/base/register.js"></script>
     <script src="/static/js/main/menu-view.js"></script>
+
     <script type="text/javascript">
         var menuView = new MainMenuView($("#main-menu"),
                                         appsManager);
