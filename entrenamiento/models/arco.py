@@ -72,6 +72,7 @@ class ArcoRecurvado(Arco):
     libraje_palas = db.Column(db.Integer)
     libraje_real = db.Column(db.Integer)
     largo_palas = db.Column(db.Text)
+    tipo_encastre = db.Column(db.Text)
 
     modelo_clicker = db.Column(db.Text)
     modelo_mira = db.Column(db.Text)

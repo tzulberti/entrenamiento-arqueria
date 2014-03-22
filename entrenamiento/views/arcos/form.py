@@ -6,7 +6,8 @@ from wtforms.validators import InputRequired, Optional
 
 from entrenamiento.views.form import ValidationForm, ValidateUnique, ValidateUniques
 from entrenamiento.views.arcos.consts import (LARGO_PALAS_RISER,
-                                              MARCA_PALAS_RISER)
+                                              MARCA_PALAS_RISER,
+                                              TIPO_ENCASTRE)
 
 class ArcoForm(ValidationForm):
     ''' Tiene las cosas base para los arcos que son recurvados o compuestos.
@@ -65,6 +66,9 @@ class ArcoRecurvadoForm(ArcoForm):
                                 [Optional()],
                                 description='El libraje que uno le saca al arco '\
                                             'teniendo en cuenta la apertura de uno')
+    tipo_encastre = SelectField('tipo_encastre',
+                                choices=TIPO_ENCASTRE)
+
 
     modelo_clicker = StringField('modelo_clicker')
     modelo_mira = StringField('modelo_mira')

@@ -15,3 +15,9 @@ MARCA_PALAS_RISER = [
     ('sebastian_flute', 'Sebastian Flute'),
     ('samick', 'Samick'),
 ]
+
+TIPO_ENCASTRE = [
+    ('prana', 'Prana'),
+    ('ilf', 'ILF'),
+    ('formula', 'Formula'),
+]
