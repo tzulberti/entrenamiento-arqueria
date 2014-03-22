@@ -61,6 +61,10 @@ class ArcoRecurvadoForm(ArcoForm):
                                  [Optional()],
                                  description='El libraje de las mismas segun la '\
                                              'fabrica. No uno termina sacando')
+    libraje_real = IntegerField('libraje_real',
+                                [Optional()],
+                                description='El libraje que uno le saca al arco '\
+                                            'teniendo en cuenta la apertura de uno')
 
     modelo_clicker = StringField('modelo_clicker')
     modelo_mira = StringField('modelo_mira')
