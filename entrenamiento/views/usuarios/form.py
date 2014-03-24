@@ -1,11 +1,12 @@
 # -*- coding: utf-8- -*-
 
 from wtforms.fields import (StringField, BooleanField, DateField,
-                            FileField, PasswordField, SelectField)
+                            FileField, PasswordField, SelectField,
+                            FloatField)
 from wtforms.validators import InputRequired, Email, Optional, EqualTo
 
 from entrenamiento.app.app import bcrypt
-from entrenamiento.views.form import ValidationForm
+from entrenamiento.views.form import ValidationForm, ValidateUnique
 
 class UserForm(ValidationForm):
     ''' Tiene toda la data del form de cuando se esta creando
@@ -14,7 +15,7 @@ class UserForm(ValidationForm):
     '''
 
     email = StringField('email',
-                        validators=[InputRequired(), Email()],
+                        validators=[InputRequired(), Email(), ValidateUnique()],
                         description='El email con el que te vas a loguear al sistema')
     nombre = StringField('nombre', [InputRequired()])
     apellido = StringField('apellido', [InputRequired()])
@@ -38,6 +39,8 @@ class UserForm(ValidationForm):
     direccion = StringField('direccion')
     localidad = StringField('localidad')
     apodo_eda = StringField('apodo_eda')
+    latitud = FloatField('latitud', validators=[Optional()])
+    longitud = FloatField('longitud', validators=[Optional()])
     dominancia_ojo = SelectField('dominancia_ojo',
                                  choices=[('diestro', 'Diestro'),
                                           ('zurdo', 'Zurdo')],
@@ -46,18 +49,6 @@ class UserForm(ValidationForm):
                                  choices=[('diestro', 'Diestro'),
                                           ('zurdo', 'Zurdo')],
                                  description='Con cual mano agarras el arco?')
-
-
-    def validate(self):
-        rv = super(UserForm, self).validate()
-        if not rv:
-            return False
-
-        # me fijo que no exista otro lugar con el mismo nombre
-        if not self.validate_unique('email'):
-            return False
-
-        return True
 
     def get_attr_value(self, attr_name, form_data):
         ''' Se encarga de codificar el password que vino por el request.
