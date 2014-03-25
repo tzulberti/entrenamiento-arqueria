@@ -1,5 +1,6 @@
 # -*- coding: utf-8- -*-
 
+from flask.ext.wtf import Form
 from wtforms.fields import (StringField, BooleanField, DateField,
                             FileField, PasswordField, SelectField,
                             FloatField)
@@ -7,6 +8,22 @@ from wtforms.validators import InputRequired, Email, Optional, EqualTo
 
 from entrenamiento.app.app import bcrypt
 from entrenamiento.views.form import ValidationForm, ValidateUnique
+
+
+class ChangePasswordForm(Form):
+    ''' Form usada para que el usuario cambie su password.
+    '''
+    password = PasswordField('password',
+                             validators=[InputRequired()],
+                             description='El password que usas para loguearte')
+    new_password = PasswordField('new_password',
+                                  validators=[InputRequired(), EqualTo('password_confirmation')],
+                                  description='El nuevo password que vas a usar para loguearte')
+    password_confirmation = PasswordField('password_confirmation',
+                                          validators=[InputRequired()],
+                                          description='La confirmacion del nuevo password')
+
+
 
 class UserForm(ValidationForm):
     ''' Tiene toda la data del form de cuando se esta creando

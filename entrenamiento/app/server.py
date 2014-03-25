@@ -4,7 +4,7 @@ import os
 from flask import send_from_directory
 
 
-from entrenamiento.app.app import app, db
+from entrenamiento.app.app import app, db, bcrypt
 from entrenamiento.app.singleton import mail_sender
 from entrenamiento.models.invitacion import Invitacion
 from entrenamiento.models.lugar import Lugar
@@ -26,7 +26,9 @@ from entrenamiento.views.pago.form import PagoForm
 from entrenamiento.views.torneo.forms import TorneoForm, RondaForm, SerieForm
 from entrenamiento.views.upload import UploadFileView
 from entrenamiento.views.usuarios.form import UserForm
+from entrenamiento.views.usuarios.change_password import ChangePasswordView
 from entrenamiento.views.usuarios.crear_desde_invitacion import CrearUsuarioDesdeInvitacionView
+from entrenamiento.views.usuarios.password_reset import PasswordResetView
 
 
 #: la url que forma parte de la base de las API Rest
@@ -59,6 +61,14 @@ app.add_url_rule('/logout/',
 app.add_url_rule('/',
                  view_func=IndexViewTemplate.as_view('index'))
 
+app.add_url_rule('/password-reset/',
+                 view_func=PasswordResetView.as_view('auth.password_reset',
+                                                     db=db,
+                                                     mail_sender=mail_sender))
+app.add_url_rule('/change-password/',
+                 view_func=ChangePasswordView.as_view('auth.change_password',
+                                                      db=db,
+                                                      bcrypt=bcrypt))
 
 
 app.add_url_rule(BASE_API_URL + 'invitacion/',
