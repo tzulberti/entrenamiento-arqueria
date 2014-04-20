@@ -18,6 +18,7 @@ from entrenamiento.views.base import (BaseModelListCrudView,
 from entrenamiento.views.auth.login import LoginView
 from entrenamiento.views.auth.logout import LogoutView
 from entrenamiento.views.arcos.form import ArcoRecurvadoForm
+from entrenamiento.views.database_information import DatabaseInformationView
 from entrenamiento.views.index import IndexViewTemplate
 from entrenamiento.views.invitacion.crud import InvitacionListCrudView
 from entrenamiento.views.invitacion.form import InvitacionForm
@@ -70,7 +71,6 @@ app.add_url_rule('/change-password/',
                                                       db=db,
                                                       bcrypt=bcrypt))
 
-
 app.add_url_rule(BASE_API_URL + 'invitacion/',
                  view_func=InvitacionListCrudView.as_view('api.invitacion.list',
                                                           mail_sender=mail_sender,
@@ -94,6 +94,13 @@ register_url('torneo', Torneo, TorneoForm)
 register_url('ronda', Ronda, RondaForm)
 register_url('serie', Serie, SerieForm)
 register_url('pago', Pago, PagoForm)
+
+app.add_url_rule(BASE_API_URL + 'database-information/',
+                 view_func=DatabaseInformationView.as_view('api.database.information',
+                                                           models=[Usuario, Invitacion, ArcoRecurvado,
+                                                                   Torneo, Ronda, Serie, Pago,
+                                                                   Lugar]))
+
 
 app.add_url_rule('/crear/usuario/invitacion/<hash_invitacion>/',
                  view_func=CrearUsuarioDesdeInvitacionView.as_view('auth.usuario.invitacion',
