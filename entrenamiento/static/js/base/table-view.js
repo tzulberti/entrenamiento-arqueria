@@ -47,33 +47,8 @@ var TableView = Class.$extend({
         this.limit = 20;
         this.currentPage = 0;
 
-        this.template = '' +
-            '<div class="alert alert-success hidden" id="created-instance">' +
-                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                'Se guardo la nueva informacion' +
-            '</div>' +
-            '<div class="alert alert-success hidden" id="updated-instance">' +
-                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                'Se guardaron los cambios' +
-            '</div>' +
-            '<div class="alert alert-success hidden" id="deleted-instance">' +
-                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                'Se borro la informacion' +
-            '</div>' +
-            '<div class="row">' +
-                '<button type="button" class="btn btn-primary button-create">' +
-                    '<span class=".glyphicon .glyphicon-plus">Crear uno nuevo</span>' +
-                '</button>' +
-            '</div>'  +
-            '<div class="row search-conditions">' +
-            '</div>' +
-            '<div class="row" id="information-container">' +
-                '<div class="row" id="table-information-container">'+
-                '</div>'+
-                '<div class="row" id="pagination-information-container">' +
-                '</div>' +
-            '</div>';
-
+        this.template = $("#table-view-handlebars-template").html();
+        this.tableContentTemplate = $("#table-content-view-handlebars-template").html();
     },
 
 
@@ -86,7 +61,6 @@ var TableView = Class.$extend({
     render: function() {
         var baseHtml = Handlebars.render(this.template, {});
         this.$element.html(baseHtml);
-        this.renderSearchConditions();
         this.getData();
 
         this.$element.off('click', '.button-create');
@@ -103,14 +77,6 @@ var TableView = Class.$extend({
    },
 
 
-    /**
-     * Se encarga de mostrar todas las condiciones de filtrado por las que el usuario
-     * puede ver toda la informacion.
-     *
-     * Por default no hace nada.
-     */
-    renderSearchConditions: function() {
-    },
 
     /**
      * Se encarga de obtener la informacion del servidor teniendo en cuenta
@@ -119,8 +85,10 @@ var TableView = Class.$extend({
     getData: function() {
         var self = this;
         if (this.addToHistory) {
-            this.historyManager.pushNewTableStatus(this.modelName, this.orderBy,
-                                                   this.orderDirection, this.currentPage);
+            this.historyManager.pushNewTableStatus(this.modelName,
+                                                   this.orderBy,
+                                                   this.orderDirection,
+                                                   this.currentPage);
         }
 
         // le tengo que volver a setear el valor en true para que el proximo
@@ -183,38 +151,12 @@ var TableView = Class.$extend({
      *                                       de datos.
      */
     renderTableInformation: function(values) {
-        var html = '';
-        if (values.length === 0) {
-            html = '<h2>No Information was found</h2>';
-        } else {
-            var template = '' +
-                '<table class="table table-hover table-bordered table-striped">' +
-                    '<thead>' +
-                        '{{#each columnNames }}' +
-                            '{{#ifCond this "!==" "id" }}' +
-                                '<th>' +
-                                    '{{renderColumnHeader this ../../orderBy ../../orderDirection }}' +
-                                '</th>' +
-                            '{{/ifCond}}' +
-                        '{{/each}}' +
-                        '<th>Edit</th>' +
-                        '<th>Delete</th>' +
-                    '</thead>' +
-                    '<tbody>' +
-                        '{{#each values}}' +
-                            '<tr>' +
-                                '{{renderTableRow this ../columnNames }}' +
-                            '</tr>' +
-                        '{{/each}}'
-                    '</tbody>' +
-                '</table>';
-            html = Handlebars.render(template, {
-                    columnNames: this.columnNames,
-                    values: values,
-                    orderDirection: this.orderDirection,
-                    orderBy: this.orderBy
-            });
-        }
+        var html = Handlebars.render(this.tableContentTemplate, {
+                columnNames: this.columnNames,
+                values: values,
+                orderDirection: this.orderDirection,
+                orderBy: this.orderBy
+        });
         this.$element.find('#table-information-container').html(html);
 
     },
@@ -407,6 +349,4 @@ var TableView = Class.$extend({
         this.getData();
     }
 
-
-
-})
+});

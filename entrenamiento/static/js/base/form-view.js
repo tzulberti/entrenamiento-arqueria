@@ -26,6 +26,13 @@ var BaseFormView = Class.$extend({
                       "bullets numbering"
         });
 
+        this.$element.find('#cuando').datepicker({
+            format: 'dd/mm/yyyy'
+        });
+        this.$element.find('#mes_correspondiente').datepicker({
+            format: 'dd/mm/yyyy'
+        });
+
         this.$element.off('click', '.button-save');
         this.$element.on('click', '.button-save', $.proxy(this.saveInformation, this));
     },
@@ -54,11 +61,8 @@ var BaseFormView = Class.$extend({
     },
 
     editObject: function(objectId) {
-        throw new Error('SE tiene que implementar este metodo');
+        throw new Error('Se tiene que implementar este metodo');
     }
-
-
-
 });
 
 /**

@@ -1,0 +1,76 @@
+<script id="table-view-handlebars-template" type="text/x-handlebars-template">
+    <div class="alert alert-success hidden" id="created-instance">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        Se guardo la nueva informacion
+    </div>
+    <div class="alert alert-success hidden" id="updated-instance">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        Se guardaron los cambios
+    </div>
+    <div class="alert alert-success hidden" id="deleted-instance">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        Se borro la informacion
+    </div>
+    <div class="row">
+        <button type="button" class="btn btn-primary button-create">
+            <span class=".glyphicon .glyphicon-plus">Crear uno nuevo</span>
+        </button>
+    </div> 
+    <div class="row search-conditions">
+    </div>
+    <div class="row" id="information-container">
+        <div class="row" id="table-information-container">
+        </div>
+        <div class="row" id="pagination-information-container">
+        </div>
+    </div>
+</script>
+
+<script id="search-condition-handlebars-template" type="text/x-handlebars-template">
+    {% raw %}
+        <div class="row">        
+            <select>
+                {{#each columnInformation}}
+                    <option name="{{ this }}">{{readableName this }}</option>
+                {{/each}}
+            </select>
+            <select>
+                <option value="eq">=</option>
+                <option value="lt"><</option>
+                <option value="let"><=</option>
+                <option value="gt">></option>
+                <option value="get">>=</option>
+            </select>
+        </div>
+    {% endraw %}
+</script>
+
+<script id="table-content-view-handlebars-template" type="text/x-handlebars-template">
+    {% raw %}
+        {{#if values }}
+            <table class="table table-hover table-bordered table-striped">
+                <thead>
+                    {{#each columnNames }}
+                        {{#ifCond this "!==" "id" }}
+                            <th>
+                                {{renderColumnHeader this ../../orderBy ../../orderDirection }}
+                            </th>
+                        {{/ifCond}}
+                    {{/each}}
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </thead>
+                <tbody>
+                    {{#each values}}
+                        <tr>
+                            {{renderTableRow this ../columnNames }}
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            <h2>No Information was found</h2>
+        {{/if}}
+    {% endraw %}
+</script>
+

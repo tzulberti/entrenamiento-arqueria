@@ -15,12 +15,12 @@ var TorneoFormView = BaseFormView.$extend({
 
         this.rondasTemplate = '' +
             '{{#each rondas }}' +
-                '<form role="form" class="form-horizontal ronda-{{ @index }}-form" enctype="multipart/form-data">' +
+                '<form role="form" class="form-horizontal ronda-form ronda-{{ @index }}-form" enctype="multipart/form-data">' +
                     '<input type="hidden" name="ronda-{{ @index }}-id" id="id-ronda-{{ @index }}"></input>' +
                     '<input type="hidden" name="foto-ronda-{{ @index }}" id="foto-ronda-{{ @index }}"></input>' +
                     '{{setIndex "indexRonda" @index}}' +
                     '<formset>' +
-                        '<h3>Ronda {{ @index }}</h3>' +
+                        '<h3>Ronda {{math @index "+" 1}}</h3>' +
                         '<div class="form-group">' +
                             '<label for="ronda-{{ @index }}-distancia" class="col-sm-2 control-label">Distancia</label>' +
                             '<div class="col-sm-10">' +
