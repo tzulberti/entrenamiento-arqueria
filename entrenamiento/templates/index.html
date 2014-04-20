@@ -108,6 +108,22 @@
 {% endblock %}
 
 {% block additional_javascript %}
+    {% include 'javascript/table-view.handlebars' %} 
+    <script id="pago-form-handlebars-template" type="text/x-handlebars-template">
+        <form role="form" class="form-horizontal">
+            {{ form_field(pago_form.cuando) }}         
+            {{ form_field(pago_form.mes_correspondiente) }}         
+            {{ form_field(pago_form.importe) }}         
+            {{ form_field(pago_form.razon) }}         
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <button type="submit" class="btn btn-primary button-save">Grabar</button>
+                </div>
+            </div> 
+        </form>
+        
+    </script>
+
     <script id="arco-recurvado-form-handlebars-template" type="text/x-handlebars-template">
         <form role="form" class="form-horizontal">
             {{ form_field(arco_recurvado_form.nombre) }} 
@@ -164,6 +180,7 @@
 
     <script src="/static/js/consts/tipo_torneos.js"></script>
     <script src="/static/js/consts/singleton.js"></script>
+    <script src="/static/js/models/database-information.js"></script>
 
     <script src="/static/js/base/table-view.js"></script>
     <script src="/static/js/base/form-view.js"></script>
@@ -188,9 +205,19 @@
     <script src="/static/js/main/menu-view.js"></script>
 
     <script type="text/javascript">
-        var menuView = new MainMenuView($("#main-menu"),
-                                        appsManager);
-        menuView.render();
+        $(document).ready(function(ev) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/v01/database-information/',
+                success: function(data, textStatus, jqXHR) {
+                    window.databaseInformation = new DatabaseInformation();
+                    window.databaseInformation.parseResponse(data.res);
+                    var menuView = new MainMenuView($("#main-menu"),
+                                                    appsManager);
+                    menuView.render();
+                }
+            });
+        });
     </script>
 {% endblock %}
 
