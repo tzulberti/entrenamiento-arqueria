@@ -2,8 +2,7 @@
  * Algunas extensiones que le agrego a jQuery para poder simplificar
  * mas el codigo.
  */
-$.fn.serializeObject = function()
-{
+$.fn.serializeObject = function() {
    var o = {};
    var a = this.serializeArray();
    $.each(a, function() {
@@ -17,6 +16,11 @@ $.fn.serializeObject = function()
        }
    });
    return o;
+};
+
+$.fn.clean = function() {
+    this.children().off('*');
+    this.empty();
 };
 
 /**

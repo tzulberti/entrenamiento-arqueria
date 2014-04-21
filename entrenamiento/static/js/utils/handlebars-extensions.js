@@ -17,6 +17,33 @@ Handlebars.registerHelper('readableName', function(columnName) {
     return columnName.toTitleCase();
 });
 
+
+/**
+ * Se necarga de renderar un filtro que el usuario creo cuando se esta viendo
+ * toda la informacion en forma de tabla.
+ *
+ * @param {Filter} filter: la informacion del filtro que aplico el usuario.
+ *
+ * @param {DatabaseInformation} databaseInformation: tiene toda la informacion
+ *                                  del schema de la base de datos.
+ */
+Handlebars.registerHelper('renderFilterData', function(filter, databaseInformation) {
+    var columnInformation = databaseInformation.getColumnInformation(filter.tableName,
+                                                                     fitler.columnName);
+    var res = columnInformation.frontendName;
+    var readableOperators = {
+        'eq': '=',
+        'neq', '!=',
+        'lt': '<',
+        'let': '<=',
+        'gt': '>',
+        'get': '>='
+    }
+    res += readableOperators[filter.operator];
+    res += value;
+    return res;
+});
+
 Handlebars.registerHelper('renderColumnHeader', function(columnName, orderBy, orderDirection) {
     var res = '<a href="#" class="column-name" id="column-' + columnName + '">';
     res += columnName.toTitleCase();

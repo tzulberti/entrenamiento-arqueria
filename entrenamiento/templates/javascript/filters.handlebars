@@ -1,0 +1,16 @@
+<script id="filters-view-handlebars-template" type="text/x-handlebars-template">
+{% raw %}
+    {{#if filters }}
+        Filters:
+        <ul>
+        {{#each filters }}
+            <li>
+                <a href="#" class="remove-filter" id="remove-filter-{{ @index }}"><span class="glyphicon glyphicon-remove"></span></a>
+                {{renderFilterData this ../databaseInformation }}
+            </li>
+        {{/each }}
+        </ul>
+    {{/if }}
+{% endraw %}
+</script>
+

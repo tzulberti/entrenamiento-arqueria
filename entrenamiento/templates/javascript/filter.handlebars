@@ -1,0 +1,38 @@
+<script id="filter-view-handlebars-template" type="text/x-handlebars-template">
+    {% raw %}
+    <div class="row">
+        <div class="col-md-4"> 
+            <select class="column-name">
+                {{#each columnsInformation #}}
+                <option value="{{ this.databaseName }}">{{ this.frontendName }}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="operators">
+                <option value="eq">=</option>
+                <option value="neq">!=</option>
+                {{#if isCategoric }}
+                    <option value="in">in</option>
+                {{else}}
+                    <option value="lt"><</option>
+                    <option value="lte"><=</option>
+                    <option value="gt">></option>
+                    <option value="gte">>=</option>
+                {{/if}}
+            </select>
+        </div>
+        <div class="col-md-3">
+            {{#if isCategoric }}
+                <select class="column-value">
+                </select>
+            {{else}}
+                <input class="column-value">
+            {{/if}}
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary create">Crear Filtro</button>
+        </div>
+    </div>
+    {% endraw %}
+</script>

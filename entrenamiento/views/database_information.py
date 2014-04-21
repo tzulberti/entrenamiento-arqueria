@@ -20,7 +20,6 @@ class DatabaseInformationView(UserRequiredView):
             columns = []
             res[model.__tablename__] = columns
             for column_information in model.__table__.columns:
-
                 columns.append(dict(name=column_information.key,
                                     type=self.get_type(column_information.type)))
 
