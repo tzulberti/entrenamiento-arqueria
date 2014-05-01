@@ -5,7 +5,7 @@ from flask import send_from_directory
 
 
 from entrenamiento.app.app import app, db, bcrypt
-from entrenamiento.app.singleton import mail_sender
+from entrenamiento.app.singleton import mail_sender, database_information
 from entrenamiento.models.invitacion import Invitacion
 from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.usuario import Usuario
@@ -97,9 +97,7 @@ register_url('pago', Pago, PagoForm)
 
 app.add_url_rule(BASE_API_URL + 'database-information/',
                  view_func=DatabaseInformationView.as_view('api.database.information',
-                                                           models=[Usuario, Invitacion, ArcoRecurvado,
-                                                                   Torneo, Ronda, Serie, Pago,
-                                                                   Lugar]))
+                                                           database_information=database_information))
 
 
 app.add_url_rule('/crear/usuario/invitacion/<hash_invitacion>/',
