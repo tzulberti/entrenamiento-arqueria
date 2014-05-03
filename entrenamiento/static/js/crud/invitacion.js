@@ -9,6 +9,7 @@ var InvitacionCrudApplication = BaseTemplateCrudApp.$extend({
             'email',
             'usada',
         ];
+        var formTemplate = $("#invitacion-form-handlebars-template").html();
         this.$super(historyManager, 'invitacion', formTemplate, element, columnNames);
     }
 });

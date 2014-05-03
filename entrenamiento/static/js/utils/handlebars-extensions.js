@@ -33,7 +33,7 @@ Handlebars.registerHelper('renderFilterData', function(filter, databaseInformati
     var res = columnInformation.frontendName;
     var readableOperators = {
         'eq': '=',
-        'neq', '!=',
+        'neq': '!=',
         'lt': '<',
         'let': '<=',
         'gt': '>',

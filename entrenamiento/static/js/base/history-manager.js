@@ -101,5 +101,3 @@ var HistoryManager = Class.$extend({
     }
 
 });
-
-var historyManager = new HistoryManager();

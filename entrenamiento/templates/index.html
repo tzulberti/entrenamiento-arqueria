@@ -208,27 +208,13 @@
     <script src="/static/js/crud/torneos.js"></script>
     <script src="/static/js/crud/pago.js"></script>
 
-    <!-- 
-        Esto tiene que ir ultimo para asegurarme de que 
-        todas las clases a las que hace referencia existan.
-    -->
-
-    <script src="/static/js/base/register.js"></script>
     <script src="/static/js/main/menu-view.js"></script>
+    <script src="/static/js/main/main-application.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(ev) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/v01/database-information/',
-                success: function(data, textStatus, jqXHR) {
-                    window.databaseInformation = new DatabaseInformation();
-                    window.databaseInformation.parseResponse(data.res);
-                    var menuView = new MainMenuView($("#main-menu"),
-                                                    appsManager);
-                    menuView.render();
-                }
-            });
+            window.app = new MainApplication();
+            window.app.start();
         });
     </script>
 {% endblock %}
