@@ -15,25 +15,21 @@ var FilterController = Class.$extend({
      * @param {String} tableName: el nombre de la tabla para la cual el usuario puede
      *                            aplicar el filtro.
      *
-     * @param {ExistingFilters} existingFilters: el modelo que tiene toda la informacion
-     *                            sobre los diferentes filtros aplicados por el usuario
+     * @param {SearchController} searchController: el controller que une todas las
+     *                                             partes del search correspondiente.
      *
-     * @param {FiltersController} filtersController: el controller que muestra todos los
-     *                              filtros que existen en el sistema.
-     */
-    __init__: function(view, databaseInformation, tableName, existingFilters,
-                       filtersController) {
+    */
+    __init__: function(view, databaseInformation, tableName, searchController) {
         this.view = view;
         this.databaseInformation = databaseInformation;
         this.tableName = tableName;
-        this.existingFilters = existingFilters;
-        this.filtersController = filtersController;
+        this.searchController = searchController;
     },
 
     prepareView: function() {
         var selectedColumnName = null;
-        if (this.view.$element.find('.column-name')) {
-            selectedColumnName = this.view.$element.find('.column-name');
+        if (this.view.$element.find('.column-name').exists()) {
+            selectedColumnName = this.view.$element.find('.column-name').val();
         } else {
             // en caso de que no haya seleccionado ninguna entonces marco
             // como opcion la primer columna de la tabla.
@@ -73,8 +69,8 @@ var FilterController = Class.$extend({
         ev.preventDefault();
 
         var selectedColumn = this.view.$element.find('.column-name').val();
-        var selectedOperator = this.view.$element.find('.operator').val();
-        var selectedValue = this.view.$element.find('.value');
+        var selectedOperator = this.view.$element.find('.operators').val();
+        var selectedValue = this.view.$element.find('.value').val();
 
         var emptyValue = false;
         if (selectedValue === null) {
@@ -94,7 +90,7 @@ var FilterController = Class.$extend({
                                 selectedColumn,
                                 selectedOperator,
                                 selectedValue);
-        this.existingFilters.addFilter(filter);
-        this.filtersController.prepareView();
+
+        this.searchController.addFilter(filter);
     }
 });

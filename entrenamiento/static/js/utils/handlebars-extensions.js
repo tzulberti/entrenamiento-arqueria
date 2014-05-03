@@ -29,7 +29,7 @@ Handlebars.registerHelper('readableName', function(columnName) {
  */
 Handlebars.registerHelper('renderFilterData', function(filter, databaseInformation) {
     var columnInformation = databaseInformation.getColumnInformation(filter.tableName,
-                                                                     fitler.columnName);
+                                                                     filter.columnName);
     var res = columnInformation.frontendName;
     var readableOperators = {
         'eq': '=',
@@ -39,8 +39,8 @@ Handlebars.registerHelper('renderFilterData', function(filter, databaseInformati
         'gt': '>',
         'get': '>='
     }
-    res += readableOperators[filter.operator];
-    res += value;
+    res += ' ' + readableOperators[filter.operator];
+    res += ' ' + filter.value;
     return res;
 });
 

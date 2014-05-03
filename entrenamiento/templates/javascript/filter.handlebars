@@ -1,14 +1,17 @@
 <script id="filter-view-handlebars-template" type="text/x-handlebars-template">
     {% raw %}
+    <div>
+        Crear nuevo filtro
+    </div>
     <div class="row">
-        <div class="col-md-4"> 
+        <div class="col-md-2"> 
             <select class="column-name">
-                {{#each columnsInformation #}}
+                {{#each columnsInformation }}
                 <option value="{{ this.databaseName }}">{{ this.frontendName }}</option>
                 {{/each}}
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-1">
             <select class="operators">
                 <option value="eq">=</option>
                 <option value="neq">!=</option>
@@ -22,17 +25,33 @@
                 {{/if}}
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             {{#if isCategoric }}
-                <select class="column-value">
+                <select class="value">
                 </select>
             {{else}}
-                <input class="column-value">
+                <input class="value">
             {{/if}}
         </div>
         <div class="col-md-2">
             <button type="button" class="btn btn-primary create">Crear Filtro</button>
         </div>
     </div>
+    {% endraw %}
+</script>
+
+<script id="filters-view-handlebars-template" type="text/x-handlebars-template">
+    {% raw %}
+        {{#if filters}}
+            <div class="row">
+                <ul>
+                    {{#each filters}}
+                    <li>
+                        {{renderFilterData this ../databaseInformation }}
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
     {% endraw %}
 </script>

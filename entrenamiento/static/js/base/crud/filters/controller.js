@@ -10,17 +10,20 @@ var FiltersController = Class.$extend({
      * @param {FiltersView} view: la view que se encarga de mostrar todos los
      *                            filtros que existen.
      *
-     * @param {ExistingFilters} existingFilters: los filtros que aplico el usuario.
+     * @param {SearchController} searchController: el controller que tiene toda la
+     *                                             informacion sobre de los filtros
+     *                                             aplicados
+     *
      */
-    __init__: function(view, existingFilters) {
+    __init__: function(view, searchController) {
         this.view = view;
-        this.existingFilters = existingFilters;
+        this.searchController = searchController;
 
         this.prepareView();
     },
 
     prepareView: function() {
-        this.view.render(this.existingFilters);
+        this.view.render(this.searchController.filters);
 
         this.view.$element.on('click', '.remove-filter', $.proxy(this.removeFilter, this));
     },
@@ -38,6 +41,7 @@ var FiltersController = Class.$extend({
         index = index.replace('remove-filter-', '');
         index = parseInt(index, 10);
 
-        this.existingFilters.removeByIndex(index);
+        this.searchController.removeByIndex(index);
+        this.prepareView();
     }
 });

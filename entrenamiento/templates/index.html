@@ -109,6 +109,7 @@
 
 {% block additional_javascript %}
     {% include 'javascript/table-view.handlebars' %} 
+    {% include 'javascript/filter.handlebars' %} 
 
     <script id="invitacion-form-handlebars-template" type="text/x-handlebars-template">
         <form role="form" class="form-horizontal">
@@ -193,6 +194,8 @@
     <script src="/static/js/consts/tipo_torneos.js"></script>
     <script src="/static/js/consts/singleton.js"></script>
     <script src="/static/js/models/database-information.js"></script>
+    <script src="/static/js/models/column-information.js"></script>
+    <script src="/static/js/models/filter.js"></script>
 
     <script src="/static/js/base/table-view.js"></script>
     <script src="/static/js/base/form-view.js"></script>
@@ -210,6 +213,12 @@
 
     <script src="/static/js/main/menu-view.js"></script>
     <script src="/static/js/main/main-application.js"></script>
+    
+    <script src="/static/js/base/crud/filter/view.js"></script>
+    <script src="/static/js/base/crud/filter/controller.js"></script>
+    <script src="/static/js/base/crud/filters/view.js"></script>
+    <script src="/static/js/base/crud/filters/controller.js"></script>
+    <script src="/static/js/base/crud/search/controller.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(ev) {

@@ -41,7 +41,6 @@ var TableView = Class.$extend({
         // no lo puedo recivir por el constructor,
         // por lo que lo tengo que recivir por aca...
         this.crudView = null;
-        this.filters = [];
         this.orderBy = null;
         this.orderDirection = 'ASC';
         this.limit = 20;
@@ -60,14 +59,16 @@ var TableView = Class.$extend({
      */
     render: function() {
         var baseHtml = Handlebars.render(this.template, {});
+        this.$element.clean();
         this.$element.html(baseHtml);
-        this.getData();
 
-        this.$element.off('click', '.button-create');
-        this.$element.off('click', '.pagination-page');
-        this.$element.off('click', '.button-edit');
-        this.$element.off('click', '.button-delete');
-        this.$element.off('click', '.column-name');
+        this.searchController = new SearchController(this.$element.find('.search-conditions'),
+                                                     window.app.databaseInformation,
+                                                     this.modelName,
+                                                     this);
+        this.searchController.render();
+
+        this.getData();
 
         this.$element.on('click', '.button-create', $.proxy(this.createNew, this));
         this.$element.on('click', '.pagination-page', $.proxy(this.changePage, this));
@@ -94,6 +95,15 @@ var TableView = Class.$extend({
         // le tengo que volver a setear el valor en true para que el proximo
         // cambio que le haga, si lo agrugue al historial
         this.addToHistory = true;
+
+        // tengo que traducir la information de los filtros
+        var filtersQueryString = '';
+        var filtersData = [];
+        for (var i = 0; i < this.searchController.filters.length; i++) {
+            var currentFilter = this.searchController.filters[i];
+            filtersData.push(currentFilter.tableName + '|' + currentFilter.columnName + '|' + currentFilter.operator + '|' + currentFilter.value);
+
+        }
         $.ajax({
             type: 'GET',
             url: '/api/v01/' + this.modelName + '/',
@@ -102,7 +112,7 @@ var TableView = Class.$extend({
                 limit: this.limit,
                 orderBy: this.orderBy,
                 orderDirection: this.orderDirection,
-                filters: this.filters
+                filters: filtersData
             },
             success: function(data, textStatus, jqXHR) {
                 self.renderInformation(data);

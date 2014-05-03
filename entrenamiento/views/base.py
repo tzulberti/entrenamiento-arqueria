@@ -88,14 +88,9 @@ class BaseModelListCrudView(UserRequiredView):
         # entones de setear el tema de los limit, me fijo el tema
         # de los filtros de las cosas que puede ver el usuario.
         filter_index = 0
-        while True:
-            current_filter_key = 'f-%s' % filter_index
-            if not (current_filter_key in request.args):
-                break
-
-            filter_data = request.args[current_filter_key]
-            table_name, column_name, operator, value = filter_data.split(';')
-
+        filters_data = request.args.getlist('filters[]')
+        for filter_data in filters_data:
+            table_name, column_name, operator, value = filter_data.split('|')
 
             column = getattr(self.model_class, column_name)
             if operator == 'eq':
@@ -124,6 +119,10 @@ class BaseModelListCrudView(UserRequiredView):
             if not (logged_user.es_entrenador or logged_user.es_administrador):
                 query = query.filter(getattr(self.model_class, 'id_usuario') == logged_user.id)
 
+        # esto lo tengo que poner antes del limit y offset porque sino
+        # el count va a tener en cuenta esas cosas
+        filter_count = query.count()
+
         if 'limit' in request.args:
             limit = int(request.args['limit'])
             query = query.limit(limit)
@@ -137,7 +136,6 @@ class BaseModelListCrudView(UserRequiredView):
         # ahora me tengo que fijar cuantos existen en la base de datos
         # en total y cuantos existen cuando se aplican los filtros
         total_count = self.model_class.query.count()
-        filter_count = total_count
 
         return jsonify(values=res,
                        totalCount=total_count,

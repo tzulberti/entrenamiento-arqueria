@@ -6,15 +6,35 @@
 var DatabaseInformation = Class.$extend({
 
     __init__: function() {
-        this.databaseInformation = null;
+        this.databaseInformation = {};
     },
 
     parseResponse: function(information) {
-        this.databaseInformation = information;
+        for (var tableName in information) {
+            var tableColumns = information[tableName];
+            var columnsInformation = []
+            this.databaseInformation[tableName] = columnsInformation;
+            for (var i = 0; i < tableColumns.length; i++) {
+                var currentColumn = tableColumns[i];
+                columnsInformation.push(new ColumnInformation(tableName,
+                                                              currentColumn.name,
+                                                              currentColumn.foreingKey,
+                                                              currentColumn.type));
+            }
+        }
     },
 
-    getTableInformation: function(tableName) {
-        return this.databaseInformation(tableName);
+    getTableColumns: function(tableName) {
+        return this.databaseInformation[tableName];
+    },
+
+    getColumnInformation: function(tableName, columnName) {
+        var tableColumns = this.getTableColumns(tableName);
+        for (var i = 0; i < tableColumns.length; i++) {
+            if (tableColumns[i].databaseName === columnName) {
+                return tableColumns[i];
+            }
+        }
     }
 
 });
