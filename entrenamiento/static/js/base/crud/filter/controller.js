@@ -57,8 +57,6 @@ var FilterController = Class.$extend({
      * Handler de cuando el usuario cambia el operador por el cual va a aplicar el filtro.
      */
     changedSelectedOperator: function(ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
     },
 
     /**

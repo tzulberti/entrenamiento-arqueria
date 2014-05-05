@@ -70,11 +70,11 @@ var TableView = Class.$extend({
 
         this.getData();
 
-        this.$element.on('click', '.button-create', $.proxy(this.createNew, this));
-        this.$element.on('click', '.pagination-page', $.proxy(this.changePage, this));
-        this.$element.on('click', '.button-edit', $.proxy(this.editValue, this));
-        this.$element.on('click', '.button-delete', $.proxy(this.deleteValue, this));
-        this.$element.on('click', '.column-name', $.proxy(this.selectedOrderBy, this));
+        this.$element.find('#information-container').on('click', '.button-create', $.proxy(this.createNew, this));
+        this.$element.find('#information-container').on('click', '.pagination-page', $.proxy(this.changePage, this));
+        this.$element.find('#information-container').on('click', '.button-edit', $.proxy(this.editValue, this));
+        this.$element.find('#information-container').on('click', '.button-delete', $.proxy(this.deleteValue, this));
+        this.$element.find('#information-container').on('click', '.column-name', $.proxy(this.selectedOrderBy, this));
    },
 
 

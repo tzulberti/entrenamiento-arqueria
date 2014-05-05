@@ -105,6 +105,8 @@ class BaseModelListCrudView(UserRequiredView):
                 query = query.filter(column >= value)
             elif operator == 'in':
                 query = query.filter(column.in_(value.split(',')))
+            elif operator == 'neq':
+                query = query.filter(column != value)
             else:
                 raise Exception('Todavia me falta manejar este caso')
             filter_index +=1

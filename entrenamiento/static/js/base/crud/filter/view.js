@@ -44,6 +44,8 @@ var FilterView = Class.$extend({
         });
         this.$element.clean();
         this.$element.html(html);
+
+        this.$element.find('.column-name').val(columnName);
     }
 
 

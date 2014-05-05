@@ -18,8 +18,14 @@ $.fn.serializeObject = function() {
    return o;
 };
 
+/**
+ * Limpia todo el html, y saca todos los events de los hijos
+ * del elemento y tambien los del elemento en cuestion.
+ */
 $.fn.clean = function() {
-    this.children().off('*');
+    this.children().off();
+    this.find('*').off();
+    this.off();
     this.empty();
 };
 
