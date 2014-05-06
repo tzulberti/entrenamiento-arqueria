@@ -16,10 +16,20 @@ var DatabaseInformation = Class.$extend({
             this.databaseInformation[tableName] = columnsInformation;
             for (var i = 0; i < tableColumns.length; i++) {
                 var currentColumn = tableColumns[i];
+                var constValues = [];
+                if (currentColumn.const_values) {
+                    for (var j = 0; j < currentColumn.const_values.length; j++) {
+                        var aux = currentColumn.const_values[j];
+                        constValues.push(new ConstValue(aux.id,
+                                                        aux.value,
+                                                        aux.showOrder));
+                    }
+                }
                 columnsInformation.push(new ColumnInformation(tableName,
                                                               currentColumn.name,
-                                                              currentColumn.foreingKey,
-                                                              currentColumn.type));
+                                                              currentColumn.foreing_key,
+                                                              currentColumn.type,
+                                                              constValues));
             }
         }
     },

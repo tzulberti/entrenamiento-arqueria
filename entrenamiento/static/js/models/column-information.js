@@ -4,16 +4,61 @@
  */
 var ColumnInformation = Class.$extend({
 
-    __init__: function(tableName, databaseName, foreignKey, type) {
+    /**
+     * Constructor.
+     *
+     * @param {String} tableName: el nombre de la tabla a donde pertenece esta columna.
+     *
+     * @paramm {String} databaseName: el nombre de la columna como figura en la base de datos.
+     *
+     * @param {String} foreignKey: en caso de que la columna sea una FK a otra, entonces
+     *                             tiene el nombre de la tabla a la que referencia. Si la
+     *                             misma es constante, entonces va a tener el nombre de la
+     *                             tabla constante a la que referencia
+     *
+     * @param {String} type: indica el tipo de la columna (numerno, string, etc...)
+     *
+     * @param {Array(ConstValue)} constValues: en caso de que la columna sea una
+     *                                         referencia a valores constantes, entonces
+     *                                         son los valores constantes en cuestion
+     */
+    __init__: function(tableName, databaseName, foreignKey, type, constValues) {
         this.tableName = tableName;
         this.databaseName = databaseName;
         this.frontendName = databaseName.toTitleCase();
         this.foreingKey = foreignKey;
         this.type = type;
-        this.constValues = [];
+        this.constValues = constValues;
     },
 
-    isCategoric: function() {
-        return false;
+    /**
+     * Indica si los valores de la columna que puede tomar son constantes
+     * o no.
+     */
+    isConst: function() {
+        return ! _.isEmpty(this.constValues);
+    }
+});
+
+/**
+ * Tiene toda la informacion de uno de los valores constantes que puede
+ * llegar a tomar la columna
+ */
+var ConstValue =  Class.$extend({
+
+    /**
+     * Constructor.
+     *
+     * @param {int} id: el identificador del valor constante en la base de datos.
+     *
+     * @param {String} value: el texto que se le tiene que mostrar al usuario.
+     *
+     * @param {int} showOrder: el orden en el que se tiene que mostrar
+     *                         los diferentes valores constantes.
+     */
+    __init__: function(id, value, showOrder) {
+        this.id = id;
+        this.value = value;
+        this.showOrder = showOrder;
     }
 });

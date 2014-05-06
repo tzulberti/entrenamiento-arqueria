@@ -69,7 +69,7 @@ class DatabaseInformation(object):
     :param list(BaseModel) models: todos los modelos de la aplicacion
                                    con los que se esta trabajando.
 
-    :param list(str) const_tables: el nombre de la tabla que es constante.
+    :param list(BaseModel) const_tables: el nombre de la tabla que es constante.
     '''
 
     def __init__(self, models, const_tables):
@@ -99,6 +99,24 @@ class DatabaseInformation(object):
                     column_data['foreign_key'] = foreign_keys[0]
                 else:
                     column_data['foreign_key'] = None
+
+                const_values = None
+                if column_data['foreign_key']:
+                    # me fijo si la FK es una que apunta a las tablas
+                    # que son constantes, y si es asi, busco la informacion
+                    # de la misma
+                    for const_model in self.const_tables:
+                        if const_model.__tablename__ == column_data['foreign_key']:
+                            values = const_model.query.all()
+                            const_values = []
+                            for value in values:
+                                const_values.append(dict(id=value.id,
+                                                         value=value.value,
+                                                         show_order=value.show_order))
+
+                column_data['const_values'] = const_values
+
+
 
                 columns.append(column_data)
 

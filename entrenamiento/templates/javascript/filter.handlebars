@@ -15,7 +15,7 @@
             <select class="operators">
                 <option value="eq">=</option>
                 <option value="neq">!=</option>
-                {{#if isCategoric }}
+                {{#if isConst }}
                     <option value="in">in</option>
                 {{else}}
                     <option value="lt"><</option>
@@ -26,7 +26,7 @@
             </select>
         </div>
         <div class="col-md-2">
-            {{#if isCategoric }}
+            {{#if isConst }}
                 <select class="value">
                 </select>
             {{else}}

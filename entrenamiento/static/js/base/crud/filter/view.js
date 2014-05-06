@@ -39,7 +39,7 @@ var FilterView = Class.$extend({
                                                                               columnName);
         var html = Handlebars.render(this.template, {
                         id: id,
-                        isCategoric: columnInformation.isCategoric(),
+                        isConst: columnInformation.isConst(),
                         columnsInformation: this.databaseInformation.getTableColumns(tableName)
         });
         this.$element.clean();
