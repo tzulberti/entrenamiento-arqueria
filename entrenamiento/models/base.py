@@ -1,5 +1,7 @@
 # -*- coding: utf-8- -*-
 
+from sqlalchemy.ext.declarative import declared_attr
+
 from datetime import datetime, date
 from entrenamiento.app.app import db
 
@@ -51,4 +53,17 @@ class BaseModel(db.Model):
         return res
 
 
+class BaseConstModel(BaseModel):
+    ''' Clase base para todos los modelos que son de tablas constantes.
+    Como todos ellos comparten el mismo schema, entonces la idea es
+    hacer una clase base para no tener que estar difiniendo el schema
+    todo el tiempo.
+    '''
+
+    __abstract__ = True
+    __mapper_args__= {'always_refresh': True}
+
+    id = db.Column(db.Integer, primary_key=True)
+    value = db.Column(db.Text, unique=True)
+    show_order = db.Column(db.Integer, unique=True)
 

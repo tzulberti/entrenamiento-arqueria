@@ -3,24 +3,26 @@
 ''' Tiene todas las tablas que son categoricas/constantes.
 '''
 
-from entrenamiento.app.app import db
-from entrenamiento.models.base import BaseModel
+from entrenamiento.models.base import BaseConstModel
 
-class LargoPalas(BaseModel):
+class LargoPalas(BaseConstModel):
     ''' Tiene la informacion sobre los diferentes largos de palas
     que pueden llegar a existir en el sistema.
     '''
 
-    id = db.Column(db.Integer, primary_key=True)
-    value = db.Column(db.Text, unique=True)
-    show_order = db.Column(db.Integer, unique=True)
+    __tablename__ = 'largo_palas'
+    pass
 
-class LargoRiser(BaseModel):
+class RazonPago(BaseConstModel):
+    ''' blah...
+    '''
+
+    __tablename__ = 'razon_pago'
+
+class LargoRiser(BaseConstModel):
     ''' Tiene la informacion sobre los diferentes largos de riser
     (cuerpo del arco) que pueden llegar a existir.
     '''
 
-    id = db.Column(db.Integer, primary_key=True)
-    value = db.Column(db.Text, unique=True)
-    show_order = db.Column(db.Integer, unique=True)
+    __tablename__ = 'largo_riser'
 
