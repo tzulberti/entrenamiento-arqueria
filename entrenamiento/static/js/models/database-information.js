@@ -27,7 +27,7 @@ var DatabaseInformation = Class.$extend({
                 }
                 columnsInformation.push(new ColumnInformation(tableName,
                                                               currentColumn.name,
-                                                              currentColumn.foreing_key,
+                                                              currentColumn.foreign_key,
                                                               currentColumn.type,
                                                               constValues));
             }

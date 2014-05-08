@@ -26,7 +26,7 @@ var ColumnInformation = Class.$extend({
         this.tableName = tableName;
         this.databaseName = databaseName;
         this.frontendName = databaseName.toTitleCase();
-        this.foreingKey = foreignKey;
+        this.foreignKey = foreignKey;
         this.type = type;
         this.constValues = constValues;
     },
