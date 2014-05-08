@@ -4,7 +4,7 @@
  */
 var LugarApplication = BaseTemplateCrudApp.$extend({
 
-    __init__: function(historyManager, element) {
+    __init__: function(historyManager, apiManager, element) {
         var formTemplate = '' +
             '<form role="form" class="form-horizontal">' +
                 '<div class="form-group">' +
@@ -47,7 +47,7 @@ var LugarApplication = BaseTemplateCrudApp.$extend({
             'longitud',
             'es_de_entrenamiento'
         ];
-        this.$super(historyManager, 'lugar', formTemplate, element, columnNames);
+        this.$super(historyManager, apiManager, 'lugar', formTemplate, element, columnNames);
     }
 });
 

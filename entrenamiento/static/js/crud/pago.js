@@ -4,14 +4,14 @@
  */
 var PagoCrudApplication = BaseTemplateCrudApp.$extend({
 
-    __init__: function(historyManager, element) {
+    __init__: function(historyManager, apiManager, element) {
         var formTemplate = $("#pago-form-handlebars-template").html();
         var columnNames = [
             'cuando',
             'importe',
-            'razon'
+            'razon_pago_id'
         ];
-        this.$super(historyManager, 'pago', formTemplate, element, columnNames);
+        this.$super(historyManager, apiManager, 'pago', formTemplate, element, columnNames);
     }
 });
 

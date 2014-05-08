@@ -50,7 +50,7 @@ var BaseCrudApp = BaseApp.$extend({
  */
 var BaseTemplateCrudApp = BaseCrudApp.$extend({
 
-    __init__: function(historyManager, modelName, formTemplate, element, columnNames) {
+    __init__: function(historyManager, apiManager, modelName, formTemplate, element, columnNames) {
         this.modelName = modelName;
         this.formTemplate = formTemplate;
         this.$element = element;
@@ -59,9 +59,10 @@ var BaseTemplateCrudApp = BaseCrudApp.$extend({
 
 
         var tableView = new TableView(this.$element.find('.table-container'),
-                                       this.modelName,
-                                       this.columnNames,
-                                       historyManager);
+                                      this.modelName,
+                                      this.columnNames,
+                                      historyManager,
+                                      apiManager);
         var formView = new TemplateFormView(this.$element.find('.form-container'),
                                              this.formTemplate,
                                              this.modelName);

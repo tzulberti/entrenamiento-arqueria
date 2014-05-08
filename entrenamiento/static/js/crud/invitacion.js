@@ -4,13 +4,13 @@
  */
 var InvitacionCrudApplication = BaseTemplateCrudApp.$extend({
 
-    __init__: function(historyManager, element) {
+    __init__: function(historyManager, apiManager, element) {
         var columnNames = [
             'email',
             'usada',
         ];
         var formTemplate = $("#invitacion-form-handlebars-template").html();
-        this.$super(historyManager, 'invitacion', formTemplate, element, columnNames);
+        this.$super(historyManager, apiManager, 'invitacion', formTemplate, element, columnNames);
     }
 });
 

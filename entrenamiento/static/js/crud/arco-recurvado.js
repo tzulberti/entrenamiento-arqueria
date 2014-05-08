@@ -4,14 +4,14 @@
  */
 var ArcosRecurvadosCrudApplication = BaseTemplateCrudApp.$extend({
 
-    __init__: function(historyManager, element) {
+    __init__: function(historyManager, apiManager, element) {
         var formTemplate = $("#arco-recurvado-form-handlebars-template").html();
         var columnNames = [
             'nombre',
             'modelo_riser',
             'modelo_palas'
         ];
-        this.$super(historyManager, 'arco-recurvado', formTemplate, element, columnNames);
+        this.$super(historyManager, apiManager, 'arco-recurvado', formTemplate, element, columnNames);
     }
 });
 

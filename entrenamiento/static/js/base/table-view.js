@@ -28,11 +28,12 @@ var TableView = Class.$extend({
      *                                     el usuario.
      *
      */
-    __init__: function(element, modelName, columnNames, historyManager) {
+    __init__: function(element, modelName, columnNames, historyManager, apiManager) {
         this.$element = element;
         this.modelName = modelName;
         this.columnNames = columnNames;
         this.historyManager = historyManager;
+        this.apiManager = apiManager;
 
         // si este valor es false, entonces el siguiente cambio que haga a la
         // tabla el usuario no se lo va a agregar al history
@@ -102,22 +103,21 @@ var TableView = Class.$extend({
         for (var i = 0; i < this.searchController.filters.length; i++) {
             var currentFilter = this.searchController.filters[i];
             filtersData.push(currentFilter.tableName + '|' + currentFilter.columnName + '|' + currentFilter.operator + '|' + currentFilter.value);
-
         }
-        $.ajax({
-            type: 'GET',
-            url: '/api/v01/' + this.modelName + '/',
-            data: {
+
+        var ajaxData = {
                 offset: this.currentPage * this.limit,
                 limit: this.limit,
                 orderBy: this.orderBy,
                 orderDirection: this.orderDirection,
                 filters: filtersData
-            },
-            success: function(data, textStatus, jqXHR) {
-                self.renderInformation(data);
-            }
-        });
+        };
+
+        this.apiManager.ajaxCall(this.modelName + '/',
+                                 ajaxData,
+                                 'GET',
+                                 $.proxy(this.renderInformation, this)
+        );
     },
 
     /**

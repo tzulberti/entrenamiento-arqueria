@@ -11,6 +11,8 @@ var MainApplication = Class.$extend({
         this.databaseInformation = new DatabaseInformation();
         this.appsManager = new AppsManager();
         this.historyManager = new HistoryManager();
+        this.apiManager = new APIManager();
+
         this.menuView = null;
     },
 
@@ -34,13 +36,26 @@ var MainApplication = Class.$extend({
         this.databaseInformation = new DatabaseInformation();
         this.databaseInformation.parseResponse(data.res);
 
+
         // aca van todas las apps relacionadas al tema del CRUD.
-        var crudLugarApp = new LugarApplication(this.historyManager, $('.container'));
-        var crudUsuariosApp = new UsuariosCrudApplication(this.historyManager, $('.container'));
-        var crudArcosRecurvadosApp = new ArcosRecurvadosCrudApplication(this.historyManager, $('.container'));
-        var crudTorneosApp = new TorneosCrudApplication(this.historyManager, $('.container'));
-        var crudInvitacionApp = new InvitacionCrudApplication(this.historyManager, $('.container'));
-        var crudPagoApp = new PagoCrudApplication(this.historyManager, $('.container'));
+        var crudLugarApp = new LugarApplication(this.historyManager,
+                                                this.apiManager,
+                                                $('.container'));
+        var crudUsuariosApp = new UsuariosCrudApplication(this.historyManager,
+                                                          this.apiManager,
+                                                          $('.container'));
+        var crudArcosRecurvadosApp = new ArcosRecurvadosCrudApplication(this.historyManager,
+                                                                        this.apiManager,
+                                                                        $('.container'));
+        var crudTorneosApp = new TorneosCrudApplication(this.historyManager,
+                                                        this.apiManager,
+                                                        $('.container'));
+        var crudInvitacionApp = new InvitacionCrudApplication(this.historyManager,
+                                                              this.apiManager,
+                                                              $('.container'));
+        var crudPagoApp = new PagoCrudApplication(this.historyManager,
+                                                  this.apiManager,
+                                                  $('.container'));
 
         this.appsManager.addApplication(1, crudLugarApp);
         this.appsManager.addApplication(2, crudUsuariosApp);

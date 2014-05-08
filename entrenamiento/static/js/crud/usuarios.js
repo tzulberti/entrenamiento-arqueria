@@ -4,7 +4,7 @@
  */
 var UsuariosCrudApplication = BaseTemplateCrudApp.$extend({
 
-    __init__: function(historyManager, element) {
+    __init__: function(historyManager, apiManager, element) {
         var formTemplate = '' +
             '<form role="form" class="form-horizontal">' +
                 '<div class="form-group">' +
@@ -62,7 +62,7 @@ var UsuariosCrudApplication = BaseTemplateCrudApp.$extend({
             'es_entrenador',
             'es_administrador'
         ];
-        this.$super(historyManager, 'user', formTemplate, element, columnNames);
+        this.$super(historyManager, apiManager, 'user', formTemplate, element, columnNames);
     }
 });
 

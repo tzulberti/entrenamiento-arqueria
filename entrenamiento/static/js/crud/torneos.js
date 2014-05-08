@@ -612,7 +612,7 @@ var TorneoFormView = BaseFormView.$extend({
 
 var TorneosCrudApplication = BaseCrudApp.$extend({
 
-    __init__: function(historyManager, element) {
+    __init__: function(historyManager, apiManager, element) {
         var tableView = new TableView(element.find('.table-container'),
                                        'torneo',
                                        ['cuando','tipo_de_torneo', 'fue_practica', 'puntaje_final_torneo' ],
