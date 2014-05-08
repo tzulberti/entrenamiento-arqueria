@@ -13,7 +13,7 @@ from entrenamiento.models.usuario import Usuario
 from entrenamiento.models.arco import Arco, ArcoRecurvado
 from entrenamiento.models.pago import Pago
 from entrenamiento.models.torneo import Torneo, Ronda, Serie
-from entrenamiento.models.consts_tables import LargoRiser, LargoPalas
+from entrenamiento.models.consts_tables import LargoRiser, LargoPalas, RazonPago
 
 from entrenamiento.utils import MailSender, DatabaseInformation
 
@@ -36,7 +36,8 @@ models = [
 
 const_tables = [
     LargoRiser,
-    LargoPalas
+    LargoPalas,
+    RazonPago,
 ]
 
 #: la instancia que tiene toda la informacion sobre el schema de la base de

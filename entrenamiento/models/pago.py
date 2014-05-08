@@ -11,7 +11,7 @@ class Pago(BaseModel):
     cuando = db.Column(db.Date, nullable=False)
     mes_correspondiente = db.Column(db.Date, nullable=False)
     importe = db.Column(db.Float, nullable=False)
-    razon = db.Column(db.String, nullable=False)
+    razon_pago_id = db.Column(db.Integer, db.ForeignKey('razon_pago.id'), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     cargado_por = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
 
