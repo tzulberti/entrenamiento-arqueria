@@ -26,8 +26,11 @@
             </select>
         </div>
         <div class="col-md-2">
-            {{#if isConst }}
+            {{#if constValues }}
                 <select class="value">
+                    {{# each constValues }}
+                        <option value="{{ this.id}}">{{ this.value }}</option>
+                    {{/each}}
                 </select>
             {{else}}
                 <input class="value">

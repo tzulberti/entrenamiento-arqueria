@@ -21,6 +21,15 @@ var FilterView = Class.$extend({
     },
 
     /**
+     * Se encarga de renderar la opcion de loading encima del filtro. Esto se
+     * lo usa cuando se selecciona una columna que es una FK a otra tabla,
+     * y se esta obteniendo la informacion de esta tabla.
+     */
+    renderLoading: function() {
+        console.log('loading...');
+    },
+
+    /**
      * Se encarga de renderar la condicion de filtrado para
      * la tabla especificada.
      *
@@ -39,8 +48,8 @@ var FilterView = Class.$extend({
                                                                               columnName);
         var html = Handlebars.render(this.template, {
                         id: id,
-                        isConst: columnInformation.isConst(),
-                        columnsInformation: this.databaseInformation.getTableColumns(tableName)
+                        columnsInformation: this.databaseInformation.getTableColumns(tableName),
+                        constValues: columnInformation.constValues
         });
         this.$element.clean();
         this.$element.html(html);
