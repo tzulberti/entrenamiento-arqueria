@@ -37,6 +37,27 @@ var ColumnInformation = Class.$extend({
      */
     isConst: function() {
         return ! _.isEmpty(this.constValues);
+    },
+
+    /**
+     * Busca el valor constante teniendo en cuenta el identificador del
+     * mismos
+     *
+     * @param {int} id: el identificador del {ConstValue} que se esta
+     *                  buscando
+     *
+     * @return {ConstValue} correspondiente. Se tira una excepcion
+     *         sino se encontro ninguno.
+     */
+    getConstValue: function(id) {
+        for (var i = 0; i < this.constValues.length; i++) {
+            if (this.constValues[i].id === id) {
+                return this.constValues[i];
+            }
+        }
+        throw new Error('No se encontro nignun valor constante para la ' +
+                        'column: ' + this.databaseName + ' con id: ' +
+                        id);
     }
 });
 

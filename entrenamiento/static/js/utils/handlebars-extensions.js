@@ -40,7 +40,15 @@ Handlebars.registerHelper('renderFilterData', function(filter, databaseInformati
         'get': '>='
     }
     res += ' ' + readableOperators[filter.operator];
-    res += ' ' + filter.value;
+    if (columnInformation.isConst()) {
+        // si es por alguna constante entonces tengo que buscar el valor
+        // correspondiente de la misma
+        var id = parseInt(filter.value, 10);
+        var constValue = columnInformation.getConstValue(id);
+        res += ' ' + constValue.value;
+    } else {
+        res += ' ' + filter.value;
+    }
     return res;
 });
 
