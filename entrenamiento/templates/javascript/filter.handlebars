@@ -26,14 +26,22 @@
             </select>
         </div>
         <div class="col-md-2">
-            {{#if constValues }}
+            {{#if fkValues }}
                 <select class="value">
-                    {{# each constValues }}
+                    {{# each fkValues }}
                         <option value="{{ this.id}}">{{ this.value }}</option>
                     {{/each}}
                 </select>
             {{else}}
-                <input class="value">
+                {{#if constValues }}
+                    <select class="value">
+                        {{# each constValues }}
+                            <option value="{{ this.id}}">{{ this.value }}</option>
+                        {{/each}}
+                    </select>
+                {{else}}
+                    <input class="value">
+                {{/if}}
             {{/if}}
         </div>
         <div class="col-md-2">

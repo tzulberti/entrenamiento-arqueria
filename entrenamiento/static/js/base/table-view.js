@@ -27,13 +27,16 @@ var TableView = Class.$extend({
      * @param {Array(string)} columnNames: todas las columnas que esta viendo
      *                                     el usuario.
      *
+     * @param {Object} fkInformation: la informacion de las FK de la tabla
+     *                                que no son constantes.
      */
-    __init__: function(element, modelName, columnNames, historyManager, apiManager) {
+    __init__: function(element, modelName, columnNames, historyManager, apiManager, fkInformation) {
         this.$element = element;
         this.modelName = modelName;
         this.columnNames = columnNames;
         this.historyManager = historyManager;
         this.apiManager = apiManager;
+        this.fkInformation = fkInformation;
 
         // si este valor es false, entonces el siguiente cambio que haga a la
         // tabla el usuario no se lo va a agregar al history
@@ -66,6 +69,7 @@ var TableView = Class.$extend({
         this.searchController = new SearchController(this.$element.find('.search-conditions'),
                                                      window.app.databaseInformation,
                                                      this.modelName,
+                                                     this.fkInformation,
                                                      this);
         this.searchController.render();
 

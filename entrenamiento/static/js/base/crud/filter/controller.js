@@ -50,19 +50,7 @@ var FilterController = Class.$extend({
         ev.stopPropagation();
         ev.preventDefault();
 
-        var selectedColumnName = this.view.$element.find('.column-name').val();
-        var columnInformation = this.databaseInformation.getColumnInformation(this.tableName,
-                                                                              selectedColumnName);
-        if ((! columnInformation.isConst()) && columnInformation.foreignKey !== null) {
-            // en este caso tengo que la columna es una FK a otra
-            // columna de la base de datos, y que no esta en el cache porque
-            // no es una constante.
-            this.view.renderLoading();
-
-            throw new Error('Todavia no lo hice...');
-        } else {
-            this.prepareView();
-        }
+        this.prepareView();
     },
 
     /**

@@ -101,7 +101,7 @@ def register_views(app, db, bcrypt):
                                                         form_class=InvitacionForm))
 
     register_url(app, db, 'lugar', Lugar, LugarForm)
-    register_url(app, db, 'user', Usuario, UserForm)
+    register_url(app, db, 'usuario', Usuario, UserForm)
     # TODO en esta view solo se deberia permitir el tema de la lectura
     # del GET
     register_url(app, db, 'arco', Arco, ArcoRecurvadoForm)

@@ -55,21 +55,80 @@ var BaseTemplateCrudApp = BaseCrudApp.$extend({
         this.formTemplate = formTemplate;
         this.$element = element;
         this.columnNames = columnNames;
+        this.missingCallbacks = [];
+        this.apiManager = apiManager;
+        this.historyManager = historyManager;
         historyManager.addApplicationForModel(modelName, this);
+
+
+
+        this.missingCallbacks = [];
+    },
+
+    start: function() {
+        // antes que nada tengo que cargar toda la informacion de todas las columnas
+        // que son FK a tablas que no son constantes.
+        this.missingCallbacks = {};
+        this.fkInformation = new FkInformation();
+        var tableColumns = window.app.databaseInformation.getTableColumns(this.modelName);
+        for (var i = 0; i < tableColumns.length; i++) {
+            var columnInfo = tableColumns[i];
+            if (columnInfo.foreignKey === null) {
+                continue;
+            }
+            if (columnInfo.isConst()) {
+                continue;
+            }
+            if (_.has(this.missingCallbacks, columnInfo.foreignKey)) {
+                continue;
+            }
+            this.missingCallbacks[columnInfo.foreignKey] = true;
+            this.apiManager.ajaxCallObject({
+                url: columnInfo.foreignKey + '/',
+                data: {
+                    fkInformation: true
+                },
+                type: 'GET',
+                successCallback: $.proxy(this.gotInformation, this, columnInfo.foreignKey)
+            });
+        }
+    },
+
+    gotInformation: function(modelName, response, textStatus, jqXHR) {
+        console.log(modelName);
+        this.missingCallbacks[modelName] = false;
+        this.fkInformation.parseTableResponse(modelName, response.values);
+
+        var missingData = _.values(this.missingCallbacks);
+        var shouldContinue = true;
+        for (var j = 0; j < missingData.length; j++) {
+            if (missingData[j]) {
+                shouldContinue = false;
+                break;
+            }
+        }
+
+        if (! shouldContinue) {
+            return;
+        }
 
 
         var tableView = new TableView(this.$element.find('.table-container'),
                                       this.modelName,
                                       this.columnNames,
-                                      historyManager,
-                                      apiManager);
+                                      this.historyManager,
+                                      this.apiManager,
+                                      this.fkInformation);
         var formView = new TemplateFormView(this.$element.find('.form-container'),
-                                             this.formTemplate,
-                                             this.modelName);
-        var crudView = new CrudView(tableView, formView, historyManager);
+                                            this.formTemplate,
+                                            this.modelName);
+        var crudView = new CrudView(tableView, formView, this.historyManager);
         tableView.crudView = crudView;
         formView.crudView = crudView;
-        this.$super(historyManager, crudView);
+
+        this.crudView = crudView;
+        this.crudView.render();
     }
+
 
 });

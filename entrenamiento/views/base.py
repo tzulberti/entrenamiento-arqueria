@@ -51,6 +51,18 @@ class BaseModelListCrudView(UserRequiredView):
           tambien esta indicado en el request.
         - Pueden existir diferentes filtros para la informacion.
 
+        Existe un parametro que es para un caso especial:
+
+        fkInformation:
+            en este caso se quiere obtener toda la informacion de la
+            tabla teniendo en cuenta que se lo va a usar para mostrar
+            el valor que es referenciado de otra tabla. Por lo tanto,
+            lo que se quiere en la respuesta son dos valores:
+
+            - id: el id del objecto en cuestion.
+            - value: el str del modelo en cuestion.
+
+
         Los filtros tienen que tener el siguiente formato:
 
         ::
@@ -121,9 +133,10 @@ class BaseModelListCrudView(UserRequiredView):
             if not (logged_user.es_entrenador or logged_user.es_administrador):
                 query = query.filter(getattr(self.model_class, 'id_usuario') == logged_user.id)
 
-        # esto lo tengo que poner antes del limit y offset porque sino
-        # el count va a tener en cuenta esas cosas
-        filter_count = query.count()
+        if not 'fkInformation' in request.args:
+            # esto lo tengo que poner antes del limit y offset porque sino
+            # el count va a tener en cuenta esas cosas
+            filter_count = query.count()
 
         if 'limit' in request.args:
             limit = int(request.args['limit'])
@@ -133,11 +146,16 @@ class BaseModelListCrudView(UserRequiredView):
             offset = int(request.args['offset'])
             query = query.offset(offset)
 
-        res = [d.to_json() for d in query.all()]
+        if 'fkInformation' in request.args:
+            total_count = 0
+            filter_count = 0
+            res = [dict(id=d.id, value=str(d)) for d in query.all()]
+        else:
+            res = [d.to_json() for d in query.all()]
 
-        # ahora me tengo que fijar cuantos existen en la base de datos
-        # en total y cuantos existen cuando se aplican los filtros
-        total_count = self.model_class.query.count()
+            # ahora me tengo que fijar cuantos existen en la base de datos
+            # en total y cuantos existen cuando se aplican los filtros
+            total_count = self.model_class.query.count()
 
         return jsonify(values=res,
                        totalCount=total_count,

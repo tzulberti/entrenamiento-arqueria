@@ -12,10 +12,15 @@ var FilterView = Class.$extend({
      *
      * @param {DatabaseInformation} databaseInformation: el modelo que tiene toda
      *                          la informacion sobre el schema de la base de datos.
+     *
+     * @param {FkInformation} fkInformation: tiene toda la informacion sobre
+     *                                       los valores referenciados por la
+     *                                       tabla que se esta filtrando.
      */
-    __init__: function(element, databaseInformation) {
+    __init__: function(element, databaseInformation, fkInformation) {
         this.$element = element;
         this.databaseInformation = databaseInformation;
+        this.fkInformation = fkInformation;
 
         this.template = $("#filter-view-handlebars-template").html();
     },
@@ -46,10 +51,17 @@ var FilterView = Class.$extend({
     render: function(tableName, columnName, id) {
         var columnInformation = this.databaseInformation.getColumnInformation(tableName,
                                                                               columnName);
+        var fkValues = [];
+        if (columnInformation.foreignKey !== null && (! columnInformation.isConst())) {
+            // en este caso la columna que selecciono el usuario es una FK a otra
+            // tabla de la base de datos.
+            fkValues = this.fkInformation.getTableValues(columnInformation.foreignKey);
+        }
         var html = Handlebars.render(this.template, {
                         id: id,
                         columnsInformation: this.databaseInformation.getTableColumns(tableName),
-                        constValues: columnInformation.constValues
+                        constValues: columnInformation.constValues,
+                        fkValues: fkValues
         });
         this.$element.clean();
         this.$element.html(html);

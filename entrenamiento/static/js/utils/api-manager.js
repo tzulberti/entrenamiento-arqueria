@@ -69,4 +69,8 @@ var APIManager = Class.$extend({
             error: $.proxy(this.ajaxError, this)
         });
     },
+
+    ajaxCallObject: function(params) {
+        return this.ajaxCall(params.url, params.data, params.type, params.successCallback);
+    }
 });

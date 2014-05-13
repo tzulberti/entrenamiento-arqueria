@@ -18,14 +18,19 @@ var SearchController = Class.$extend({
      * @param {String} tableName: el nombre de la tabla por la cual el usuario puede
      *                            filtrar.
      *
+     * @param {FkInformation} fkInformation: tiene toda la informacion de los valores
+     *                                       referenciados por la tabla que no son
+     *                                       constantes.
+     *
      * @param {TableView} tableView: la view que se encarga de mostrar toda la informacion
      *                               en forma de tabla
      *
      */
-    __init__: function(element, databaseInformation, tableName, tableView) {
+    __init__: function(element, databaseInformation, tableName, fkInformation, tableView) {
         this.$element = element;
         this.databaseInformation = databaseInformation;
         this.tableName = tableName;
+        this.fkInformation = fkInformation;
         this.tableView = tableView;
 
         this.filters = [];
@@ -33,13 +38,15 @@ var SearchController = Class.$extend({
 
     render: function() {
         var existingFiltersView = new FiltersView(this.$element.find('.existing-filters'),
-                                                  this.databaseInformation);
+                                                  this.databaseInformation,
+                                                  this.fkInformation);
         this.existingFilterController = new FiltersController(existingFiltersView,
                                                               this);
         this.existingFilterController.prepareView();
 
         var filterView = new FilterView(this.$element.find('.filter'),
-                                        this.databaseInformation);
+                                        this.databaseInformation,
+                                        this.fkInformation);
         this.filterController = new FilterController(filterView,
                                                      this.databaseInformation,
                                                      this.tableName,
