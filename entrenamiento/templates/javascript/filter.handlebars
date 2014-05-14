@@ -58,6 +58,9 @@
                 <ul>
                     {{#each filters}}
                     <li>
+                        <a class="remove-filter" href="#">
+                            <span id="remove-filter-{{@index}}" class="glyphicon glyphicon-remove-circle"></span>
+                        </a>
                         {{renderFilterData this ../databaseInformation ../fkInformation}}
                     </li>
                     {{/each}}

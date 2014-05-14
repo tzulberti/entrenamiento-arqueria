@@ -41,7 +41,6 @@ var FiltersController = Class.$extend({
         index = index.replace('remove-filter-', '');
         index = parseInt(index, 10);
 
-        this.searchController.removeByIndex(index);
-        this.prepareView();
+        this.searchController.removeFilter(index);
     }
 });

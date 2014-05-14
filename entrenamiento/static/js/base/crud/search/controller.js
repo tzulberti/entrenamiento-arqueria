@@ -66,6 +66,20 @@ var SearchController = Class.$extend({
 
         this.existingFilterController.prepareView();
         this.tableView.getData();
+    },
+
+    /**
+     * Handler de cuando el usuario quiere borrar un filtro basandose en
+     * el indice del mismo.
+     *
+     * En este caso se tiene que notificar al tableView para que vuelva
+     * a cargar la informacion sin ese filtro puntual.
+     */
+    removeFilter: function(filterIndex) {
+        this.filters.pop(filterIndex);
+
+        this.existingFilterController.prepareView();
+        this.tableView.getData();
     }
 
 });
