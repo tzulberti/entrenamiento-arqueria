@@ -18,5 +18,22 @@ var FkInformation = Class.$extend({
 
     getTableValues: function(tableName) {
         return this.information[tableName];
+    },
+
+    /**
+     * Se encarga de buscar la informacion que tiene el id
+     *
+     * @param {String} talbeName: el nombre de la tabla a la que pertence
+     *                            el valor en cuestion.
+     *
+     * @param {int} id: el identificador del valor que se quiere
+     */
+    getValue: function(tableName, id) {
+        var data = this.getTableValues(tableName);
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].id === id) {
+                return data[i];
+            }
+        }
     }
 });

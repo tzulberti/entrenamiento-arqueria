@@ -26,8 +26,11 @@ Handlebars.registerHelper('readableName', function(columnName) {
  *
  * @param {DatabaseInformation} databaseInformation: tiene toda la informacion
  *                                  del schema de la base de datos.
+ *
+ * @param {FkInformation} fkInformation: tiene toda la informacion de las tablas
+ *                                       referenciadas que no son constantes.
  */
-Handlebars.registerHelper('renderFilterData', function(filter, databaseInformation) {
+Handlebars.registerHelper('renderFilterData', function(filter, databaseInformation, fkInformation) {
     var columnInformation = databaseInformation.getColumnInformation(filter.tableName,
                                                                      filter.columnName);
     var res = columnInformation.frontendName;
@@ -46,6 +49,12 @@ Handlebars.registerHelper('renderFilterData', function(filter, databaseInformati
         var id = parseInt(filter.value, 10);
         var constValue = columnInformation.getConstValue(id);
         res += ' ' + constValue.value;
+    } else if (columnInformation.foreignKey !== null) {
+        var id = parseInt(filter.value, 10);
+        var referencedInfo = fkInformation.getValue(columnInformation.foreignKey,
+                                                    id);
+        res += ' ' + referencedInfo.value;
+
     } else {
         res += ' ' + filter.value;
     }

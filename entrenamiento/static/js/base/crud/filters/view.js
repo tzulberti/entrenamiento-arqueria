@@ -13,10 +13,15 @@ var FiltersView = Class.$extend({
      *
      * @param {DatabaseInformation} databaseInformation: tiene la informacion
      *                          del schema de la base de datos.
+     *
+     * @param {FkInformation} fkInformation: tiene la informacion de las tablas
+     *                                       referenciadas que no son constantes.
      */
-    __init__: function(element, databaseInformation) {
+    __init__: function(element, databaseInformation, fkInformation) {
         this.$element = element;
         this.databaseInformation = databaseInformation;
+        this.fkInformation = fkInformation;
+
         this.template = $("#filters-view-handlebars-template").html();
     },
 
@@ -29,7 +34,8 @@ var FiltersView = Class.$extend({
     render: function(filters) {
         var html = Handlebars.render(this.template, {
                             filters: filters,
-                            databaseInformation: this.databaseInformation
+                            databaseInformation: this.databaseInformation,
+                            fkInformation: this.fkInformation
         });
         this.$element.clean();
         this.$element.html(html);
