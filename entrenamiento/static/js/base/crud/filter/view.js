@@ -67,6 +67,11 @@ var FilterView = Class.$extend({
         this.$element.html(html);
 
         this.$element.find('.column-name').val(columnName);
+        if (columnInformation.type === 'date') {
+            this.$element.find('.value').datepicker({
+                format: 'dd/mm/yyyy'
+            });
+        }
     }
 
 
