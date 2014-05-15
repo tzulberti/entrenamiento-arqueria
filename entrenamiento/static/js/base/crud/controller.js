@@ -1,47 +1,146 @@
 /**
- * Controller que se encarga de manejar tanto el tema
-var CrudController = Class.$extend({
+ * Controller que es usado para simplemente renderar toda
+ * la informacion teniendo en cuenta el listado de las columnas
+ * y las views asociadas.
+ */
+var BaseCrudApp = Class.$extend({
 
     /**
-     * Inicializa la instancia.
+     * Constructor.
      *
-     * @param {TableView} tableView: la view que se encarga de mostrar
-     *                               todos los resultados de la tabla
-     *                               correspondiente.
+     * @param {jQuery} element: el elemento del DOM en donde es que se tiene
+     *                          que mostrar la tabla y el form.
      *
-     * @param {FormController} formController: la view que se encarga de mostrar el
-     *                                         form para que el usuario pueda actualizar
-     *                                         un valor o para crear uno nuevo.
+     * @param {HistoryManager} historyManager: el manager en donde se tiene que
+     *                                         se va a encargar de tener en cuenta
+     *                                         cuando el usuario cambia de opcion.
      *
-     * @param {HisotryManager} historyManager: el que se va a encargar de
-     *                                         trabajar con todo el tema
-     *                                         del historial del browser.
+     * @param {APIManager} apiManager: el manager que se va a usar para obtener la
+     *                                 informacion de las FK de las tablas.
+     *
+     * @param {DatabaseInformation} databaseInformation: tiene toda la informacion
+     *                                  del schema de la base de datos.
+     *
+     * @param {String} tableName: el nombre de la tabla que esta viendo el usuario
+     *                            actualmente.
+     *
+     * @param {Array(String)} tableColumns: una lista de las columnas que se tienen
+     *                              que mostrar en la view de columnas.
      */
-    __init__: function(tableView, formController, historyManager) {
-        this.tableView = tableView;
-        this.formController = formController;
+    __init__: function(element, historyManager, apiManager, databaseInformation,
+                       tableName, tableColumns) {
+        this.$element = element;
         this.historyManager = historyManager;
-    },
+        this.apiManager = apiManager;
+        this.databaseInformation = databaseInformation;
+        this.tableName = tableName;
+        this.tableColumns = tableColumns;
 
+        this.fkInformation = null;
+        this.missingCallbacks = null;
+    },
 
     /**
-     * Se encarga de renderar tanto el tableView como el formController.
-     *
-     * Pero a uno de los dos los va a ocultar teniendo en cuenta si
-     * la URL es de una instancia o es generica para ver todas.
+     * Se encarga de obtener toda la informacion de las FK de la
+     * tabla que esta viendo el usario para despues renderar el view
+     * correspondiente.
      */
-    render: function() {
-        this.tableView.$element.show();
-        this.formController.formView.$elementt.hide();
-        this.tableView.render();
+    start: function() {
+        // antes que nada tengo que cargar toda la informacion de todas las columnas
+        // que son FK a tablas que no son constantes.
+        this.missingCallbacks = {};
+        this.fkInformation = new FkInformation();
+        var tableColumns = this.databaseInformation.getTableColumns(this.tableName);
+        for (var i = 0; i < tableColumns.length; i++) {
+            var columnInfo = tableColumns[i];
+            if (columnInfo.foreignKey === null) {
+                continue;
+            }
+            if (columnInfo.isConst()) {
+                continue;
+            }
+            if (_.has(this.missingCallbacks, columnInfo.foreignKey)) {
+                continue;
+            }
+            this.missingCallbacks[columnInfo.foreignKey] = true;
+            this.apiManager.ajaxCallObject({
+                url: columnInfo.foreignKey + '/',
+                data: {
+                    fkInformation: true
+                },
+                type: 'GET',
+                successCallback: $.proxy(this.gotInformation, this, columnInfo.foreignKey)
+            });
+        }
     },
+
+    /**
+     * Handler de obtener la informacion de una de las tablas
+     * referenciadas por la tabla que esta viendo el usuario.
+     *
+     * @param {String} modelName: el nombre de la tabla de la cual se
+     *                            obtuvo la informacion.
+     *
+     * @param {Object} response: la respuesta del servidor por la cual
+     *                           puede filtrar el usuario.
+     *
+     *
+     */
+    gotInformation: function(modelName, response, textStatus, jqXHR) {
+        this.missingCallbacks[modelName] = false;
+        this.fkInformation.parseTableResponse(modelName, response.values);
+
+        var missingData = _.values(this.missingCallbacks);
+        var shouldContinue = true;
+        for (var j = 0; j < missingData.length; j++) {
+            if (missingData[j]) {
+                shouldContinue = false;
+                break;
+            }
+        }
+
+        if (! shouldContinue) {
+            return;
+        }
+
+        this.tableView = this.createTableView();
+        this.formView = this.createFormController();
+    },
+
+    /**
+     * Se encarga de crear la instancia del {TableView} que se va a
+     * encargar de mostrar toda la informacion.
+     */
+    createTableView: function() {
+        var tableView = new TableView(this.$element.find('.table-container'),
+                                      this.modelName,
+                                      this.columnNames,
+                                      this.historyManager,
+                                      this.apiManager,
+                                      this.fkInformation);
+        return tableView;
+    },
+
+    /**
+     * Se encarga de crear el form view/controller que se va a usar
+     * para crear / editar valores
+     *
+     * A diferencia del {createTableView}, este es un metodo abstracto
+     * por lo que las diferentes opciones se tienen que encargar de
+     * implementarlo.
+     */
+    createFormController: function() {
+        throw new Error('Se tiene que implementar este metodo');
+    },
+
+
 
     /**
      * Se encarga de mostrar la tabla con toda la informacion
      */
     showTable: function() {
         this.tableView.$element.show();
-        this.formController.formView.$elementt.hide();
+        this.formController.formView.$element.hide();
         this.tableView.getData();
     },
 
@@ -51,7 +150,7 @@ var CrudController = Class.$extend({
      */
     createNew: function() {
         this.tableView.$element.hide();
-        this.formController.formView.$elementt.show();
+        this.formController.formView.$element.show();
         this.formController.render(null);
     },
 
@@ -62,7 +161,7 @@ var CrudController = Class.$extend({
      */
     createdObject: function(objectId) {
         this.tableView.$element.show();
-        this.formController.formView.$elementt.hide();
+        this.formController.formView.$element.hide();
         this.tableView.createdObject();
     },
 
@@ -80,8 +179,7 @@ var CrudController = Class.$extend({
 
 
     /**
-     * Llamado desde el APP para que se encargue de manejar todo el tema
-     * de mostrar la tabla con toda la informacion.
+     * Llamado desde el history manager cuando se vuelve para atras.
      *
      * Esta funcion solo se la usa cuando el usuario esta cambiando la parte
      * del historial (haciendo Back o Forward), asique es importante tener
@@ -100,4 +198,43 @@ var CrudController = Class.$extend({
         // de los eventos.
         this.tableView.render();
     }
+
 });
+
+/**
+ * App para la parte del crud en donde el form se crea basandose
+ * en los campos especificados de cada uno.
+ */
+var FieldCrudApp = BaseCrudApp.$extend({
+
+    /**
+     * Constrcutor.
+     *
+     * @param {Array(FormFieldData)} formFieldsData: la informacion de todas las
+     *                                               columnas que se tienen que
+     *                                               renderar en el form.
+     */
+    __init__: function(element, historyManager, apiManager, databaseInformation,
+                       tableName, tableColumns, formFieldsData) {
+        this.$super(element, historyManager, apiManager, databaseInformation,
+                    tableName, tableColumns);
+        this.formFieldsData = formFieldsData;
+    },
+
+    /**
+     * Crea una instancia de {FieldFormView} basandose en las columnas
+     * especificadas.
+     */
+    createFormController: function() {
+        var view = new FormFieldView(this.$element.find('.form-container'),
+                                     this.databaseInformation.getTableColumns(this.tableName),
+                                     this.fkInformation,
+                                     this.formFieldsData);
+        var controller = new FormController(view,
+                                            this.apiManager,
+                                            this.tableName,
+                                            this);
+        return controller;
+
+    }
+})
