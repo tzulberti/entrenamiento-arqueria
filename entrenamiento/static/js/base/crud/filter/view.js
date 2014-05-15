@@ -72,6 +72,10 @@ var FilterView = Class.$extend({
                 format: 'dd/mm/yyyy'
             });
         }
+
+        if (columnInformation.isConst() || ! _.isEmpty(fkValues)) {
+            this.$element.find('.value').chosen();
+        }
     }
 
 
