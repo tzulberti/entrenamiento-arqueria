@@ -190,6 +190,11 @@ var TableView = Class.$extend({
         var previousPages = 0;
         var nextPages = 0;
         var maxNumberOfPages = filterCount / this.limit;
+        if (filterCount === 0) {
+            // en este caso no hay informacion porque la tabla no tiene
+            // informacion o por los filtros que se aplicaron
+            return
+        }
         if (filterCount % this.limit === 0) {
             // en este caso le tengo que restar uno porque es justo cuando
             // es multiplo de la cantidad de paginas que se estan mostrando.
