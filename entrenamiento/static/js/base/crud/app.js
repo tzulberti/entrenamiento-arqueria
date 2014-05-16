@@ -103,8 +103,6 @@ var BaseCrudApp = Class.$extend({
             return;
         }
 
-        console.log('Assssssssss');
-
         this.tableView = this.createTableView();
         this.formController = this.createFormController();
 
