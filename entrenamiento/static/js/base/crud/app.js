@@ -51,6 +51,7 @@ var BaseCrudApp = Class.$extend({
         this.missingCallbacks = {};
         this.fkInformation = new FkInformation();
         var tableColumns = this.databaseInformation.getTableColumns(this.tableName);
+        var hasFks = false;
         for (var i = 0; i < tableColumns.length; i++) {
             var columnInfo = tableColumns[i];
             if (columnInfo.foreignKey === null) {
@@ -62,6 +63,8 @@ var BaseCrudApp = Class.$extend({
             if (_.has(this.missingCallbacks, columnInfo.foreignKey)) {
                 continue;
             }
+
+            hasFks = true;
             this.missingCallbacks[columnInfo.foreignKey] = true;
             this.apiManager.ajaxCallObject({
                 url: columnInfo.foreignKey + '/',
@@ -71,6 +74,12 @@ var BaseCrudApp = Class.$extend({
                 type: 'GET',
                 successCallback: $.proxy(this.gotInformation, this, columnInfo.foreignKey)
             });
+        }
+
+        if (! hasFks) {
+            // en el caso de que no tenga ninguan FK, entones
+            // simplemente tengo que crear los controllers
+            this.createControllers();
         }
     },
 
@@ -103,6 +112,15 @@ var BaseCrudApp = Class.$extend({
             return;
         }
 
+
+        this.createControllers();
+    },
+
+    /**
+     * Se encarga de crear los controllers del form y del table
+     * view para mostrarselos al usuario.
+     */
+    createControllers: function() {
         this.tableView = this.createTableView();
         this.formController = this.createFormController();
 
@@ -112,6 +130,7 @@ var BaseCrudApp = Class.$extend({
         this.tableView.$element.show();
 
         this.tableView.render();
+
     },
 
     /**
