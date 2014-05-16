@@ -93,7 +93,7 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
             fkValues = fkInformation.getTableValues(columnInformation.foreignKey);
         }
     } else {
-        templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}">';
+        templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control">';
     }
 
     templateRes += '{{raw "[[#if"}} validationErrors.{{columnInformation.databaseName }} {{ raw "]]" }}' +
