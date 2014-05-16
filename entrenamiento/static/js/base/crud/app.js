@@ -103,8 +103,16 @@ var BaseCrudApp = Class.$extend({
             return;
         }
 
+        console.log('Assssssssss');
+
         this.tableView = this.createTableView();
         this.formController = this.createFormController();
+
+        // esto es por si antes venia de ver algun crud, entonces
+        // tengo que ocultar el form anterior y poner en nuevo
+        this.formController.formView.$element.hide();
+        this.tableView.$element.show();
+
         this.tableView.render();
     },
 
@@ -175,7 +183,7 @@ var BaseCrudApp = Class.$extend({
      */
     editObject: function(objectId) {
         this.tableView.$element.hide();
-        this.formController.formView.$elementt.show();
+        this.formController.formView.$element.show();
         this.formController.render(objectId);
     },
 
@@ -192,7 +200,7 @@ var BaseCrudApp = Class.$extend({
         this.tableView.orderDirection = orderDirection;
         this.tableView.currentPage = currentPage;
 
-        this.formController.formView.$elementt.hide();
+        this.formController.formView.$element.hide();
         this.tableView.$element.show();
         this.tableView.addToHistory = false;
 
