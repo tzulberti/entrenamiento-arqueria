@@ -48,10 +48,10 @@ class ValidateUniques(object):
         model_attrs = []
         form_attrs = []
         for attr_name in self.attr_names:
-            model_attrs.append(getattr(self.model_class, attr_name))
-            form_attrs.append(getattr(self, attr_name))
+            model_attrs.append(getattr(form.model_class, attr_name))
+            form_attrs.append(getattr(form, attr_name))
 
-        query = self.model_class.query
+        query = form.model_class.query
         # usar itertools
         for index in range(len(self.attr_names)):
             query = query.filter(model_attrs[index] == form_attrs[index].data)
@@ -60,12 +60,12 @@ class ValidateUniques(object):
             return True
 
 
-        if not self.object_id:
+        if not form.object_id:
             # en este caso el usuario estaba creando una nueva instancia,
             # pero ya existe una con esos datos.
             raise ValidationError(self.message)
 
-        if data.id != self.object_id:
+        if data.id != form.object_id:
             raise ValidationError(self.message)
 
 
@@ -92,11 +92,6 @@ class ValidationForm(Form):
             return False
         self.instance = self.get_instance()
         return True
-
-
-
-
-
 
     def get_instance(self, skip_fieldnames=[]):
         ''' Se encarga de crear una instancia una vez que se hayan validado todas
