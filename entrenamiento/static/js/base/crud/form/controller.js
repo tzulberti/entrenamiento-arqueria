@@ -53,10 +53,13 @@ var FormController = Class.$extend({
     /**
      * Handler de cuando hace click en el boton de guardar.
      */
-    saveInformation: functio(ev) {
+    saveInformation: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
         var httpMethod = '';
-        var url = this.modelName + '/';
-        var data = this.$element.find('form').serializeObject();
+        var url = this.tableName + '/';
+        var data = this.formView.$element.find('form').serializeObject();
         this.formView.$element.mask('Saving');
         if (this.objectId === null) {
             httpMethod = 'POST';
@@ -70,8 +73,8 @@ var FormController = Class.$extend({
             url: url,
             type: httpMethod,
             data: data,
-            successCallback: $.proxy(this.savedInformation, this);
-            errorCallback: $.proxy(this.errorSavingInformation, this);
+            successCallback: $.proxy(this.savedInformation, this),
+            errorCallback: $.proxy(this.errorSavingInformation, this)
         });
     },
 
@@ -89,9 +92,8 @@ var FormController = Class.$extend({
      */
     errorSavingInformation: function(jqXHR, textStatus, errorThrown) {
         this.formView.$element.unmask();
-        var formErrors = JSON.parse(jqXHR.responseText);
-        var data = this.$element.find('form').serializeObject();
-        data.id = this.objectId;
+        var validationErrors = JSON.parse(jqXHR.responseText);
+        var data = this.formView.$element.find('form').serializeObject();
         this._renderForm(data, validationErrors);
     }
 });

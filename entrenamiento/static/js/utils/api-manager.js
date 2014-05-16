@@ -60,17 +60,17 @@ var APIManager = Class.$extend({
      *                                    ejecutado en caso de que el llamado
      *                                    ajax no devuelva un error.
      */
-    ajaxCall: function(url, data, type, successCallback) {
+    ajaxCall: function(url, data, type, successCallback, errorCallback) {
         $.ajax({
             type: type,
             url: '/api/v01/' + url,
             data: data,
             success: successCallback,
-            error: $.proxy(this.ajaxError, this)
+            error: errorCallback || $.proxy(this.ajaxError, this)
         });
     },
 
     ajaxCallObject: function(params) {
-        return this.ajaxCall(params.url, params.data, params.type, params.successCallback);
+        return this.ajaxCall(params.url, params.data, params.type, params.successCallback, params.errorCallback);
     }
 });

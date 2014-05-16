@@ -38,6 +38,7 @@ var MainApplication = Class.$extend({
 
 
         // aca van todas las apps relacionadas al tema del CRUD.
+        /*
         var crudLugarApp = new LugarApplication(this.historyManager,
                                                 this.apiManager,
                                                 $('.container'));
@@ -53,15 +54,19 @@ var MainApplication = Class.$extend({
         var crudInvitacionApp = new InvitacionCrudApplication(this.historyManager,
                                                               this.apiManager,
                                                               $('.container'));
-        var crudPagoApp = new PagoCrudApplication(this.historyManager,
+        */
+        var crudPagoApp = new PagoCrudApplication($('.container'),
+                                                  this.historyManager,
                                                   this.apiManager,
-                                                  $('.container'));
+                                                  this.databaseInformation);
 
+        /*
         this.appsManager.addApplication(1, crudLugarApp);
         this.appsManager.addApplication(2, crudUsuariosApp);
         this.appsManager.addApplication(3, crudArcosRecurvadosApp);
         this.appsManager.addApplication(4, crudTorneosApp);
         this.appsManager.addApplication(5, crudInvitacionApp);
+        */
         this.appsManager.addApplication(6, crudPagoApp);
 
         this.menuView = new MainMenuView($("#main-menu"),

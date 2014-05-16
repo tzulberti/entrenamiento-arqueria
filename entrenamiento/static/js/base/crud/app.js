@@ -104,7 +104,8 @@ var BaseCrudApp = Class.$extend({
         }
 
         this.tableView = this.createTableView();
-        this.formView = this.createFormController();
+        this.formController = this.createFormController();
+        this.tableView.render();
     },
 
     /**
@@ -113,11 +114,12 @@ var BaseCrudApp = Class.$extend({
      */
     createTableView: function() {
         var tableView = new TableView(this.$element.find('.table-container'),
-                                      this.modelName,
+                                      this.tableName,
                                       this.columnNames,
                                       this.historyManager,
                                       this.apiManager,
-                                      this.fkInformation);
+                                      this.fkInformation,
+                                      this);
         return tableView;
     },
 
@@ -226,7 +228,7 @@ var FieldCrudApp = BaseCrudApp.$extend({
      * especificadas.
      */
     createFormController: function() {
-        var view = new FormFieldView(this.$element.find('.form-container'),
+        var view = new FieldFormView(this.$element.find('.form-container'),
                                      this.databaseInformation.getTableColumns(this.tableName),
                                      this.fkInformation,
                                      this.formFieldsData);

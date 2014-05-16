@@ -29,22 +29,25 @@ var TableView = Class.$extend({
      *
      * @param {Object} fkInformation: la informacion de las FK de la tabla
      *                                que no son constantes.
+     *
+     * @param {BaseCrudApp} crudApp: la applicacion que se encarga de
+     *                               mostrar la tabla o el form segun
+     *                               corresponda.
      */
-    __init__: function(element, modelName, columnNames, historyManager, apiManager, fkInformation) {
+    __init__: function(element, modelName, columnNames, historyManager,
+                       apiManager, fkInformation, crudApp) {
         this.$element = element;
         this.modelName = modelName;
         this.columnNames = columnNames;
         this.historyManager = historyManager;
         this.apiManager = apiManager;
         this.fkInformation = fkInformation;
+        this.crudApp = crudApp;
 
         // si este valor es false, entonces el siguiente cambio que haga a la
         // tabla el usuario no se lo va a agregar al history
         this.addToHistory = true;
 
-        // no lo puedo recivir por el constructor,
-        // por lo que lo tengo que recivir por aca...
-        this.crudView = null;
         this.orderBy = null;
         this.orderDirection = 'ASC';
         this.limit = 20;
@@ -75,7 +78,7 @@ var TableView = Class.$extend({
 
         this.getData();
 
-        this.$element.find('#information-container').on('click', '.button-create', $.proxy(this.createNew, this));
+        this.$element.on('click', '.button-create', $.proxy(this.createNew, this));
         this.$element.find('#information-container').on('click', '.pagination-page', $.proxy(this.changePage, this));
         this.$element.find('#information-container').on('click', '.button-edit', $.proxy(this.editValue, this));
         this.$element.find('#information-container').on('click', '.button-delete', $.proxy(this.deleteValue, this));
@@ -277,7 +280,7 @@ var TableView = Class.$extend({
         ev.preventDefault();
 
         this.historyManager.pushNewInstanceStatus(this.modelName, null);
-        this.crudView.createNew();
+        this.crudApp.createNew();
     },
 
     /**
@@ -296,7 +299,7 @@ var TableView = Class.$extend({
         objectId = objectId.replace('edit-', '');
         objectId = parseInt(objectId, 10);
         this.historyManager.pushNewInstanceStatus(this.modelName, objectId);
-        this.crudView.editObject(objectId);
+        this.crudApp.editObject(objectId);
     },
 
 
@@ -331,7 +334,7 @@ var TableView = Class.$extend({
 
 
     /**
-     * Handler llamado por el crudView cuando el usuario pudo crear
+     * Handler llamado por el crudApp cuando el usuario pudo crear
      * bien una nueva instancia del objeto que el mismo queria.
      */
     createdObject: function() {

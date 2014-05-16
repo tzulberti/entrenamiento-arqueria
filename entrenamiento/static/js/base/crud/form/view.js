@@ -38,7 +38,7 @@ var FormView = Class.$extend({
      */
     render: function(objectData, validationErrors) {
         var html = Handlebars.render(this.template, {
-                        validationErros: validationErrors
+                        validationErrors: validationErrors
         });
 
         this.$element.clean();
@@ -76,11 +76,12 @@ var FormView = Class.$extend({
         });
 
 
-
-        utils.renderFormData(self.$element,
-                                     responseData,
-                                     '');
-                self.$element.unmask();
+        if (objectData !== null) {
+            utils.renderFormData(this.$element,
+                                 objectData,
+                                 '');
+        }
+        this.$element.unmask();
 
 
     }
@@ -108,10 +109,15 @@ var FieldFormView = FormView.$extend({
                 '{{#each columnsNamesToShow}}' +
                     '{{renderFormField this ../columnsInformation ../fkInformation }}' +
                 '{{/each}}' +
+                '<div class="row">' +
+                    '<div class="col-sm-offset-3">' +
+                        '<input type="submit" class="btn btn-primary button-save">' +
+                    '</div>' +
+                '</div>' +
             '</form>';
 
         var template = Handlebars.render(superTemplate, {
-                            columsNamesToShow: columnsNamesToShow,
+                            columnsNamesToShow: columnsNamesToShow,
                             columnsInformation: columnsInformation,
                             fkInformation: fkInformation
         });

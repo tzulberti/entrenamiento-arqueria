@@ -129,6 +129,12 @@ var BaseTemplateCrudApp = BaseCrudApp.$extend({
         this.crudView = crudView;
         this.crudView.render();
     }
+});
 
 
+var BaseTemplateCrudApp = BaseApp.$extend({
+
+    __init__: function(historyManager) {
+        this.$super(historyManager);
+    }
 });

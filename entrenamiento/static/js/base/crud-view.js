@@ -15,30 +15,30 @@ var CrudView = Class.$extend({
      *                               todos los resultados de la tabla
      *                               correspondiente.
      *
-     * @param {FormView} formView: la view que se encarga de mostrar el
-     *                             form para que el usuario pueda actualizar
-     *                             un valor o para crear uno nuevo.
+     * @param {FormController} formController: la view que se encarga de mostrar el
+     *                                         form para que el usuario pueda actualizar
+     *                                         un valor o para crear uno nuevo.
      *
      * @param {HisotryManager} historyManager: el que se va a encargar de
      *                                         trabajar con todo el tema
      *                                         del historial del browser.
      */
-    __init__: function(tableView, formView, historyManager) {
+    __init__: function(tableView, formController, historyManager) {
         this.tableView = tableView;
-        this.formView = formView;
+        this.formController = formController;
         this.historyManager = historyManager;
     },
 
 
     /**
-     * Se encarga de renderar tanto el tableView como el formView.
+     * Se encarga de renderar tanto el tableView como el formController.
      *
      * Pero a uno de los dos los va a ocultar teniendo en cuenta si
      * la URL es de una instancia o es generica para ver todas.
      */
     render: function() {
         this.tableView.$element.show();
-        this.formView.$element.hide();
+        this.formController.formView.$elementt.hide();
         this.tableView.render();
     },
 
@@ -47,7 +47,7 @@ var CrudView = Class.$extend({
      */
     showTable: function() {
         this.tableView.$element.show();
-        this.formView.$element.hide();
+        this.formController.formView.$elementt.hide();
         this.tableView.getData();
     },
 
@@ -57,8 +57,8 @@ var CrudView = Class.$extend({
      */
     createNew: function() {
         this.tableView.$element.hide();
-        this.formView.$element.show();
-        this.formView.createNew();
+        this.formController.formView.$elementt.show();
+        this.formController.render(null);
     },
 
     /**
@@ -68,7 +68,7 @@ var CrudView = Class.$extend({
      */
     createdObject: function(objectId) {
         this.tableView.$element.show();
-        this.formView.$element.hide();
+        this.formController.formView.$elementt.hide();
         this.tableView.createdObject();
     },
 
@@ -80,8 +80,8 @@ var CrudView = Class.$extend({
      */
     editObject: function(objectId) {
         this.tableView.$element.hide();
-        this.formView.$element.show();
-        this.formView.editObject(objectId);
+        this.formController.formView.$elementt.show();
+        this.formController.render(objectId);
     },
 
 
@@ -98,7 +98,7 @@ var CrudView = Class.$extend({
         this.tableView.orderDirection = orderDirection;
         this.tableView.currentPage = currentPage;
 
-        this.formView.$element.hide();
+        this.formController.formView.$elementt.hide();
         this.tableView.$element.show();
         this.tableView.addToHistory = false;
 

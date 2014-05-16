@@ -19,6 +19,101 @@ Handlebars.registerHelper('readableName', function(columnName) {
 
 
 /**
+ * Se encarga de traducir un template para que despues handlebars
+ * lo pueda entender.
+ *
+ * En este caso el template que se recive usa los siguientes cambios
+ * con respecto a handlebars:
+ *
+ * - en vez de usar {{ y }}, usa [[ y ]]
+ *
+ * @param {String} template: el template que tiene que ser devuelto
+ *                           para que handelbars lo pueda renderar la proximca
+ */
+Handlebars.registerHelper('raw', function(template) {
+    template = template.replace(/\[\[/g, "{{");
+    template = template.replace(/\]\]/g, "}}");
+
+    return new Handlebars.SafeString(template);
+});
+
+
+/**
+ * Se encarga de renderar un campo del form teniendo en cuenta el tipo
+ * de valor de la base de datos.
+ *
+ *
+ * @param {FormFieldData} fielData: toda la informacion sobre el campo en
+ *                                  cuestion que se tiene que renderar.
+ *
+ * @param {Array(ColumnInformation)} columnsInformation: la informaicon de
+ *                             todas las columnas en la que pertence
+ *                             la columna del form.
+ *
+ * @param {FkInformation} fkInformation: toda la informacion de la tablas
+ *                                       referenciadas a las que pertence la
+ *                                       columna.
+ *
+ * @param {String helpText: el texto de ayuda que se quiere mostrar junto al
+ *                          campo en cuestion.
+ *
+ *
+ * @param {boolean} required: si es true, entonces se va a marcar en especial
+ *                            el campo como requerido
+ */
+Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformation, fkInformation, helpText, required) {
+    var fkValues = [];
+    var columnInformation = null;
+    for (var i = 0; i < columnsInformation.length; i++) {
+        if (columnsInformation[i].databaseName === fieldData.databaseName) {
+            columnInformation = columnsInformation[i];
+            break;
+        }
+    }
+    if (columnInformation === null) {
+        throw new Error('No puede encontrar la informacion....');
+    }
+    var templateRes = '' +
+        '<div class="form-group {{raw "[[#if"}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]has-error[[/if]]" }}">' +
+            '<label for="{{ columnInformation.databaseName }}" class="col-sm-2 control-label">' +
+                '{{ columnInformation.frontendName }}{{#if required }}*{{/if}}' +
+            '</label>' +
+            '<div class="col-sm-10">';
+    if (columnInformation.isConst() || columnInformation.foreignKey !== null) {
+        templateRes += '' +
+                '<select name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}">' +
+                    '{{#each fkValues }}' +
+                        '<option value="{{ this.id }}">{{ this.value }}</option>' +
+                    '{{/each}}' +
+                '</select>';
+
+        if (columnInformation.isConst()) {
+            fkValues = columnInformation.constValues;
+        } else {
+            fkValues = fkInformation.getTableValues(columnInformation.foreignKey);
+        }
+    } else {
+        templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}">';
+    }
+
+    templateRes += '{{raw "[[#if"}} validationErrors.{{columnInformation.databaseName }} {{ raw "]]" }}' +
+                        '<span class="help-block error-message">' +
+                            '{{raw "[["}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]" }}' +
+                        '</span>' +
+                    '{{raw "[[/if]]" }}';
+    templateRes += '</div>';
+    templateRes += '</div>';
+    var res = Handlebars.render(templateRes, {
+                            columnInformation: columnInformation,
+                            required: required,
+                            fkValues: fkValues
+    });
+
+    return new Handlebars.SafeString(res);
+
+});
+
+/**
  * Se necarga de renderar un filtro que el usuario creo cuando se esta viendo
  * toda la informacion en forma de tabla.
  *

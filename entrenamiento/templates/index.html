@@ -122,21 +122,6 @@
         </form>
     </script>
 
-    <script id="pago-form-handlebars-template" type="text/x-handlebars-template">
-        <form role="form" class="form-horizontal">
-            {{ form_field(pago_form.cuando) }}         
-            {{ form_field(pago_form.mes_correspondiente) }}         
-            {{ form_field(pago_form.importe) }}         
-            {{ form_field(pago_form.razon) }}         
-            <div class="form-group">
-                <div class="col-sm-10 col-sm-offset-2">
-                    <button type="submit" class="btn btn-primary button-save">Grabar</button>
-                </div>
-            </div> 
-        </form>
-        
-    </script>
-
     <script id="arco-recurvado-form-handlebars-template" type="text/x-handlebars-template">
         <form role="form" class="form-horizontal">
             {{ form_field(arco_recurvado_form.nombre) }} 
@@ -197,29 +182,37 @@
     <script src="/static/js/models/column-information.js"></script>
     <script src="/static/js/models/filter.js"></script>
     <script src="/static/js/models/fk-information.js"></script>
+    <script src="/static/js/models/form-field-data.js"></script>
     
     <script src="/static/js/base/table-view.js"></script>
-    <script src="/static/js/base/form-view.js"></script>
     <script src="/static/js/base/crud-view.js"></script>
     <script src="/static/js/base/history-manager.js"></script>
     <script src="/static/js/base/app.js"></script>
     <script src="/static/js/base/apps-manager.js"></script>
-    <!-- Aca van todas las opciones de cada una de los ABMS correspondientes -->
+
+    <script src="/static/js/base/crud/filter/view.js"></script>
+    <script src="/static/js/base/crud/filter/controller.js"></script>
+    <script src="/static/js/base/crud/filters/view.js"></script>
+    <script src="/static/js/base/crud/filters/controller.js"></script>
+    <script src="/static/js/base/crud/form/view.js"></script>
+    <script src="/static/js/base/crud/form/controller.js"></script>
+    <script src="/static/js/base/crud/search/controller.js"></script>
+    <script src="/static/js/base/crud/app.js"></script>
+
+
+    <!-- 
+        Aca van todas las opciones de cada una de los ABMS correspondientes 
     <script src="/static/js/crud/invitacion.js"></script>
     <script src="/static/js/crud/lugar.js"></script>
     <script src="/static/js/crud/usuarios.js"></script>
     <script src="/static/js/crud/arco-recurvado.js"></script>
     <script src="/static/js/crud/torneos.js"></script>
-    <script src="/static/js/crud/pago.js"></script>
+    -->
+    <script src="/static/js/apps/crud/pago.js"></script>
 
     <script src="/static/js/main/menu-view.js"></script>
     <script src="/static/js/main/main-application.js"></script>
     
-    <script src="/static/js/base/crud/filter/view.js"></script>
-    <script src="/static/js/base/crud/filter/controller.js"></script>
-    <script src="/static/js/base/crud/filters/view.js"></script>
-    <script src="/static/js/base/crud/filters/controller.js"></script>
-    <script src="/static/js/base/crud/search/controller.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(ev) {
