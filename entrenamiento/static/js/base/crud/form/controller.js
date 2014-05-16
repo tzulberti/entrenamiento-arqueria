@@ -30,7 +30,7 @@ var FormController = Class.$extend({
                 url: this.tableName + '/' + objectId + '/',
                 data: {},
                 type: 'GET',
-                succesCallback: $.proxy(this.gotObjectInformation, this)
+                successCallback: $.proxy(this.gotObjectInformation, this)
             });
         }
     },

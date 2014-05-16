@@ -61,6 +61,9 @@ var APIManager = Class.$extend({
      *                                    ajax no devuelva un error.
      */
     ajaxCall: function(url, data, type, successCallback, errorCallback) {
+        if (! successCallback) {
+            throw new Error('Te falto el successCallback');
+        }
         $.ajax({
             type: type,
             url: '/api/v01/' + url,
