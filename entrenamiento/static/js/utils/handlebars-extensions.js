@@ -73,36 +73,53 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
     if (columnInformation === null) {
         throw new Error('No puede encontrar la informacion....');
     }
-    var templateRes = '' +
-        '<div class="form-group {{raw "[[#if"}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]has-error[[/if]]" }}">' +
-            '<label for="{{ columnInformation.databaseName }}" class="col-sm-2 control-label">' +
-                '{{ columnInformation.frontendName }}{{#if required }}*{{/if}}' +
-            '</label>' +
-            '<div class="col-sm-10">';
-    if (columnInformation.isConst() || columnInformation.foreignKey !== null) {
-        templateRes += '' +
-                '<select name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}">' +
-                    '{{#each fkValues }}' +
-                        '<option value="{{ this.id }}">{{ this.value }}</option>' +
-                    '{{/each}}' +
-                '</select>';
 
-        if (columnInformation.isConst()) {
-            fkValues = columnInformation.constValues;
-        } else {
-            fkValues = fkInformation.getTableValues(columnInformation.foreignKey);
-        }
+
+    var templateRes = ''
+    if (columnInformation.type === 'boolean') {
+        templateRes = '' +
+            '<div class="form-group {{raw "[[#if"}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]has-error[[/if]]" }}">' +
+                '<div class="col-sm-10 col-sm-offset-2">' +
+                    '<div clas="checkbox">' +
+                        '<label>' +
+                            '<input type="checkbox" name="{{ columnInformation.databaseName}}" id="{{ columnInformation.databaseName}}">' +
+                            '{{ columnInformation.frontendName }}' +
+                        '</label>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
     } else {
-        templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control">';
-    }
+        templateRes = '' +
+            '<div class="form-group {{raw "[[#if"}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]has-error[[/if]]" }}">' +
+                '<label for="{{ columnInformation.databaseName }}" class="col-sm-2 control-label">' +
+                    '{{ columnInformation.frontendName }}{{#if required }}*{{/if}}' +
+                '</label>' +
+                '<div class="col-sm-10">';
+        if (columnInformation.isConst() || columnInformation.foreignKey !== null) {
+            templateRes += '' +
+                    '<select name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}">' +
+                        '{{#each fkValues }}' +
+                            '<option value="{{ this.id }}">{{ this.value }}</option>' +
+                        '{{/each}}' +
+                    '</select>';
 
-    templateRes += '{{raw "[[#if"}} validationErrors.{{columnInformation.databaseName }} {{ raw "]]" }}' +
-                        '<span class="help-block error-message">' +
-                            '{{raw "[["}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]" }}' +
-                        '</span>' +
-                    '{{raw "[[/if]]" }}';
-    templateRes += '</div>';
-    templateRes += '</div>';
+            if (columnInformation.isConst()) {
+                fkValues = columnInformation.constValues;
+            } else {
+                fkValues = fkInformation.getTableValues(columnInformation.foreignKey);
+            }
+        } else {
+            templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control">';
+        }
+
+        templateRes += '{{raw "[[#if"}} validationErrors.{{columnInformation.databaseName }} {{ raw "]]" }}' +
+                            '<span class="help-block error-message">' +
+                                '{{raw "[["}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]" }}' +
+                            '</span>' +
+                        '{{raw "[[/if]]" }}';
+        templateRes += '</div>';
+        templateRes += '</div>';
+    }
     var res = Handlebars.render(templateRes, {
                             columnInformation: columnInformation,
                             required: required,
