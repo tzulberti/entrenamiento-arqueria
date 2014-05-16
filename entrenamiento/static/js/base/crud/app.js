@@ -115,7 +115,7 @@ var BaseCrudApp = Class.$extend({
     createTableView: function() {
         var tableView = new TableView(this.$element.find('.table-container'),
                                       this.tableName,
-                                      this.columnNames,
+                                      this.tableColumns,
                                       this.historyManager,
                                       this.apiManager,
                                       this.fkInformation,
