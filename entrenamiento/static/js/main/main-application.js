@@ -55,13 +55,19 @@ var MainApplication = Class.$extend({
                                                               this.apiManager,
                                                               $('.container'));
         */
+
+        var crudLugarApp = new LugarCrudApplication($('.container'),
+                                                    this.historyManager,
+                                                    this.apiManager,
+                                                    this.databaseInformation);
+
         var crudPagoApp = new PagoCrudApplication($('.container'),
                                                   this.historyManager,
                                                   this.apiManager,
                                                   this.databaseInformation);
 
-        /*
         this.appsManager.addApplication(1, crudLugarApp);
+        /*
         this.appsManager.addApplication(2, crudUsuariosApp);
         this.appsManager.addApplication(3, crudArcosRecurvadosApp);
         this.appsManager.addApplication(4, crudTorneosApp);
