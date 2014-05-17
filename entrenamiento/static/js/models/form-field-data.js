@@ -18,3 +18,27 @@ var FormFieldData = Class.$extend({
         this.helpText = helpText;
     }
 });
+
+/**
+ * Indica al render del form, que se tiene que poner un <fieldset>,
+ * hasta que encuentre el mismo que diga close
+ */
+var FieldsetFieldData = Class.$extend({
+
+    /**
+     * Constructor.
+     *
+     * @param {String} legend: la leyenda del fieldset que se tiene que
+     *                         agregar.
+     *
+     * @param {boolean} open: si es True, entonces se tiene que abrir un
+     *                        fieldset. En caso contrario se lo tiene
+     *                        que cerrar
+     */
+    __init__: function(legend, open) {
+        this.legend = legend;
+        this.open = open;
+
+    }
+
+});

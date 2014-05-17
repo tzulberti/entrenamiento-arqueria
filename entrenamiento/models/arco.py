@@ -35,14 +35,17 @@ class Arco(BaseModel):
     comentario = db.Column(db.Text)
     tipo_arco = db.Column(db.String(255), nullable=False)
 
+    marca_barra_larga_estabilizacion = db.Column(db.Integer, db.ForeignKey('marca_estabilizacion.id'))
     modelo_barra_larga_estabilizacion = db.Column(db.Text)
     largo_barra_larga_estabilizacion = db.Column(db.Integer)
     peso_adicional_barra_larga = db.Column(db.Integer)
 
+    marca_barra_lateral_estabilizacion = db.Column(db.Integer, db.ForeignKey('marca_estabilizacion.id'))
     modelo_barra_lateral_estabilizacion = db.Column(db.Text)
     largo_barra_lateral_estabilizacion = db.Column(db.Integer)
     peso_adicional_barra_lateral = db.Column(db.Integer)
 
+    marca_extender_estabilizacion = db.Column(db.Integer, db.ForeignKey('marca_estabilizacion.id'))
     modelo_extender_estabilizacion = db.Column(db.Text)
     largo_extender_estabilizacion = db.Column(db.Integer)
 
@@ -63,18 +66,19 @@ class ArcoRecurvado(Arco):
 
     id = db.Column(db.Integer, db.ForeignKey('arco.id'), primary_key=True)
 
-    marca_riser = db.Column(db.Text)
+    marca_riser = db.Column(db.Integer, db.ForeignKey('marca_riser.id'))
     modelo_riser = db.Column(db.Text)
-    largo_riser = db.Column(db.Integer, db.ForeignKey('largo_riser'))
+    largo_riser = db.Column(db.Integer, db.ForeignKey('largo_riser.id'))
+    tipo_encastre = db.Column(db.Integer, db.ForeignKey('tipo_encastre_riser.id'))
 
-    marca_palas = db.Column(db.Text)
+    marca_palas = db.Column(db.Integer, db.ForeignKey('marca_palas.id'))
     modelo_palas = db.Column(db.Text)
     libraje_palas = db.Column(db.Integer)
     libraje_real = db.Column(db.Integer)
-    largo_palas = db.Column(db.Integer, db.ForeignKey('largo_palas'))
-    tipo_encastre = db.Column(db.Text)
+    largo_palas = db.Column(db.Integer, db.ForeignKey('largo_palas.id'))
 
     modelo_clicker = db.Column(db.Text)
+    marca_mira = db.Column(db.Integer, db.ForeignKey('marca_mira.id'))
     modelo_mira = db.Column(db.Text)
     modelo_cushion_plunger = db.Column(db.Text)
 

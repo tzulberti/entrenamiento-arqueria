@@ -64,6 +64,21 @@ Handlebars.registerHelper('raw', function(template) {
 Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformation, fkInformation, helpText, required) {
     var fkValues = [];
     var columnInformation = null;
+    if (fieldData instanceof FieldsetFieldData) {
+        var res = '';
+        if (fieldData.open) {
+            res = '<fieldset>';
+            if (fieldData.legend) {
+                res += '<legend>' + fieldData.legend + '</legend>';
+            }
+        } else {
+            res = '</fieldset>';
+        }
+
+        return new Handlebars.SafeString(res);
+    }
+
+
     for (var i = 0; i < columnsInformation.length; i++) {
         if (columnsInformation[i].databaseName === fieldData.databaseName) {
             columnInformation = columnsInformation[i];
@@ -71,7 +86,8 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
         }
     }
     if (columnInformation === null) {
-        throw new Error('No puede encontrar la informacion....');
+        throw new Error('No puede encontrar la informacion para la colun: ' +
+                        fieldData.databaseName);
     }
 
 

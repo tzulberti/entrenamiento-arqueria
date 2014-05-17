@@ -7,13 +7,15 @@ Esto es para evitar crear mas de una misma instancia de la clase
 '''
 
 from entrenamiento.app.app import app
+from entrenamiento.models import consts_tables
+from entrenamiento.models.base import BaseConstModel
 from entrenamiento.models.invitacion import Invitacion
 from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.usuario import Usuario
 from entrenamiento.models.arco import Arco, ArcoRecurvado
 from entrenamiento.models.pago import Pago
 from entrenamiento.models.torneo import Torneo, Ronda, Serie
-from entrenamiento.models.consts_tables import LargoRiser, LargoPalas, RazonPago
+
 
 from entrenamiento.utils import MailSender, DatabaseInformation
 
@@ -34,11 +36,17 @@ models = [
     Serie
 ]
 
-const_tables = [
-    LargoRiser,
-    LargoPalas,
-    RazonPago,
-]
+
+
+const_tables = []
+for attr_name in dir(consts_tables):
+    attr = getattr(consts_tables, attr_name)
+    if not hasattr(attr, 'mro'):
+        continue
+    if attr == BaseConstModel:
+        continue
+    if BaseConstModel in attr.mro():
+        const_tables.append(attr)
 
 #: la instancia que tiene toda la informacion sobre el schema de la base de
 #: datos.

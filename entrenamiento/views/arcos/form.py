@@ -43,21 +43,17 @@ class ArcoForm(ValidationForm):
 
 class ArcoRecurvadoForm(ArcoForm):
 
-    marca_riser = SelectField('marca_riser',
-                               choices=MARCA_PALAS_RISER,
+    marca_riser = IntegerField('marca_riser',
                                validators=[Optional()])
     modelo_riser = StringField('modelo_riser')
-    largo_riser = SelectField('largo_riser',
-                               choices=LARGO_PALAS_RISER,
+    largo_riser = IntegerField('largo_riser',
                                validators=[Optional()])
 
-    marca_palas = SelectField('marca_palas',
-                              choices=MARCA_PALAS_RISER,
+    marca_palas = IntegerField('marca_palas',
                               validators=[Optional()])
     modelo_palas = StringField('modelo_palas')
-    largo_palas = SelectField('largo_palas',
-                              validators=[Optional()],
-                              choices=LARGO_PALAS_RISER)
+    largo_palas = IntegerField('largo_palas',
+                              validators=[Optional()])
     libraje_palas = IntegerField('libraje_palas',
                                  [Optional()],
                                  description='El libraje de las mismas segun la '\
@@ -66,8 +62,7 @@ class ArcoRecurvadoForm(ArcoForm):
                                 [Optional()],
                                 description='El libraje que uno le saca al arco '\
                                             'teniendo en cuenta la apertura de uno')
-    tipo_encastre = SelectField('tipo_encastre',
-                                choices=TIPO_ENCASTRE)
+    tipo_encastre = IntegerField('tipo_encastre')
 
 
     modelo_clicker = StringField('modelo_clicker')

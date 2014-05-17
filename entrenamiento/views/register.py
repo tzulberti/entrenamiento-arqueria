@@ -67,16 +67,8 @@ def register_views(app, db, bcrypt):
                     view_func=LogoutView.as_view('auth.logout'))
     app.add_url_rule('/',
                     view_func=IndexViewTemplate.as_view('index',
-                                                        invitacion_form=dict(klass=InvitacionForm,
-                                                                             args=[Invitacion]),
-                                                        lugar_form=dict(klass=LugarForm,
-                                                                        args=[Lugar]),
-                                                        arco_recurvado_form=dict(klass=ArcoRecurvadoForm,
-                                                                                args=[ArcoRecurvado]),
                                                         torneo_form=dict(klass=TorneoForm,
-                                                                         args=[Torneo]),
-                                                        pago_form=dict(klass=PagoForm,
-                                                                       args=[Pago])))
+                                                                         args=[Torneo])))
 
     app.add_url_rule('/password-reset/',
                     view_func=PasswordResetView.as_view('auth.password_reset',
@@ -105,7 +97,7 @@ def register_views(app, db, bcrypt):
     # TODO en esta view solo se deberia permitir el tema de la lectura
     # del GET
     register_url(app, db, 'arco', Arco, ArcoRecurvadoForm)
-    register_url(app, db, 'arco-recurvado', ArcoRecurvado, ArcoRecurvadoForm)
+    register_url(app, db, 'arco_recurvado', ArcoRecurvado, ArcoRecurvadoForm)
     register_url(app, db, 'torneo', Torneo, TorneoForm)
     register_url(app, db, 'ronda', Ronda, RondaForm)
     register_url(app, db, 'serie', Serie, SerieForm)

@@ -9,6 +9,7 @@ import random
 import smtplib
 from email.MIMEText import MIMEText
 
+from entrenamiento.models.base import BaseModel
 from sqlalchemy.sql.sqltypes import Integer, Float, Date, String, Text, Boolean
 
 
@@ -82,7 +83,18 @@ class DatabaseInformation(object):
         for model in self.models:
             columns = []
             self.information[model.__tablename__] = columns
+            if not (model.__base__ == BaseModel):
+                # entonces la clase que estoy viendo hereda de otra
+                # clase, y por lo tanto le tengo que agregar la informacion
+                # de las columnas a esta
+                base_model = model.__base__
+                if not base_model.__tablename__:
+                    raise Exception('Las clases bases deberian ir primero')
+
+                columns.extend(self.information[base_model.__tablename__])
+
             for column_information in model.__table__.columns:
+
                 column_data = dict(name=column_information.key,
                                    type=self.get_type(column_information.type),
                                    primary_key=column_information.primary_key)

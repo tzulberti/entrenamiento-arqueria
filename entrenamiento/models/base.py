@@ -1,7 +1,5 @@
 # -*- coding: utf-8- -*-
 
-from sqlalchemy.ext.declarative import declared_attr
-
 from datetime import datetime, date
 from entrenamiento.app.app import db
 
