@@ -111,16 +111,6 @@
     {% include 'javascript/table-view.handlebars' %} 
     {% include 'javascript/filter.handlebars' %} 
 
-    <script id="invitacion-form-handlebars-template" type="text/x-handlebars-template">
-        <form role="form" class="form-horizontal">
-            {{ form_field(invitacion_form.email) }} 
-            <div class="form-group">
-                <div class="col-sm-10 col-sm-offset-2">
-                    <button type="submit" class="btn btn-primary button-save">Grabar</button>
-                </div>
-            </div> 
-        </form>
-    </script>
 
     <script id="arco-recurvado-form-handlebars-template" type="text/x-handlebars-template">
         <form role="form" class="form-horizontal">
@@ -210,6 +200,7 @@
     -->
     <script src="/static/js/apps/crud/lugar.js"></script>
     <script src="/static/js/apps/crud/pago.js"></script>
+    <script src="/static/js/apps/crud/invitacion.js"></script>
 
     <script src="/static/js/main/menu-view.js"></script>
     <script src="/static/js/main/main-application.js"></script>

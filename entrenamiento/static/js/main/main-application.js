@@ -65,13 +65,17 @@ var MainApplication = Class.$extend({
                                                   this.historyManager,
                                                   this.apiManager,
                                                   this.databaseInformation);
+        var invitacionCrudApp = new InvitacionCrudApplication($('.container'),
+                                                              this.historyManager,
+                                                              this.apiManager,
+                                                              this.databaseInformation);
 
         this.appsManager.addApplication(1, crudLugarApp);
+        this.appsManager.addApplication(5, invitacionCrudApp);
         /*
         this.appsManager.addApplication(2, crudUsuariosApp);
         this.appsManager.addApplication(3, crudArcosRecurvadosApp);
         this.appsManager.addApplication(4, crudTorneosApp);
-        this.appsManager.addApplication(5, crudInvitacionApp);
         */
         this.appsManager.addApplication(6, crudPagoApp);
 
