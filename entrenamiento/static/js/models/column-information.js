@@ -18,16 +18,20 @@ var ColumnInformation = Class.$extend({
      *
      * @param {String} type: indica el tipo de la columna (numerno, string, etc...)
      *
+     * @param {boolean} nullable: si es True, entonces la columna en cuestion puede
+     *                            tener valores null
+     *
      * @param {Array(ConstValue)} constValues: en caso de que la columna sea una
      *                                         referencia a valores constantes, entonces
      *                                         son los valores constantes en cuestion
      */
-    __init__: function(tableName, databaseName, foreignKey, type, constValues) {
+    __init__: function(tableName, databaseName, foreignKey, type, nullable, constValues) {
         this.tableName = tableName;
         this.databaseName = databaseName;
         this.frontendName = databaseName.toTitleCase();
         this.foreignKey = foreignKey;
         this.type = type;
+        this.nullable = nullable;
         this.constValues = constValues;
     },
 

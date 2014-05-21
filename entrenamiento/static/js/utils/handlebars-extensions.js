@@ -114,6 +114,9 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
         if (columnInformation.isConst() || columnInformation.foreignKey !== null) {
             templateRes += '' +
                     '<select name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}">' +
+                        '{{#if columnInformation.nullable }}' +
+                            '<option value=""></option>' +
+                        '{{/if }}' +
                         '{{#each fkValues }}' +
                             '<option value="{{ this.id }}">{{ this.value }}</option>' +
                         '{{/each}}' +

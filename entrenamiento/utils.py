@@ -97,7 +97,8 @@ class DatabaseInformation(object):
 
                 column_data = dict(name=column_information.key,
                                    type=self.get_type(column_information.type),
-                                   primary_key=column_information.primary_key)
+                                   primary_key=column_information.primary_key,
+                                   nullable=column_information.nullable)
 
                 foreign_keys = []
                 for data in column_information.foreign_keys:

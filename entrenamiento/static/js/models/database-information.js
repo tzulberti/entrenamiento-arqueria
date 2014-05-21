@@ -29,6 +29,7 @@ var DatabaseInformation = Class.$extend({
                                                               currentColumn.name,
                                                               currentColumn.foreign_key,
                                                               currentColumn.type,
+                                                              currentColumn.nullable,
                                                               constValues));
             }
         }
