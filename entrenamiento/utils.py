@@ -137,7 +137,9 @@ class DatabaseInformation(object):
     def get_type(self, column_type):
         if isinstance(column_type, (Integer, Float)):
             return 'number'
-        elif isinstance(column_type, (String, Text)):
+        elif isinstance(column_type, Text):
+            return 'textarea'
+        elif isinstance(column_type, String):
             return 'text'
         elif isinstance(column_type, Date):
             return 'date'
