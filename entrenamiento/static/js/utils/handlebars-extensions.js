@@ -127,6 +127,8 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
             } else {
                 fkValues = fkInformation.getTableValues(columnInformation.foreignKey);
             }
+        } else if (columnInformation.type === 'textarea') {
+            templateRes += '<textarea type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control"></textarea>';
         } else {
             templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control">';
         }
