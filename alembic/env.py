@@ -1,6 +1,10 @@
 from __future__ import with_statement
+
+import os
+import imp
+
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import engine_from_config, pool, create_engine
 from logging.config import fileConfig
 
 # this is the Alembic Config object, which provides
@@ -34,8 +38,11 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
-    context.configure(url=url)
+    if not 'ENTRENAMIENTO_CONFIGURATION' in os.environ:
+        raise Exception('Falta configurar la variable de entorno')
+    config = imp.load_source('', os.environ['ENTRENAMIENTO_CONFIGURATION'])
+    #url = config.get_main_option("sqlalchemy.url")
+    context.configure(url=config.SQLALCHEMY_DATABASE_URI)
 
     with context.begin_transaction():
         context.run_migrations()
@@ -47,10 +54,11 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-    engine = engine_from_config(
-                config.get_section(config.config_ini_section),
-                prefix='sqlalchemy.',
-                poolclass=pool.NullPool)
+    if not 'ENTRENAMIENTO_CONFIGURATION' in os.environ:
+        raise Exception('Falta configurar la variable de entorno')
+    config = imp.load_source('', os.environ['ENTRENAMIENTO_CONFIGURATION'])
+    engine = create_engine(config.SQLALCHEMY_DATABASE_URI,
+                           poolclass=pool.NullPool)
 
     connection = engine.connect()
     context.configure(
