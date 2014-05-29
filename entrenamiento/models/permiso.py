@@ -17,4 +17,16 @@ class Permiso(BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Text, unique=True)
 
+class PermisoUsuario(BaseModel):
+    ''' Tiene toda la informacion de como es que se relacionan los permisos
+    con los usuarios del sistema correspondiente.
 
+
+    :param int usuario: el identificador del usuario a quien se le va a
+                        asignar el permiso correspondiente.
+
+    :param int permiso: el identificador del permiso que se le esta
+                        asignando al usuario.
+    '''
+    usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    permiso = db.Column(db.Integer, db.ForeignKey('permiso.id'), nullable=False)

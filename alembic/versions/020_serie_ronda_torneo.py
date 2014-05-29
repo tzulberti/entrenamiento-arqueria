@@ -1,14 +1,14 @@
-"""Add serie
+"""serie_ronda_torneo
 
-Revision ID: b4157b9e5e
-Revises: 54197cc29242
-Create Date: 2014-01-28 08:13:00.914050
+Revision ID: 019
+Revises: 018
+Create Date: 2014-05-28 06:35:11.059049
 
 """
 
 # revision identifiers, used by Alembic.
-revision = 'b4157b9e5e'
-down_revision = '54197cc29242'
+revision = '020'
+down_revision = '019'
 
 from alembic import op
 import sqlalchemy as sa
@@ -17,7 +17,6 @@ import sqlalchemy as sa
 def upgrade():
     op.create_table('serie',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('id_ronda', sa.Integer, sa.ForeignKey('ronda.id'), nullable=False),
         sa.Column('fue_de_practica', sa.Boolean),
         sa.Column('puntaje_flecha_1', sa.Integer),
         sa.Column('puntaje_flecha_2', sa.Integer),
@@ -26,7 +25,10 @@ def upgrade():
         sa.Column('puntaje_flecha_5', sa.Integer),
         sa.Column('puntaje_flecha_6', sa.Integer),
         sa.Column('puntaje_total', sa.Integer),
+
+        sa.Column('id_ronda', sa.Integer, sa.ForeignKey('ronda.id', ondelete='CASCADE'), nullable=False),
     )
+
 
 
 def downgrade():

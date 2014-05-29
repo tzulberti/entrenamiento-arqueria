@@ -22,6 +22,9 @@ class Lugar(BaseModel):
                                         entrenar. Sino es un lugar a donde
                                         los arqueros fueron a tirar por
                                         una vez un torneo.
+
+    :param boolean es_outdoor: si es True, entonces es un lugar outdoor,
+                               sino es indoor.
     '''
 
     id = db.Column(db.Integer, primary_key=True)
@@ -29,6 +32,4 @@ class Lugar(BaseModel):
     latitud = db.Column(db.Float, nullable=False)
     longitud = db.Column(db.Float, nullable=False)
     es_de_entrenamiento = db.Column(db.Boolean, nullable=False, default=True)
-
-    torneos = db.relationship('Torneo',
-                              backref='lugar')
+    es_outdor = db.Column(db.Boolean, nullable=False)

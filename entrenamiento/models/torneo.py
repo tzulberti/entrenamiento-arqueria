@@ -31,15 +31,15 @@ class Torneo(BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
     cuando = db.Column(db.Date, nullable=False)
-    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'),
-                           nullable=False)
+
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id', ondelete='CASCADE'), nullable=False)
+    id_tipo_de_torneo = db.Column(db.Integer, db.ForeignKey('tipo_torneo.id'), nullable=False)
     id_lugar = db.Column(db.Integer, db.ForeignKey('lugar.id'))
     id_arco = db.Column(db.Integer, db.ForeignKey('arco.id'))
 
-    tipo_de_torneo = db.Column(db.Text)
     comentario = db.Column(db.Text)
     puntaje_final_torneo = db.Column(db.Integer)
-    fue_practica = db.Column(db.Boolean)
+    fue_practica = db.Column(db.Boolean, nullable=False)
 
 
 class Ronda(BaseModel):
@@ -62,15 +62,10 @@ class Ronda(BaseModel):
     '''
 
     id = db.Column(db.Integer, primary_key=True)
-    id_torneo = db.Column(db.Integer,
-                          db.ForeignKey('torneo.id'),
-                          nullable=False)
+    id_torneo = db.Column(db.Integer, db.ForeignKey('torneo.id', ondelete='CASCADE'), nullable=False)
     puntaje = db.Column(db.Integer)
     distancia = db.Column(db.Integer)
     foto = db.Column(db.Text)
-    series= db.relationship('Serie',
-                            backref='ronda',
-                            cascade='all,delete')
 
 
 class Serie(BaseModel):
@@ -96,6 +91,7 @@ class Serie(BaseModel):
     '''
 
     id = db.Column(db.Integer, primary_key=True)
+    id_ronda = db.Column(db.Integer, db.ForeignKey('ronda.id', ondelete='CASCADE'), nullable=False)
     fue_de_practica = db.Column(db.Boolean)
     puntaje_flecha_1 = db.Column(db.Integer)
     puntaje_flecha_2 = db.Column(db.Integer)
@@ -105,7 +101,4 @@ class Serie(BaseModel):
     puntaje_flecha_6 = db.Column(db.Integer)
     puntaje_total = db.Column(db.Integer)
 
-    id_ronda = db.Column(db.Integer,
-                         db.ForeignKey('ronda.id'),
-                         nullable=False)
 
