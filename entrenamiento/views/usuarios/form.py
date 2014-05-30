@@ -1,12 +1,14 @@
 # -*- coding: utf-8- -*-
 
 from flask.ext.wtf import Form
-from wtforms.fields import (StringField, BooleanField, DateField,
+from wtforms.fields import (StringField, DateField,
                             FileField, PasswordField, SelectField,
                             FloatField)
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import InputRequired, Email, Optional, EqualTo
 
 from entrenamiento.app.app import bcrypt
+from entrenamiento.models.consts_tables import DominanciaOjo, DominanciaMano
 from entrenamiento.views.form import ValidationForm, ValidateUnique
 
 
@@ -41,8 +43,6 @@ class UserForm(ValidationForm):
     password_confirmation = PasswordField('password_confirmation',
                                           validators=[InputRequired()],
                                           description='El mismo password que ingresaste arriba')
-    es_entrenador = BooleanField('es_entrenador')
-    es_administrador = BooleanField('es_administrador')
     foto_archivo = FileField('foto_archivo')
     fecha_ingreso = DateField('fecha_ingreso',
                               format='%d/%m/%Y',
@@ -58,14 +58,17 @@ class UserForm(ValidationForm):
     apodo_eda = StringField('apodo_eda')
     latitud = FloatField('latitud', validators=[Optional()])
     longitud = FloatField('longitud', validators=[Optional()])
-    dominancia_ojo = SelectField('dominancia_ojo',
-                                 choices=[('diestro', 'Diestro'),
-                                          ('zurdo', 'Zurdo')],
-                                 description='Cual es el ojo con el que apuntas?')
-    dominancia_mano = SelectField('dominancia_mano',
-                                 choices=[('diestro', 'Diestro'),
-                                          ('zurdo', 'Zurdo')],
-                                 description='Con cual mano agarras el arco?')
+    id_dominancia_ojo = QuerySelectField('dominancia_ojo',
+                                         description='Cual es el ojo con el que apuntas?',
+                                         query_factory=DominanciaOjo.query.all,
+                                         get_label='value',
+                                         allow_blank=True)
+    id_dominancia_mano = QuerySelectField('dominancia_mano',
+                                          query_factory=DominanciaMano.query.all,
+                                          get_label='value',
+                                          description='Cual es la mano que usas para hacer las cosas genearlmente (comer, escribir, etc...)?',
+                                          allow_blank=True)
+
 
     def get_attr_value(self, attr_name, form_data):
         ''' Se encarga de codificar el password que vino por el request.

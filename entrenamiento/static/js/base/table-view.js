@@ -325,8 +325,13 @@ var TableView = Class.$extend({
             type: 'DELETE',
             url: '/api/v01/' + this.modelName + '/' + objectId + '/',
             success: function(data, textStatus, jqXHR) {
-                self._hideMessages();
-                self.$element.find('#deleted-instance').removeClass('hidden');
+                new PNotify({
+                    title: 'Delete',
+                    text: 'Se borro la informacion',
+                    delay: 1500,
+                    type: 'success'
+                });
+
                 self.getData();
             }
         })
@@ -338,23 +343,16 @@ var TableView = Class.$extend({
      * bien una nueva instancia del objeto que el mismo queria.
      */
     createdObject: function() {
-        this._hideMessages();
-        this.$element.find('#created-instance').removeClass('hidden');
+        new PNotify({
+            title: 'Guardo la informacion',
+            text: 'Se creo bien la nueva informacion',
+            delay: 1500,
+            type: 'success'
+        });
         this.getData();
     },
 
 
-    /**
-     * Oculta todos los mensajes que se pueden leegar a estar mostrando
-     * por default de cosa de evitar que dos mensajes que muestren al
-     * mismo tiempo.
-     *
-     * Esto se refiere a los mensajes usados para mostrar que se pudo
-     * guardar los cambios o que la instancia fue borrada correctamente.
-     */
-    _hideMessages: function() {
-        this.$element.find('.alert').addClass('hidden');
-    },
 
     /**
      * Handler que se lo usa cuando el usuario quiere cambiar la pagina que el

@@ -21,7 +21,7 @@ def upgrade():
         sa.Column('latitud', sa.Float, nullable=False),
         sa.Column('longitud', sa.Float, nullable=False),
         sa.Column('es_de_entrenamiento', sa.Boolean, nullable=False, default=True),
-        sa.Column('es_outdor', sa.Boolean, nullable=False),
+        sa.Column('es_outdoor', sa.Boolean, nullable=False),
     )
 
 def downgrade():

@@ -48,13 +48,14 @@ class Usuario(BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(250), nullable=False, unique=True)
     password = db.Column(db.String(1024), nullable=False)
+    codigo = db.Column(db.String(10), nullable=False, unique=True)
     nombre = db.Column(db.String(1024), nullable=False)
     apellido = db.Column(db.String(1024), nullable=False)
-    es_entrenador = db.Column(db.Boolean, nullable=False, default=False)
     es_administrador = db.Column(db.Boolean, nullable=False, default=False)
 
     # estos datos son pedidos usados por la data de la EDA
     fecha_ingreso = db.Column(db.Date)
+    fecha_abandono = db.Column(db.Date)
     fecha_nacimiento = db.Column(db.Date)
     telefono = db.Column(db.String(1024))
     celular = db.Column(db.String(1024))

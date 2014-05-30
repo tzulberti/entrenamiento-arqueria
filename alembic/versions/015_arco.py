@@ -20,6 +20,7 @@ def upgrade():
         sa.Column('id_usuario', sa.Integer, sa.ForeignKey('usuario.id')),
         sa.Column('nombre', sa.String(1024), nullable=False),
         sa.Column('comentario', sa.Text),
+        sa.Column('foto_path', sa.Text),
         sa.Column('tipo_arco', sa.String(255), nullable=False),
 
         sa.Column('draw', sa.Float),

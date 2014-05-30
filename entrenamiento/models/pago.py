@@ -55,7 +55,7 @@ class Pago(BaseModel):
     cuando = db.Column(db.Date, nullable=False)
     mes_correspondiente = db.Column(db.Date, nullable=False)
     importe = db.Column(db.Float, nullable=False)
-    comprobante = db.Column(db.Text)
+    comprobante_path = db.Column(db.Text)
     comentario = db.Column(db.Text)
 
 

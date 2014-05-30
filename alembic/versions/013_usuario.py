@@ -19,13 +19,14 @@ def upgrade():
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('email', sa.String(250), nullable=False, unique=True),
         sa.Column('password', sa.String(1024), nullable=False),
+        sa.Column('codigo', sa.String(10), nullable=False, unique=True),
         sa.Column('nombre', sa.String(1024), nullable=False),
         sa.Column('apellido', sa.String(1024), nullable=False),
-        sa.Column('es_entrenador', sa.Boolean, nullable=False, default=False),
         sa.Column('es_administrador', sa.Boolean, nullable=False, default=False),
 
         # estos datos son pedidos usados por la data de la EDA
         sa.Column('fecha_ingreso', sa.Date),
+        sa.Column('fecha_abandono', sa.Date),
         sa.Column('fecha_nacimiento', sa.Date),
         sa.Column('telefono', sa.String(1024)),
         sa.Column('celular', sa.String(1024)),

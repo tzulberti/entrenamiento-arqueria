@@ -9,7 +9,8 @@ var LugarCrudApplication = FieldCrudApp.$extend({
             new FormFieldData('nombre', null),
             new FormFieldData('latitud', null),
             new FormFieldData('longitud', null),
-            new FormFieldData('es_de_entrenamiento', null)
+            new FormFieldData('es_de_entrenamiento', null),
+            new FormFieldData('es_outdoor', null)
         ];
         this.$super(element, historyManager, apiManager, databaseInformation,
                     'lugar', ['nombre', 'latitud', 'longitud', 'es_de_entrenamiento'], formFields);

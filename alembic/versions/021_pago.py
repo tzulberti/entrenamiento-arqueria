@@ -23,7 +23,7 @@ def upgrade():
         sa.Column('cuando', sa.Date, nullable=False),
         sa.Column('mes_correspondiente', sa.Date, nullable=False),
         sa.Column('importe', sa.Float, nullable=False),
-        sa.Column('comprobante', sa.Text),
+        sa.Column('comprobante_path', sa.Text),
         sa.Column('comentario', sa.Text)
     )
 

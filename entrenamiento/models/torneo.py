@@ -65,7 +65,7 @@ class Ronda(BaseModel):
     id_torneo = db.Column(db.Integer, db.ForeignKey('torneo.id', ondelete='CASCADE'), nullable=False)
     puntaje = db.Column(db.Integer)
     distancia = db.Column(db.Integer)
-    foto = db.Column(db.Text)
+    foto_path = db.Column(db.Text)
 
 
 class Serie(BaseModel):

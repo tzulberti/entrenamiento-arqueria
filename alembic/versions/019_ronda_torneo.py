@@ -20,7 +20,7 @@ def upgrade():
         sa.Column('id_torneo', sa.Integer, sa.ForeignKey('torneo.id', ondelete='CASCADE'), nullable=False),
         sa.Column('puntaje', sa.Integer),
         sa.Column('distancia', sa.Integer),
-        sa.Column('foto', sa.Text),
+        sa.Column('foto_path', sa.Text),
     )
 
 

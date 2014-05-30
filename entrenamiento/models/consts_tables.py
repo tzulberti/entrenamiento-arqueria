@@ -62,12 +62,12 @@ class LargoRiser(BaseConstModel):
 
     __tablename__ = 'largo_riser'
 
-class TipoEncastreRiser(BaseConstModel):
+class TipoEncastre(BaseConstModel):
     ''' Tiene los diferentes tipos de encastre que puede llegar a tener
     un riser
     '''
 
-    __tablename__ = 'tipo_encastre_riser'
+    __tablename__ = 'tipo_encastre'
 
 class MarcaRiser(BaseConstModel):
     ''' Tiene las diferentes marcas que hacen risers
@@ -102,4 +102,12 @@ class TipoHiloCuerda(BaseConstModel):
     la cuerda.
     '''
 
-    __table_name = 'tipo_hilo_cuerda'
+    __tablename__ = 'tipo_hilo_cuerda'
+
+class DominanciaOjo(BaseConstModel):
+
+    __tablename__ = 'dominancia_ojo'
+
+class DominanciaMano(BaseConstModel):
+
+    __tablename__ = 'dominancia_mano'

@@ -49,6 +49,20 @@ class CrearUsuarioDesdeInvitacionView(BaseEntrenamientoView):
                     form_usuario.instance.foto = filename
                     foto_stream.save(os.path.join(self.upload_folder, filename))
 
+            # le tengo que poner un codigo al usuario para poder identificarlo
+            # sin tener que usar el id en la base de datos
+            codigo = None
+            while True:
+                codigo = random_text()
+                query = Usuario.query
+                query = query.filter(Usuario.codigo == codigo)
+                usuario_existente = query.first()
+                if not usuario_existente:
+                    break
+
+            form_usuario.instance.codigo = codigo
+
+
             self.db.session.add(invitacion)
             self.db.session.add(form_usuario.instance)
             self.db.session.commit()

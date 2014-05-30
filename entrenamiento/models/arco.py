@@ -33,6 +33,7 @@ class Arco(BaseModel):
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     nombre = db.Column(db.String(1024), nullable=False)
     comentario = db.Column(db.Text)
+    foto_path = db.Column(db.Text, nullable=True)
     tipo_arco = db.Column(db.String(255), nullable=False)
 
     draw = db.Column(db.Float)
@@ -66,8 +67,6 @@ class ArcoRecurvado(Arco):
     __mapper_args__ = {'polymorphic_identity': 'recurvado'}
 
     id = db.Column(db.Integer, db.ForeignKey('arco.id'), primary_key=True)
-
-
 
     id_marca_riser = db.Column(db.Integer, db.ForeignKey('marca_riser.id'))
     modelo_riser = db.Column(db.String(1024))
