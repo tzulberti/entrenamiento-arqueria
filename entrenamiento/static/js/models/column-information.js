@@ -28,7 +28,14 @@ var ColumnInformation = Class.$extend({
     __init__: function(tableName, databaseName, foreignKey, type, nullable, constValues) {
         this.tableName = tableName;
         this.databaseName = databaseName;
-        this.frontendName = databaseName.toTitleCase();
+        if (_.str.startsWith(databaseName, 'id_')) {
+            this.frontendName = databaseName.replace('id_', '');
+        } else {
+            this.frontendName = databaseName;
+        }
+        this.frontendName = this.frontendName.replace(/_/g, ' ');
+        this.frontendName = _.str.titleize(this.frontendName);
+
         this.foreignKey = foreignKey;
         this.type = type;
         this.nullable = nullable;

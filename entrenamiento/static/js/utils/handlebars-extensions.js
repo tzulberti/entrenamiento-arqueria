@@ -14,7 +14,8 @@ Handlebars.render = function(template, context) {
  * pasando.
  */
 Handlebars.registerHelper('readableName', function(columnName) {
-    return columnName.toTitleCase();
+    var tmp = columnName.replace(/_/g, ' ');
+    return _.str.titleize(tmp);
 });
 
 
