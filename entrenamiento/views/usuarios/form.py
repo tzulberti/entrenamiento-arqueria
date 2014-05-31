@@ -58,16 +58,16 @@ class UserForm(ValidationForm):
     apodo_eda = StringField('apodo_eda')
     latitud = FloatField('latitud', validators=[Optional()])
     longitud = FloatField('longitud', validators=[Optional()])
-    id_dominancia_ojo = QuerySelectField('dominancia_ojo',
-                                         description='Cual es el ojo con el que apuntas?',
-                                         query_factory=DominanciaOjo.query.all,
-                                         get_label='value',
-                                         allow_blank=True)
-    id_dominancia_mano = QuerySelectField('dominancia_mano',
-                                          query_factory=DominanciaMano.query.all,
-                                          get_label='value',
-                                          description='Cual es la mano que usas para hacer las cosas genearlmente (comer, escribir, etc...)?',
-                                          allow_blank=True)
+    dominancia_ojo = QuerySelectField('dominancia_ojo',
+                                       description='Cual es el ojo con el que apuntas?',
+                                       query_factory=DominanciaOjo.query.all,
+                                       get_label='value',
+                                       allow_blank=True)
+    dominancia_mano = QuerySelectField('dominancia_mano',
+                                        query_factory=DominanciaMano.query.all,
+                                        get_label='value',
+                                        description='Cual es la mano que usas para hacer las cosas genearlmente (comer, escribir, etc...)?',
+                                        allow_blank=True)
 
 
     def get_attr_value(self, attr_name, form_data):
@@ -81,4 +81,13 @@ class UserForm(ValidationForm):
         return bcrypt.generate_password_hash(form_data)
 
     def get_instance(self):
-        return super(UserForm, self).get_instance(['password_confirmation', 'foto_archivo'])
+        res = super(UserForm, self).get_instance(['password_confirmation',
+                                                  'foto_archivo',
+                                                  'dominancia_ojo',
+                                                  'dominancia_mano'])
+        if self.dominancia_ojo.data:
+            res.id_dominancia_ojo = self.dominancia_ojo.data.id
+        if self.dominancia_mano.data:
+            res.id_dominancia_mano = self.dominancia_mano.data.id
+        return res
+
