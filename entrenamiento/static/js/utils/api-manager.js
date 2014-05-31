@@ -28,7 +28,7 @@ var APIManager = Class.$extend({
      * o mostrarle un mensaje de error teniendo en cuenta el tipo
      * de error.
      */
-    ajaxError: function(jqXHR, ajaxSettings, thrownError) {
+    ajaxError: function(originalErrorCallback, jqXHR, textStatus, thrownError) {
         if (jqXHR.status === 401) {
             // el usuario nunca se logueo, por lo que lo redirigo a la pagina
             // correspondiente
@@ -36,10 +36,25 @@ var APIManager = Class.$extend({
         } else if (jqXHR.status === 403) {
             // en este caso el usuario no tiene el permiso para ver los datos
             // de la persona en cuestion.
+        } else if (jqXHR.status === 400) {
+            // en este caso hubo algun tipo de error de validacion en el servidor
+            // por lo que llamo al errorParser original para que me parsee
+            // la respuesta.
+            if (originalErrorCallback === null) {
+                throw new Error('Falta definir la funcion de originalErrorCallback');
+            }
+            originalErrorCallback(jqXHR, textStatus, thrownError);
+
+
         } else if (jqXHR.status === 500) {
             // en este caso ocurrio un error de javascript por lo que tengo
             // que mostrar el mensaje de error por pantalla
-            $("#javascript-error").show();
+            var opts = {
+                title: "Error",
+                text: "Ocurrio un error en la pagina. Los developers ya fueron notificados",
+                type: 'error',
+            };
+            new PNotify(opts);
         }
     },
 
@@ -59,6 +74,11 @@ var APIManager = Class.$extend({
      * @param {Function} successCallback: el callback que tiene que ser
      *                                    ejecutado en caso de que el llamado
      *                                    ajax no devuelva un error.
+     *
+     *
+     * @param {Function} errorCallback: el callback que se va a usar en caso de
+     *                                  hubo un error de validacion cuando se hizo
+     *                                  el request.
      */
     ajaxCall: function(url, data, type, successCallback, errorCallback) {
         if (! successCallback) {
@@ -69,11 +89,15 @@ var APIManager = Class.$extend({
             url: '/api/v01/' + url,
             data: data,
             success: successCallback,
-            error: errorCallback || $.proxy(this.ajaxError, this)
+            error: $.proxy(this.ajaxError, this, errorCallback || null)
         });
     },
 
     ajaxCallObject: function(params) {
-        return this.ajaxCall(params.url, params.data, params.type, params.successCallback, params.errorCallback);
+        return this.ajaxCall(params.url,
+                             params.data,
+                             params.type,
+                             params.successCallback,
+                             params.errorCallback);
     }
 });
