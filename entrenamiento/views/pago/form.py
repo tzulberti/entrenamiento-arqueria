@@ -16,11 +16,11 @@ class PagoForm(ValidationForm):
     mes_correspondiente = DateField('mes_correspondiente',
                                     format='%d/%m/%Y')
     importe = FloatField('importe')
-    razon_pago_id = IntegerField('razon_pago_id')
+    id_razon_pago = IntegerField('id_razon_pago')
 
     def get_instance(self):
         res = super(PagoForm, self).get_instance()
         logged_user = get_logged_user_data()
-        res.cargado_por = logged_user.id
+        res.id_cargado_por = logged_user.id
         return res
 

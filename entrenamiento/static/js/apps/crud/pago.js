@@ -9,7 +9,7 @@ var PagoCrudApplication = FieldCrudApp.$extend({
             new FormFieldData('cuando', null),
             new FormFieldData('mes_correspondiente', null),
             new FormFieldData('importe', null),
-            new FormFieldData('razon_pago_id', null)
+            new FormFieldData('id_razon_pago', null)
         ];
         this.$super(element, historyManager, apiManager, databaseInformation,
                     'pago', ['cuando', 'importe'], formFields);

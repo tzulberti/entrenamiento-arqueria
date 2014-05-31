@@ -130,7 +130,7 @@ class BaseModelListCrudView(UserRequiredView):
         # administrador entonces solo va a poder ver su informacion
         if hasattr(self.model_class, 'id_usuario'):
             logged_user = LoggedUserData(*session['logged_user'])
-            if not (logged_user.es_entrenador or logged_user.es_administrador):
+            if not logged_user.es_administrador:
                 query = query.filter(getattr(self.model_class, 'id_usuario') == logged_user.id)
 
         if not 'fkInformation' in request.args:

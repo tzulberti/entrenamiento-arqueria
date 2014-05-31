@@ -22,11 +22,6 @@ class Usuario(BaseModel):
     :param str apellido: el/los apellido/s de la persona fisica que es
                          representado por este usuario.
 
-    :param bool es_entrenador: si es True, entonces el usuario en cuestion
-                               es un entrenador y puede ver la informacion
-                               y graficos de todos los usuarios. Sin embargo,
-                               no puede cargar ciertas cosas (como usuarios)
-
     :param bool es_administrador: si es True, entonces puede ver la informacion
                                   de los otros usuarios y ademas puede cargar
                                   ciertas cosas que el entrenador no puede.
