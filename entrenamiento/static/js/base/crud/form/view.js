@@ -37,12 +37,23 @@ var FormView = Class.$extend({
      * y los posibles errores de validacion.
      */
     render: function(objectData, validationErrors) {
+
         var html = Handlebars.render(this.template, {
                         validationErrors: validationErrors
         });
 
         this.$element.clean();
         this.$element.html(html);
+
+        if (validationErrors) {
+            new PNotify({
+                title: 'Error',
+                text: 'Alguno de los campos ingresados esta mal',
+                delay: 1500,
+                type: 'error'
+            });
+
+        }
 
         for (var i = 0; i < this.columnsInformation.length; i++) {
             var columnInformation = this.columnsInformation[i];
