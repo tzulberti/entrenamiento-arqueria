@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from flask.ext.wtf import Form
-from wtforms.fields import Field
-from wtforms.validators import ValidationError
+from sqlalchemy.sql.sqltypes import Integer, Float, Date, String, Text, Boolean
+from wtforms.fields import (Field, StringField, IntegerField, TextAreaField,
+                            BooleanField, DateField, FloatField)
+from wtforms.validators import ValidationError, InputRequired, Optional
 
+from entrenamiento.models.base import BaseModel
 
 class ValidateUnique(object):
     ''' Valida que el campo sea unico teniendo en cuenta
@@ -80,8 +83,8 @@ class ValidationForm(Form):
 
     '''
 
-    def __init__(self, model_class, object_id=None):
-        super(ValidationForm, self).__init__()
+    def __init__(self, model_class, object_id=None, **kwargs):
+        super(ValidationForm, self).__init__(**kwargs)
         self.model_class = model_class
         self.object_id = object_id
 
@@ -135,4 +138,69 @@ class ValidationForm(Form):
 
 
 
+class ModelForm(ValidationForm):
+    ''' Se encarga de crear el form teniendo en cuenta todos campos que
+    tiene el modelo de la base de datos.
+
+    :param list(str) ignore_columns: los nombres de las columnas que no
+                                     van a formar parte de form.
+    '''
+
+    def __init__(self, model_class, ignore_columns=[], object_id=None):
+        self.ignore_columns = ignore_columns
+        fields = self.convert_sqlalchemy_information(model_class)
+        if not (model_class.__base__ == BaseModel):
+            fields.extend(self.convert_sqlalchemy_information(model_class.__base__))
+
+        self.__class__._unbound_fields = fields
+        super(ModelForm, self).__init__(model_class, object_id)
+
+    def convert_sqlalchemy_information(self, model_class):
+        ''' Se encarga de convertir toda la informacion del modelo de SQLAlchemy
+        a un form de WTForm.
+
+        Para esto, se fija los siguientes attributos del field:
+
+        - Si puede llegar a ser nullable
+        - Si es unique
+        - Si es primary key
+
+        Ademas, en funcion del tipo de columna el tipo de field que va a usar.
+        '''
+        res = []
+        for column_information in model_class.__table__.columns:
+            if column_information.primary_key:
+                # no pongo la primary key en el form porque la misma forma
+                # parte de la url que recive el usuario
+                continue
+
+            if column_information.key in self.ignore_columns:
+                # en este caso se quiere ignorar el campo.
+                continue
+
+
+            validators = []
+            if column_information.nullable:
+                validators.append(Optional())
+            else:
+                validators.append(InputRequired())
+            if column_information.unique:
+                validators.append(ValidateUnique())
+
+            field_class = None
+            if isinstance(column_information.type, Integer):
+                field_class = IntegerField
+            elif isinstance(column_information.type, Float):
+                field_class = FloatField
+            elif isinstance(column_information.type, Text):
+                field_class = TextAreaField
+            elif isinstance(column_information.type, String):
+                field_class = StringField
+            elif isinstance(column_information.type, Date):
+                field_class = DateField
+            elif isinstance(column_information.type, Boolean):
+                field_class = BooleanField
+
+            res.append((column_information.key, field_class(column_information.key, validators=validators)))
+        return res
 

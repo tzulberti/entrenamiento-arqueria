@@ -18,8 +18,6 @@ class IndexViewTemplate(MethodView):
     def get(self):
         if 'logged_user' in session:
             forms = dict()
-            for form_name, form_aux in self.forms_data.items():
-                forms[form_name] = form_aux['klass'](*form_aux['args'])
             return render_template('index.html',
                                    **forms)
         else:
