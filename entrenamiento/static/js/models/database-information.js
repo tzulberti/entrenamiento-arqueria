@@ -32,6 +32,14 @@ var DatabaseInformation = Class.$extend({
                                                               currentColumn.nullable,
                                                               constValues));
             }
+            columnsInformation.sort(function(c1, c2) {
+                if (c1.frontendName < c2.frontendName) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+            this.databaseInformation[tableName] = columnsInformation;
         }
     },
 
