@@ -116,6 +116,8 @@ class ValidationForm(Form):
                 continue
             if attr_name in skip_fieldnames:
                 continue
+            if not hasattr(self, attr_name):
+                continue
             attr = getattr(self, attr_name)
             if isinstance(attr, Field):
                 final_value = self.get_attr_value(attr_name, attr.data)
@@ -178,15 +180,6 @@ class ModelForm(ValidationForm):
                 # en este caso se quiere ignorar el campo.
                 continue
 
-
-            validators = []
-            if column_information.nullable:
-                validators.append(Optional())
-            else:
-                validators.append(InputRequired())
-            if column_information.unique:
-                validators.append(ValidateUnique())
-
             field_class = None
             if isinstance(column_information.type, Integer):
                 field_class = IntegerField
@@ -200,6 +193,15 @@ class ModelForm(ValidationForm):
                 field_class = DateField
             elif isinstance(column_information.type, Boolean):
                 field_class = BooleanField
+
+            validators = []
+            if column_information.nullable:
+                validators.append(Optional())
+            elif field_class != BooleanField:
+                validators.append(InputRequired())
+            if column_information.unique:
+                validators.append(ValidateUnique())
+
 
             res.append((column_information.key, field_class(column_information.key, validators=validators)))
         return res

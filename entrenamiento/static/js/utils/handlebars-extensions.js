@@ -197,7 +197,8 @@ Handlebars.registerHelper('renderFilterData', function(filter, databaseInformati
 
 Handlebars.registerHelper('renderColumnHeader', function(columnName, orderBy, orderDirection) {
     var res = '<a href="#" class="column-name" id="column-' + columnName + '">';
-    res += columnName.toTitleCase();
+    var tmp = columnName.replace(/_/g, ' ')
+    res += _.str.titleize(tmp);
     if (columnName == orderBy) {
         if (orderDirection === 'ASC') {
             res += '<span class="glyphicon glyphicon-chevron-down"></span>';
@@ -226,6 +227,10 @@ Handlebars.registerHelper('renderTableRow', function(data, columnNames) {
             value = '<span class="glyphicon glyphicon-ok"></span>';
         } else if (value === false) {
             value = '<span class="glyphicon glyphicon-minus"></span>';
+        }
+
+        if (value === null) {
+            value = '';
         }
         res += '<td>' + value + '</td>';
     }
