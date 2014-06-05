@@ -130,6 +130,8 @@ var BaseCrudApp = Class.$extend({
         this.$element.clean();
         this.$element.html(html);
 
+        this.$element.on('click', '.button-create', $.proxy(this.createNew, this));
+
         this.tableView = this.createTableView();
         this.formController = this.createFormController();
 
@@ -141,6 +143,8 @@ var BaseCrudApp = Class.$extend({
         this.tableView.render();
 
     },
+
+
 
     /**
      * Se encarga de crear la instancia del {TableView} que se va a
@@ -181,13 +185,18 @@ var BaseCrudApp = Class.$extend({
     },
 
     /**
-     * Se encarga de mostrar el form para que el usuario
-     * pueda crear una nueva instancia.
+     * Handler de cuando el usuario hace click en el boton para agregar
+     * un nuevo objecto.
      */
-    createNew: function() {
+    createNew: function(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        this.historyManager.pushNewInstanceStatus(this.tableName, null);
         this.tableView.$element.hide();
         this.formController.formView.$element.show();
         this.formController.render(null);
+
     },
 
     /**
