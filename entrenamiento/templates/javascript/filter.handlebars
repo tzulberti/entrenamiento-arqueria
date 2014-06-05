@@ -1,17 +1,15 @@
 <script id="filter-view-handlebars-template" type="text/x-handlebars-template">
     {% raw %}
-    <div>
-        Crear nuevo filtro
-    </div>
-    <div class="row">
-        <div class="col-md-2"> 
+        <span class="filter-field"> 
             <select class="column-name">
                 {{#each columnsInformation }}
-                <option value="{{ this.databaseName }}">{{ this.frontendName }}</option>
+                    {{#ifCond this.primaryKey '!' ''}}
+                        <option value="{{ this.databaseName }}">{{ this.frontendName }}</option>
+                    {{/ifCond}}
                 {{/each}}
             </select>
-        </div>
-        <div class="col-md-1">
+        </span>
+        <span class="filter-field">
             <select class="operators">
                 <option value="eq">=</option>
                 <option value="neq">!=</option>
@@ -24,8 +22,8 @@
                     <option value="get">>=</option>
                 {{/if}}
             </select>
-        </div>
-        <div class="col-md-2">
+        </span>
+        <span class="filter-field">
             {{#if fkValues }}
                 <select class="value">
                     {{# each fkValues }}
@@ -43,11 +41,10 @@
                     <input class="value">
                 {{/if}}
             {{/if}}
-        </div>
-        <div class="col-md-2">
+        </span>
+        <span class="filter-field">
             <button type="button" class="btn btn-primary create">Crear Filtro</button>
-        </div>
-    </div>
+        </span>
     {% endraw %}
 </script>
 
@@ -57,7 +54,7 @@
             <div class="row">
                 <ul>
                     {{#each filters}}
-                    <li>
+                    <li class="filter-list-item">
                         <a class="remove-filter" href="#">
                             <span id="remove-filter-{{@index}}" class="glyphicon glyphicon-remove-circle"></span>
                         </a>

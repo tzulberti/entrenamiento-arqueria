@@ -2,6 +2,17 @@
  * Estilos custom que corresponden a la pagina web
  */
 
+/* 
+ * Para los campos de crear filtros que estan en la tabla de CRUD
+ */
+.filter-field {
+    padding-right: 10px;
+}
+
+.filter-list-item {
+    list-style-type: none;
+    padding-top: 10px;
+}
 
 .ronda-form {
     padding-top: 30px;

@@ -1,8 +1,15 @@
 <script id="table-view-handlebars-template" type="text/x-handlebars-template">
-    <div class="row search-conditions">
-        <div class="filter">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Filtros
         </div>
-        <div class="existing-filters">
+        <div class="panel-body">
+            <div class="row search-conditions">
+                <div class="filter">
+                </div>
+                <div class="existing-filters">
+                </div>
+            </div>
         </div>
     </div>
     <div id="information-container">
@@ -56,7 +63,7 @@
                 </tbody>
             </table>
         {{else}}
-            <h2>No Information was found</h2>
+            <h2>No se encontro informacion</h2>
         {{/if}}
     {% endraw %}
 </script>

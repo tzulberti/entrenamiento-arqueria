@@ -30,6 +30,7 @@ var DatabaseInformation = Class.$extend({
                                                               currentColumn.foreign_key,
                                                               currentColumn.type,
                                                               currentColumn.nullable,
+                                                              currentColumn.primary_key,
                                                               constValues));
             }
             columnsInformation.sort(function(c1, c2) {

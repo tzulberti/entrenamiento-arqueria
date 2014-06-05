@@ -21,11 +21,14 @@ var ColumnInformation = Class.$extend({
      * @param {boolean} nullable: si es True, entonces la columna en cuestion puede
      *                            tener valores null
      *
+     * @param {boolean} primaryKey: si es True, entonces la columna es una primary key
+     *                              de la tabla
+     *
      * @param {Array(ConstValue)} constValues: en caso de que la columna sea una
      *                                         referencia a valores constantes, entonces
      *                                         son los valores constantes en cuestion
      */
-    __init__: function(tableName, databaseName, foreignKey, type, nullable, constValues) {
+    __init__: function(tableName, databaseName, foreignKey, type, nullable, primaryKey, constValues) {
         this.tableName = tableName;
         this.databaseName = databaseName;
         if (_.str.startsWith(databaseName, 'id_')) {
@@ -38,6 +41,7 @@ var ColumnInformation = Class.$extend({
 
         this.foreignKey = foreignKey;
         this.type = type;
+        this.primaryKey = primaryKey;
         this.nullable = nullable;
         this.constValues = constValues;
     },
