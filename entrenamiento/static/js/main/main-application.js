@@ -56,20 +56,20 @@ var MainApplication = Class.$extend({
                                                               $('.container'));
         */
 
-        var crudLugarApp = new LugarCrudApplication($('.container'),
+        var crudLugarApp = new LugarCrudApplication($('.crud-container'),
                                                     this.historyManager,
                                                     this.apiManager,
                                                     this.databaseInformation);
 
-        var crudPagoApp = new PagoCrudApplication($('.container'),
+        var crudPagoApp = new PagoCrudApplication($('.crud-container'),
                                                   this.historyManager,
                                                   this.apiManager,
                                                   this.databaseInformation);
-        var invitacionCrudApp = new InvitacionCrudApplication($('.container'),
+        var invitacionCrudApp = new InvitacionCrudApplication($('.crud-container'),
                                                               this.historyManager,
                                                               this.apiManager,
                                                               this.databaseInformation);
-        var arcoRecurvadoCrudApp = new ArcoRecurvadoCrudApplication($('.container'),
+        var arcoRecurvadoCrudApp = new ArcoRecurvadoCrudApplication($('.crud-container'),
                                                                     this.historyManager,
                                                                     this.apiManager,
                                                                     this.databaseInformation);
@@ -83,8 +83,11 @@ var MainApplication = Class.$extend({
         */
         this.appsManager.addApplication(6, crudPagoApp);
 
-        this.menuView = new MainMenuView($("#main-menu"),
+        this.menuView = new MainMenuView($("#side-menu"),
                                          this.appsManager);
         this.menuView.render();
+
+        $('#side-menu').metisMenu();
+
     }
 });

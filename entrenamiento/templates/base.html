@@ -33,19 +33,20 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Entrenamiento</title>
+        <title>EDA - Sistema</title>
         <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}"> 
-        <!-- Bootstrap -->
         <link href="/static/css/bootstrap.css" rel="stylesheet">
-        <!-- Other vendor things -->
+        <link href="/static/css/font-awesome.css" rel="stylesheet">
         <link href="/static/css/jquery.cleditor.css" rel="stylesheet">
         <link href="/static/css/datepicker3.css" rel="stylesheet">
         <link href="/static/css/jquery.loadmask.css" rel="stylesheet">
         <link href="/static/css/chosen.css" rel="stylesheet">
-        <link href="/static/css/entrenamiento.css" rel="stylesheet">
         <link href="/static/css/pnotify.custom.min.css" rel="stylesheet">
+        <link href="/static/css/sb-admin.css" rel="stylesheet">
+        <!-- custom css -->
+        <link href="/static/css/entrenamiento.css" rel="stylesheet">
         {% block additional_css %}
         {% endblock %}
         {% block additional_headers %}
@@ -60,25 +61,13 @@
         <![endif]-->
     </head>
     <body>
-        <nav class="navbar navbar-default" role="navigation" id="main-menu">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#" style="padding-top: 5px"><img src="/static/images/eda.jpg" style="height: 30px"/></a>
-            </div>
-            {% block menu %}
-            {% endblock %}
-        </nav>
         {% block content %}
         {% endblock %}
         
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="/static/js/vendor/jquery-1.9.1.js"></script>
+        <script src="/static/js/vendor/jquery.metisMenu.js"></script>
         <script src="/static/js/vendor/handlebars-1.0.0.js"></script>
         <script src="/static/js/vendor/bootstrap.min.js"></script>
         <script src="/static/js/vendor/classy.js"></script>

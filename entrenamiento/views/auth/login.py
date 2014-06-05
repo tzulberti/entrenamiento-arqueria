@@ -29,8 +29,7 @@ class LoginView(MethodView):
         user = query.first()
         if not user:
             return render_template('login.html',
-                                    username=email or " ",
-                                    password=password)
+                                    email=email or " ")
         else:
             if bcrypt.check_password_hash(user.password, password):
                 logged_user_data = LoggedUserData(user.id,
@@ -42,6 +41,5 @@ class LoginView(MethodView):
                 return redirect(request.args.get('next') or url_for('index'))
             else:
                 return render_template('login.html',
-                                        username=email or " ",
-                                        password=password)
+                                        email=email or " ")
 
