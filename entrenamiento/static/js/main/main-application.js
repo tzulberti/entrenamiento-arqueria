@@ -56,20 +56,20 @@ var MainApplication = Class.$extend({
                                                               $('.container'));
         */
 
-        var crudLugarApp = new LugarCrudApplication($('.crud-container'),
+        var crudLugarApp = new LugarCrudApplication($('#page-wrapper'),
                                                     this.historyManager,
                                                     this.apiManager,
                                                     this.databaseInformation);
 
-        var crudPagoApp = new PagoCrudApplication($('.crud-container'),
+        var crudPagoApp = new PagoCrudApplication($('#page-wrapper'),
                                                   this.historyManager,
                                                   this.apiManager,
                                                   this.databaseInformation);
-        var invitacionCrudApp = new InvitacionCrudApplication($('.crud-container'),
+        var invitacionCrudApp = new InvitacionCrudApplication($('#page-wrapper'),
                                                               this.historyManager,
                                                               this.apiManager,
                                                               this.databaseInformation);
-        var arcoRecurvadoCrudApp = new ArcoRecurvadoCrudApplication($('.crud-container'),
+        var arcoRecurvadoCrudApp = new ArcoRecurvadoCrudApplication($('#page-wrapper'),
                                                                     this.historyManager,
                                                                     this.apiManager,
                                                                     this.databaseInformation);

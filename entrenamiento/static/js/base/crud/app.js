@@ -38,6 +38,7 @@ var BaseCrudApp = Class.$extend({
 
         this.fkInformation = null;
         this.missingCallbacks = null;
+        this.template = $("#crud-view-handlebars-template").html();
     },
 
     /**
@@ -121,6 +122,14 @@ var BaseCrudApp = Class.$extend({
      * view para mostrarselos al usuario.
      */
     createControllers: function() {
+        // rendero el template de basico en donde despues se va a renderar
+        // la tabla y el form
+        var html = Handlebars.render(this.template, {
+                tableName: this.tableName
+        });
+        this.$element.clean();
+        this.$element.html(html);
+
         this.tableView = this.createTableView();
         this.formController = this.createFormController();
 
