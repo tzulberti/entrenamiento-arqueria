@@ -1,14 +1,14 @@
 """usuario
 
 Revision ID: 013
-Revises: 012
+Revises: 012b
 Create Date: 2014-05-27 22:28:32.052345
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '013'
-down_revision = '012'
+down_revision = '012b'
 
 from alembic import op
 import sqlalchemy as sa
@@ -16,12 +16,9 @@ import sqlalchemy as sa
 
 def upgrade():
     op.create_table('usuario',
-        sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('email', sa.String(250), nullable=False, unique=True),
+        sa.Column('id', sa.Integer, sa.ForeignKey('arquero.id'), primary_key=True),
         sa.Column('password', sa.String(1024), nullable=False),
         sa.Column('codigo', sa.String(10), nullable=False, unique=True),
-        sa.Column('nombre', sa.String(1024), nullable=False),
-        sa.Column('apellido', sa.String(1024), nullable=False),
         sa.Column('es_administrador', sa.Boolean, nullable=False, default=False),
 
         # estos datos son pedidos usados por la data de la EDA
