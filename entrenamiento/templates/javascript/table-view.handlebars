@@ -20,24 +20,6 @@
     </div>
 </script>
 
-<script id="search-condition-handlebars-template" type="text/x-handlebars-template">
-    {% raw %}
-        <div class="row">        
-            <select>
-                {{#each columnInformation}}
-                    <option name="{{ this }}">{{readableName this }}</option>
-                {{/each}}
-            </select>
-            <select>
-                <option value="eq">=</option>
-                <option value="lt"><</option>
-                <option value="let"><=</option>
-                <option value="gt">></option>
-                <option value="get">>=</option>
-            </select>
-        </div>
-    {% endraw %}
-</script>
 
 <script id="table-content-view-handlebars-template" type="text/x-handlebars-template">
     {% raw %}
@@ -57,7 +39,7 @@
                 <tbody>
                     {{#each values}}
                         <tr>
-                            {{renderTableRow this ../columnNames }}
+                            {{renderTableRow this ../columnNames ../columnsInformation ../fkInformation}}
                         </tr>
                     {{/each}}
                 </tbody>

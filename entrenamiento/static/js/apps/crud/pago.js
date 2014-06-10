@@ -17,7 +17,7 @@ var PagoCrudApplication = FieldCrudApp.$extend({
 
         ];
         this.$super(element, historyManager, apiManager, databaseInformation,
-                    'pago', ['cuando', 'importe'], formFields, 'upload/pago-comprobante/');
+                    'pago', ['cuando', 'id_usuario', 'importe'], formFields, 'upload/pago-comprobante/');
     }
 });
 

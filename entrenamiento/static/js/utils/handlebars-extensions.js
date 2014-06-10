@@ -220,11 +220,38 @@ Handlebars.registerHelper('renderColumnHeader', function(columnName, orderBy, or
  * Esto muestra toda la informacion en el orden correspondiente teniendo
  * en cuenta ademas que se tiene que agregar las columnas de "edit" y
  * "delete".
+ *
+ * @param {Object} data: la informacion enviaada desde el servidor que se tiene
+ *                       que mostrar en forma de row.
+ *
+ * @param {Array(String)} columnNames: todas las columnas de la tabla que
+ *                                     se tienen que mostrar.
+ *
+ * @param {Array(ColumnInformation)} columnInformation: tiene toda la informacion de las
+ *                                                      columnas de la tabla que se
+ *                                                      esta mostrando
+ *
+ * @param {FkInformation} fkInformation: tiene toda la informacion de los objetos
+ *                                       relacionados
  */
-Handlebars.registerHelper('renderTableRow', function(data, columnNames) {
+Handlebars.registerHelper('renderTableRow', function(data, columnNames, columnsInformation, fkInformation) {
     var res = '';
     for (var index in columnNames) {
         var columnName = columnNames[index];
+        var columnSchema = null;
+        for (var i = 0; i< columnsInformation.length; i++) {
+            if (columnsInformation[i].databaseName === columnName) {
+                columnSchema = columnsInformation[i];
+                break;
+            }
+        }
+
+        if (columnSchema === null) {
+            throw new Error('No se pudo encontrar informacion para la ' +
+                            'columna: ' + columnName);
+        }
+
+
         var value = data[columnName];
         if (value === true) {
             value = '<span class="glyphicon glyphicon-ok"></span>';
@@ -233,7 +260,11 @@ Handlebars.registerHelper('renderTableRow', function(data, columnNames) {
         }
 
         if (value === null) {
-            value = '';
+            value = '&nbsp;';
+        } else if (columnSchema.isConst()) {
+            value = columnSchema.getConstValue(value).value;
+        } else if (columnSchema.foreignKey !== null) {
+            value = fkInformation.getValue(columnSchema.foreignKey, value).value;
         }
         res += '<td>' + value + '</td>';
     }

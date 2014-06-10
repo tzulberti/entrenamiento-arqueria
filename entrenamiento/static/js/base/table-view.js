@@ -171,7 +171,9 @@ var TableView = Class.$extend({
                 columnNames: this.columnNames,
                 values: values,
                 orderDirection: this.orderDirection,
-                orderBy: this.orderBy
+                orderBy: this.orderBy,
+                columnsInformation: window.app.databaseInformation.getTableColumns(this.modelName),
+                fkInformation: this.fkInformation
         });
         this.$element.find('#table-information-container').html(html);
 
