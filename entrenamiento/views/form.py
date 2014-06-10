@@ -181,6 +181,7 @@ class ModelForm(ValidationForm):
                 continue
 
             field_class = None
+            field_kwargs = dict()
             if isinstance(column_information.type, Integer):
                 field_class = IntegerField
             elif isinstance(column_information.type, Float):
@@ -191,6 +192,7 @@ class ModelForm(ValidationForm):
                 field_class = StringField
             elif isinstance(column_information.type, Date):
                 field_class = DateField
+                field_kwargs = dict(format='%d/%m/%Y')
             elif isinstance(column_information.type, Boolean):
                 field_class = BooleanField
 
@@ -203,6 +205,7 @@ class ModelForm(ValidationForm):
                 validators.append(ValidateUnique())
 
 
-            res.append((column_information.key, field_class(column_information.key, validators=validators)))
+            res.append((column_information.key,
+                        field_class(column_information.key, validators=validators, **field_kwargs)))
         return res
 

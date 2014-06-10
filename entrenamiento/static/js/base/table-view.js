@@ -78,7 +78,6 @@ var TableView = Class.$extend({
 
         this.getData();
 
-        this.$element.on('click', '.button-create', $.proxy(this.createNew, this));
         this.$element.find('#information-container').on('click', '.pagination-page', $.proxy(this.changePage, this));
         this.$element.find('#information-container').on('click', '.button-edit', $.proxy(this.editValue, this));
         this.$element.find('#information-container').on('click', '.button-delete', $.proxy(this.deleteValue, this));

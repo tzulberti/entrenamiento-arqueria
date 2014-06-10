@@ -4,10 +4,28 @@
  */
 var FormController = Class.$extend({
 
-    __init__: function(formView, apiManager, tableName, crudView) {
+    /**
+     * Constructor.
+     *
+     * @param {FormView} formView: la view que esta asociada al controller en cuestion.
+     *
+     * @param {ApiManager} apiManager: el manager que se usa para hacer todos los
+     *                                 request ajax.
+     *
+     * @param {String} tableName: el nombre de la tabla para la cual se quiere grabar
+     *                            un nuevo valor.
+     *
+     * @param {String} urlPekeUpload: la URL a donde se tiene que subir el archivo
+     *                                en caso de que el form tenga un input de path.
+     *
+     * @param {CrudView} crudView: la view que se tiene que notificar cuando el objeto
+     *                             fue creado.
+     */
+    __init__: function(formView, apiManager, tableName, urlPekeUpload, crudView) {
         this.formView = formView;
         this.apiManager = apiManager;
         this.tableName = tableName;
+        this.urlPekeUpload = urlPekeUpload;
         this.crudView = crudView;
         this.objectId = null;
     },
@@ -46,6 +64,28 @@ var FormController = Class.$extend({
 
     _renderForm: function(objectData, validationErrors) {
         this.formView.render(objectData, validationErrors);
+
+        var self = this;
+        if (this.formView.$element.find('input:file').exists()) {
+            var elem = this.formView.$element.find('input:file');
+            elem.pekeUpload({
+                onSubmit: false,
+                theme: "bootstrap",
+                multi: false,
+                url: '/api/v01/' + this.urlPekeUpload,
+                onFileSuccess: $.proxy(function(elem, file, data) {
+                        var columnName = elem.attr('name');
+                        columnName = columnName.replace('_upload', '');
+                        var hiddenElement = this.formView.$element.find('#' + columnName);
+                        if (! hiddenElement.exists()) {
+                            throw new Error('Algo esta mal configurado porque no se encuentra el hidden element');
+                        }
+
+                        hiddenElement.val(data.filename);
+                    }, this, elem)
+            });
+
+        }
 
         this.formView.$element.on('click', '.button-save', $.proxy(this.saveInformation, this));
     },

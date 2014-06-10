@@ -258,12 +258,19 @@ var FieldCrudApp = BaseCrudApp.$extend({
      * @param {Array(FormFieldData)} formFieldsData: la informacion de todas las
      *                                               columnas que se tienen que
      *                                               renderar en el form.
+     *
+     * @param {String} urlPekeUpload: en caso de que el form tenga un archivo que
+     *                                el usuario tiene que subir, entonces este es el
+     *                                path en donde se encuentra el archivo en cuestion.
+     *                                Sino tiene el path de ningun archivo entonces va
+     *                                a ser null
      */
     __init__: function(element, historyManager, apiManager, databaseInformation,
-                       tableName, tableColumns, formFieldsData) {
+                       tableName, tableColumns, formFieldsData, urlPekeUpload) {
         this.$super(element, historyManager, apiManager, databaseInformation,
                     tableName, tableColumns);
         this.formFieldsData = formFieldsData;
+        this.urlPekeUpload = urlPekeUpload;
     },
 
     /**
@@ -278,6 +285,7 @@ var FieldCrudApp = BaseCrudApp.$extend({
         var controller = new FormController(view,
                                             this.apiManager,
                                             this.tableName,
+                                            this.urlPekeUpload,
                                             this);
         return controller;
 

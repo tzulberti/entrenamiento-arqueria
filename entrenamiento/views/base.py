@@ -169,8 +169,9 @@ class BaseModelListCrudView(UserRequiredView):
         if form.validate_on_submit():
             # si tiene el usuario, entonces se lo tengo que agregar.
             if hasattr(self.model_class, 'id_usuario'):
-                logged_user = LoggedUserData(*session['logged_user'])
-                form.instance.id_usuario = logged_user.id
+                if form.instance.id_usuario is None:
+                    logged_user = LoggedUserData(*session['logged_user'])
+                    form.instance.id_usuario = logged_user.id
             self.db.session.add(form.instance)
             self.db.session.commit()
             return jsonify(id=form.instance.id)
