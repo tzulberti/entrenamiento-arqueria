@@ -58,7 +58,9 @@ var utils = {
                 continue;
             }
             if (inputField.is('input')) {
-                if (inputField.attr('type') === 'text') {
+                if (inputField.attr('type') === 'hidden') {
+                    inputField.val(value);
+                } else if (inputField.attr('type') === 'text') {
                     inputField.val(value);
                 } else if (inputField.attr('type') === 'checkbox') {
                     if (value === 1 || value) {
