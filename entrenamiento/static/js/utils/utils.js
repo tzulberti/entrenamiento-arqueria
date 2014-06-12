@@ -60,6 +60,11 @@ var utils = {
             if (inputField.is('input')) {
                 if (inputField.attr('type') === 'hidden') {
                     inputField.val(value);
+                    if (_.str.endsWith(attributeName, '_path')) {
+                        // en este caso se que estoy con lo de pekeupload,
+                        // por lo que busco donde va el nombre correspondiente, y lo mustro ahi
+                        $element.find('#' + attributeName + '_existing').html(value);
+                    }
                 } else if (inputField.attr('type') === 'text') {
                     inputField.val(value);
                 } else if (inputField.attr('type') === 'checkbox') {

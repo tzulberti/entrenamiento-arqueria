@@ -129,6 +129,7 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
                 fkValues = fkInformation.getTableValues(columnInformation.foreignKey);
             }
         } else if (_.str.include(columnInformation.databaseName, '_path')) {
+            templateRes += '<div class="existing-upload" id="{{ columnInformation.databaseName }}_existing"></div>';
             templateRes += '<input type="hidden" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control">';
             templateRes += '<input type="file" name="{{ columnInformation.databaseName }}_upload" id="{{ columnInformation.databaseName }}_upload" class="form-control">';
         } else if (columnInformation.type === 'textarea') {

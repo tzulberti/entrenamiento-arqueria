@@ -113,13 +113,14 @@ def register_views(app, db, bcrypt):
                                                                     db=db,
                                                                     base_upload_folder=app.config['UPLOAD_FOLDER']))
 
-    app.add_url_rule(BASE_API_URL + 'upload/pago-comprobante/',
-                     view_func=UploadFileView.as_view('api.upload.pago_comprobante',
+    app.add_url_rule(BASE_API_URL + 'upload/<path>/',
+                     view_func=UploadFileView.as_view('api.upload',
                                                       file_extensions=['bmp', 'jpg', 'gif', 'png', 'psd', 'jpeg', 'svg', 'pdf'],
                                                       upload_folder=app.config['UPLOAD_FOLDER']))
-    app.add_url_rule(BASE_API_URL + 'upload/foto-ronda/',
-                     view_func=UploadFileView.as_view('api.upload.foto_ronda',
-                                                      file_extensions=['bmp', 'jpg', 'gif', 'png', 'psd', 'jpeg', 'svg'],
+
+    app.add_url_rule('/uploads/<path>/<filename>/',
+                     view_func=UploadFileView.as_view('uploads.existing',
+                                                      file_extensions=['bmp', 'jpg', 'gif', 'png', 'psd', 'jpeg', 'svg', 'pdf'],
                                                       upload_folder=app.config['UPLOAD_FOLDER']))
 
     @app.route('/favicon.ico')

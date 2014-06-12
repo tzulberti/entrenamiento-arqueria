@@ -69,25 +69,43 @@ var FormController = Class.$extend({
         if (this.formView.$element.find('input:file').exists()) {
             var elem = this.formView.$element.find('input:file');
             elem.pekeUpload({
+                showFilename: false,
+                showPercent: false,
                 onSubmit: false,
                 theme: "bootstrap",
-                multi: false,
+                multi: true,
                 url: '/api/v01/' + this.urlPekeUpload,
-                onFileSuccess: $.proxy(function(elem, file, data) {
-                        var columnName = elem.attr('name');
-                        columnName = columnName.replace('_upload', '');
-                        var hiddenElement = this.formView.$element.find('#' + columnName);
-                        if (! hiddenElement.exists()) {
-                            throw new Error('Algo esta mal configurado porque no se encuentra el hidden element');
-                        }
-
-                        hiddenElement.val(data.filename);
-                    }, this, elem)
+                onFileSuccess: $.proxy(this.handleUploadedFile, this, elem)
             });
 
         }
 
         this.formView.$element.on('click', '.button-save', $.proxy(this.saveInformation, this));
+    },
+
+    /**
+     * Handler de cuando un archivo se pudo subir bien.
+     *
+     * @param {jQuery} element: el elemento que esta siendo usado por pekeUpload.
+     *
+     * @param {Object} file: tiene informacion sobre el archivo subido.
+     *
+     * @param {Object} data: tiene otra informacion sobre el archivo que se subio.
+     */
+    handleUploadedFile: function(element, file, data) {
+        var columnName = element.attr('name');
+        columnName = columnName.replace('_upload', '');
+        var hiddenElement = this.formView.$element.find('#' + columnName);
+        if (! hiddenElement.exists()) {
+            throw new Error('Algo esta mal configurado porque no se encuentra el hidden element');
+        }
+
+        hiddenElement.val(data.filename);
+        this.formView.$element.find('#' + columnName + '_existing').html(
+                '<a href="/uploads/' + data.filename + '/"><img src="/uploads/' + data.thumb_filename + '/"></a>');
+        // porque hay un bug cuando pongo multi en True, y que
+        // no muestre la barra
+        this.formView.$element.find('.file').clean();
     },
 
     /**

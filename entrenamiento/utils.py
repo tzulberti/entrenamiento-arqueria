@@ -12,7 +12,6 @@ from email.MIMEText import MIMEText
 from entrenamiento.models.base import BaseModel
 from sqlalchemy.sql.sqltypes import Integer, Float, Date, String, Text, Boolean
 
-
 def random_text(size=10, chars=string.ascii_uppercase + string.digits):
     ''' Devuelve un texto creado de forma random usando los chars
     del largo especificado.
