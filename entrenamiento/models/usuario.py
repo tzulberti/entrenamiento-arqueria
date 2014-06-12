@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 
 from entrenamiento.app.app import db
-from entrenamiento.models.base import BaseModel
+from entrenamiento.models.arquero import Arquero
 
-class Usuario(BaseModel):
+class Usuario(Arquero):
     ''' Representa toda la informacion de un usuario que se
     puede loguear a la aplicacion.
 
 
-    :param str password: el password del usuario. El mismo esta
-                         encryptado usando Bcrypt.
 
     :param str email: el email del usuario. El mismo es usado
                       para mandarle mails con respecto a cambios
                       en el sistema o si el usuario se olvido la
                       clave.
+
+    :param str password: el password del usuario. El mismo esta
+                         encryptado usando Bcrypt.
 
     :param str nombre: el nombre/s de la persona fisica que es
                         representado por este usuario,
@@ -40,12 +41,9 @@ class Usuario(BaseModel):
                                 de la vida (escribir, comer, etc...)
     '''
 
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(250), nullable=False, unique=True)
+    id = db.Column(db.Integer, db.ForeignKey('arquero.id'), primary_key=True)
     password = db.Column(db.String(1024), nullable=False)
     codigo = db.Column(db.String(10), nullable=False, unique=True)
-    nombre = db.Column(db.String(1024), nullable=False)
-    apellido = db.Column(db.String(1024), nullable=False)
     es_administrador = db.Column(db.Boolean, nullable=False, default=False)
 
     # estos datos son pedidos usados por la data de la EDA
