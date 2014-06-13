@@ -5,7 +5,7 @@ from entrenamiento.views.utils import get_logged_user_data
 
 class PagoForm(ModelForm):
     ''' Tiene toda la data del form de cuando se esta creando
-    o editando un :class:`entrenamiento.models.user.User`
+    o editando un :class:`entrenamiento.models.pago.Pago`
 
     '''
 

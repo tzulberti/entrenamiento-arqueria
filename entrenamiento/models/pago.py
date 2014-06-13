@@ -36,7 +36,6 @@ class Pago(BaseModel):
     :param str comentario: algun comentario sobre el pago que realizo el
                            usuario
 
-    :param int usuario: el usuario que hizo el pago.
 
     :param int cargado_por: el usuario que cargo el pago. Si uno mismo
                             esta cargando un pago a su nombre entonces
@@ -46,11 +45,14 @@ class Pago(BaseModel):
                             persona de la comision, y el :attr:`usuario`
                             es la persona que hizo el pago.
 
+
+    :param int id_arquero: el identificador del arquero a quien le
+                           corresponde este pago.
     '''
 
     id = db.Column(db.Integer, primary_key=True)
     id_razon_pago = db.Column(db.Integer, db.ForeignKey('razon_pago.id'), nullable=False)
-    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    id_arquero = db.Column(db.Integer, db.ForeignKey('arquero.id'), nullable=False)
     id_cargado_por = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     cuando = db.Column(db.Date, nullable=False)
     mes_correspondiente = db.Column(db.Date, nullable=False)

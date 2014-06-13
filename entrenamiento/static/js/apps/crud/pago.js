@@ -7,7 +7,7 @@ var PagoCrudApplication = FieldCrudApp.$extend({
 
     __init__: function(element, historyManager, apiManager, databaseInformation) {
         var formFields = [
-            new FormFieldData('id_usuario', null),
+            new FormFieldData('id_arquero', null),
             new FormFieldData('cuando', null),
             new FormFieldData('mes_correspondiente', null),
             new FormFieldData('importe', null),
@@ -17,7 +17,7 @@ var PagoCrudApplication = FieldCrudApp.$extend({
 
         ];
         this.$super(element, historyManager, apiManager, databaseInformation,
-                    'pago', ['cuando', 'id_usuario', 'importe'], formFields, 'upload/pago-comprobante/');
+                    'pago', ['cuando', 'id_arquero', 'importe'], formFields, 'upload/pago-comprobante/');
     }
 });
 

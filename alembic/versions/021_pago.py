@@ -18,7 +18,7 @@ def upgrade():
     op.create_table('pago',
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('id_razon_pago', sa.Integer, sa.ForeignKey('razon_pago.id'), nullable=False),
-        sa.Column('id_usuario', sa.Integer, sa.ForeignKey('usuario.id'), nullable=False),
+        sa.Column('id_arquero', sa.Integer, sa.ForeignKey('arquero.id'), nullable=False),
         sa.Column('id_cargado_por', sa.Integer, sa.ForeignKey('usuario.id'), nullable=False),
         sa.Column('cuando', sa.Date, nullable=False),
         sa.Column('mes_correspondiente', sa.Date, nullable=False),

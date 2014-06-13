@@ -8,6 +8,7 @@ Esto es para evitar crear mas de una misma instancia de la clase
 
 from entrenamiento.app.app import app
 from entrenamiento.models import consts_tables
+from entrenamiento.models.arquero import Arquero
 from entrenamiento.models.base import BaseConstModel
 from entrenamiento.models.invitacion import Invitacion
 from entrenamiento.models.lugar import Lugar
@@ -25,6 +26,7 @@ mail_sender = MailSender(app.config['EMAIL_USERNAME'],
 
 
 models = [
+    Arquero,
     Invitacion,
     Lugar,
     Usuario,
