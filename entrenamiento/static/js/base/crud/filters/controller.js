@@ -25,7 +25,7 @@ var FiltersController = Class.$extend({
     prepareView: function() {
         this.view.render(this.searchController.filters);
 
-        this.view.$element.on('click', '.remove-filter', $.proxy(this.removeFilter, this));
+        this.view.$element.find('.remove-filter').on('click', $.proxy(this.removeFilter, this));
     },
 
     /**

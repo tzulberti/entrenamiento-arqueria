@@ -80,7 +80,7 @@ var FormController = Class.$extend({
 
         }
 
-        this.formView.$element.on('click', '.button-save', $.proxy(this.saveInformation, this));
+        this.formView.$element.find('.button-save').on('click', $.proxy(this.saveInformation, this));
     },
 
     /**

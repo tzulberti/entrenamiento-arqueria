@@ -23,7 +23,6 @@ $.fn.serializeObject = function() {
  * del elemento y tambien los del elemento en cuestion.
  */
 $.fn.clean = function() {
-    this.children().off();
     this.find('*').off();
     this.off();
     this.empty();

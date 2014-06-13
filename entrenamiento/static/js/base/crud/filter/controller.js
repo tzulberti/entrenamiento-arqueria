@@ -38,9 +38,9 @@ var FilterController = Class.$extend({
         }
 
         this.view.render(this.tableName, selectedColumnName);
-        this.view.$element.on('change', '.column-name', $.proxy(this.changedSelectedColumnName, this));
-        this.view.$element.on('change', '.operator', $.proxy(this.changedSelectedOperator, this));
-        this.view.$element.on('click', '.create', $.proxy(this.createFilter, this));
+        this.view.$element.find('.column-name').on('change', $.proxy(this.changedSelectedColumnName, this));
+        this.view.$element.find('.operator').on('change', $.proxy(this.changedSelectedOperator, this));
+        this.view.$element.find('.create').on('click', $.proxy(this.createFilter, this));
     },
 
     /*

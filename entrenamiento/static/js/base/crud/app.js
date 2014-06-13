@@ -130,7 +130,7 @@ var BaseCrudApp = Class.$extend({
         this.$element.clean();
         this.$element.html(html);
 
-        this.$element.on('click', '.button-create', $.proxy(this.createNew, this));
+        this.$element.find('.button-create').on('click', $.proxy(this.createNew, this));
 
         this.searchController = this.createSearchController();
         this.tableController = this.createTableController();
@@ -197,6 +197,7 @@ var BaseCrudApp = Class.$extend({
      */
     showTable: function() {
         this.tableController.tableView.$element.show();
+        this.searchController.$element.show();
         this.formController.formView.$element.hide();
         this.tableController.render();
     },
@@ -210,6 +211,7 @@ var BaseCrudApp = Class.$extend({
         ev.preventDefault();
 
         this.historyManager.pushNewInstanceStatus(this.tableName, null);
+        this.searchController.$element.hide();
         this.tableController.tableView.$element.hide();
         this.formController.formView.$element.show();
         this.formController.render(null);
@@ -223,6 +225,7 @@ var BaseCrudApp = Class.$extend({
      */
     createdObject: function(objectId) {
         this.tableController.tableView.$element.show();
+        this.searchController.$element.show();
         this.formController.formView.$element.hide();
         this.tableController.createdObject();
         this.tableController.render();
@@ -236,6 +239,7 @@ var BaseCrudApp = Class.$extend({
      */
     editObject: function(objectId) {
         this.tableController.tableView.$element.hide();
+        this.searchController.$element.hide();
         this.formController.formView.$element.show();
         this.formController.render(objectId);
     },
