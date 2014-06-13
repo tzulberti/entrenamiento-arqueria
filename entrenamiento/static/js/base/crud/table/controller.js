@@ -101,11 +101,10 @@ var TableController = Class.$extend({
                                                    this.limit,
                                                    this.currentPage);
 
-        this.tableView.$element.find('#information-container').on('click', '.pagination-page', $.proxy(this.changePage, this));
-        this.tableView.$element.find('#information-container').on('click', '.button-edit', $.proxy(this.editValue, this));
-        this.tableView.$element.find('#information-container').on('click', '.button-delete', $.proxy(this.deleteValue, this));
-        this.tableView.$element.find('#information-container').on('click', '.column-name', $.proxy(this.selectedOrderBy, this));
-
+        this.tableView.$element.on('click', '.pagination-page', $.proxy(this.changePage, this));
+        this.tableView.$element.on('click', '.button-edit', $.proxy(this.editValue, this));
+        this.tableView.$element.on('click', '.button-delete', $.proxy(this.deleteValue, this));
+        this.tableView.$element.on('click', '.column-name', $.proxy(this.selectedOrderBy, this));
     },
 
     /**
