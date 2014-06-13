@@ -196,9 +196,9 @@ var BaseCrudApp = Class.$extend({
      * Se encarga de mostrar la tabla con toda la informacion
      */
     showTable: function() {
-        this.tableController.tableView.$element.show();
-        this.searchController.$element.show();
-        this.formController.formView.$element.hide();
+        this.$element.find('.table-container').show();
+        this.$element.find('.form-container').hide();
+
         this.tableController.render();
     },
 
@@ -211,9 +211,8 @@ var BaseCrudApp = Class.$extend({
         ev.preventDefault();
 
         this.historyManager.pushNewInstanceStatus(this.tableName, null);
-        this.searchController.$element.hide();
-        this.tableController.tableView.$element.hide();
-        this.formController.formView.$element.show();
+        this.$element.find('.table-container').hide();
+        this.$element.find('.form-container').show();
         this.formController.render(null);
 
     },
@@ -224,9 +223,8 @@ var BaseCrudApp = Class.$extend({
      * @param {int} objectId: el id del objeto que fue recien creado.
      */
     createdObject: function(objectId) {
-        this.tableController.tableView.$element.show();
-        this.searchController.$element.show();
-        this.formController.formView.$element.hide();
+        this.$element.find('.table-container').show();
+        this.$element.find('.form-container').hide();
         this.tableController.createdObject();
         this.tableController.render();
     },
@@ -238,9 +236,8 @@ var BaseCrudApp = Class.$extend({
      * @param {int} objectId: el id del objeto que se quiere editar.
      */
     editObject: function(objectId) {
-        this.tableController.tableView.$element.hide();
-        this.searchController.$element.hide();
-        this.formController.formView.$element.show();
+        this.$element.find('.table-container').hide();
+        this.$element.find('.form-container').show();
         this.formController.render(objectId);
     },
 
