@@ -1,26 +1,3 @@
-<script id="table-view-handlebars-template" type="text/x-handlebars-template">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            Filtros
-        </div>
-        <div class="panel-body">
-            <div class="row search-conditions">
-                <div class="filter">
-                </div>
-                <div class="existing-filters">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="information-container">
-        <div class="row" id="table-information-container">
-        </div>
-        <div class="row" id="pagination-information-container">
-        </div>
-    </div>
-</script>
-
-
 <script id="table-content-view-handlebars-template" type="text/x-handlebars-template">
     {% raw %}
         {{#if values }}
@@ -29,7 +6,7 @@
                     {{#each columnNames }}
                         {{#ifCond this "!==" "id" }}
                             <th>
-                                {{renderColumnHeader this ../../orderBy ../../orderDirection }}
+                                {{renderColumnHeader this ../../orderBy ../../orderDirection ../../columnsInformation}}
                             </th>
                         {{/ifCond}}
                     {{/each}}

@@ -22,16 +22,16 @@ var SearchController = Class.$extend({
      *                                       referenciados por la tabla que no son
      *                                       constantes.
      *
-     * @param {TableView} tableView: la view que se encarga de mostrar toda la informacion
-     *                               en forma de tabla
+     * @param {TableController} tableController: la view que se encarga de mostrar
+     *                                           toda la informacion en forma de tabla
      *
      */
-    __init__: function(element, databaseInformation, tableName, fkInformation, tableView) {
+    __init__: function(element, databaseInformation, tableName, fkInformation, tableController) {
         this.$element = element;
         this.databaseInformation = databaseInformation;
         this.tableName = tableName;
         this.fkInformation = fkInformation;
-        this.tableView = tableView;
+        this.tableController = tableController;
 
         this.filters = [];
     },
@@ -65,7 +65,7 @@ var SearchController = Class.$extend({
         this.filters.push(filter);
 
         this.existingFilterController.prepareView();
-        this.tableView.getData();
+        this.tableController.getData();
     },
 
     /**
@@ -79,7 +79,7 @@ var SearchController = Class.$extend({
         this.filters.pop(filterIndex);
 
         this.existingFilterController.prepareView();
-        this.tableView.getData();
+        this.tableController.render();
     }
 
 });

@@ -175,6 +175,7 @@ var TableView = Class.$extend({
                 columnsInformation: window.app.databaseInformation.getTableColumns(this.modelName),
                 fkInformation: this.fkInformation
         });
+        this.$element.find('#table-information.container').clean();
         this.$element.find('#table-information-container').html(html);
 
     },

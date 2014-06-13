@@ -199,10 +199,29 @@ Handlebars.registerHelper('renderFilterData', function(filter, databaseInformati
     return res;
 });
 
-Handlebars.registerHelper('renderColumnHeader', function(columnName, orderBy, orderDirection) {
-    var res = '<a href="#" class="column-name" id="column-' + columnName + '">';
-    var tmp = columnName.replace(/_/g, ' ')
-    res += _.str.titleize(tmp);
+
+/**
+ * Se encarga de rendrear todos los nombres de las columnas que tienen que ir
+ * junto a los headers de la aplicacion.
+ *
+ * @param {String} columnName: el nombre de la columna que se quiere mostrar.
+ *
+ * @param {String} orderBy: el nombre de la columna por la que se ordeno
+ *                          toda la informacion.
+ *
+ * @param {String} orderDirection: indica en que sentido se ordeno toda
+ *                                 la informacion.
+ *
+ * @param {Array(ColumnInformation)} columnsInformation: tiene toda la informacion
+ *                          sobre el schema de las columnas de la tabla.
+ */
+Handlebars.registerHelper('renderColumnHeader', function(columnName, orderBy, orderDirection, columnsInformation) {
+    var columnInformation = _.find(columnsInformation, function(ci) { return ci.databaseName == columnName});
+    if (! columnInformation) {
+        throw new Error('La columna: ' + columnName + ' no corresponde a la tabla');
+    }
+    var res = '<a href="#" class="column-name" id="column-' + columnInformation.databaseName + '">';
+    res += columnInformation.frontendName;
     if (columnName == orderBy) {
         if (orderDirection === 'ASC') {
             res += '<span class="glyphicon glyphicon-chevron-down"></span>';

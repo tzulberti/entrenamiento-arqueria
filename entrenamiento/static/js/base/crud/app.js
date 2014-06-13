@@ -132,33 +132,50 @@ var BaseCrudApp = Class.$extend({
 
         this.$element.on('click', '.button-create', $.proxy(this.createNew, this));
 
-        this.tableView = this.createTableView();
+        this.searchController = this.createSearchController();
+        this.tableController = this.createTableController();
         this.formController = this.createFormController();
 
         // esto es por si antes venia de ver algun crud, entonces
         // tengo que ocultar el form anterior y poner en nuevo
         this.formController.formView.$element.hide();
-        this.tableView.$element.show();
+        this.tableController.tableView.$element.show();
 
-        this.tableView.render();
+        this.searchController.tableController = this.tableController;
+        this.tableController.render();
+        this.searchController.render();
 
     },
 
-
+    /**
+     * Se encarga de generar el controller que permite filtrar los valores
+     * de la tabla
+     */
+    createSearchController: function() {
+        var searchController = new SearchController(this.$element.find('.search-conditions'),
+                                                     this.databaseInformation,
+                                                     this.tableName,
+                                                     this.fkInformation,
+                                                     null);
+        return searchController;
+    },
 
     /**
      * Se encarga de crear la instancia del {TableView} que se va a
      * encargar de mostrar toda la informacion.
      */
-    createTableView: function() {
-        var tableView = new TableView(this.$element.find('.table-container'),
-                                      this.tableName,
-                                      this.tableColumns,
-                                      this.historyManager,
-                                      this.apiManager,
-                                      this.fkInformation,
-                                      this);
-        return tableView;
+    createTableController: function() {
+        var tableView = new TableView(this.$element.find('#information-container'),
+                                      this.databaseInformation.getTableColumns(this.tableName),
+                                      this.fkInformation);
+        var tableController = new TableController(tableView,
+                                                  this.tableName,
+                                                  this.tableColumns,
+                                                  this.historyManager,
+                                                  this.apiManager,
+                                                  this,
+                                                  this.searchController);
+        return tableController;
     },
 
     /**
@@ -179,9 +196,9 @@ var BaseCrudApp = Class.$extend({
      * Se encarga de mostrar la tabla con toda la informacion
      */
     showTable: function() {
-        this.tableView.$element.show();
+        this.tableController.tableView.$element.show();
         this.formController.formView.$element.hide();
-        this.tableView.getData();
+        this.tableController.render();
     },
 
     /**
@@ -193,7 +210,7 @@ var BaseCrudApp = Class.$extend({
         ev.preventDefault();
 
         this.historyManager.pushNewInstanceStatus(this.tableName, null);
-        this.tableView.$element.hide();
+        this.tableController.tableView.$element.hide();
         this.formController.formView.$element.show();
         this.formController.render(null);
 
@@ -205,9 +222,10 @@ var BaseCrudApp = Class.$extend({
      * @param {int} objectId: el id del objeto que fue recien creado.
      */
     createdObject: function(objectId) {
-        this.tableView.$element.show();
+        this.tableController.tableView.$element.show();
         this.formController.formView.$element.hide();
-        this.tableView.createdObject();
+        this.tableController.createdObject();
+        this.tableController.render();
     },
 
     /**
@@ -217,7 +235,7 @@ var BaseCrudApp = Class.$extend({
      * @param {int} objectId: el id del objeto que se quiere editar.
      */
     editObject: function(objectId) {
-        this.tableView.$element.hide();
+        this.tableController.tableView.$element.hide();
         this.formController.formView.$element.show();
         this.formController.render(objectId);
     },
@@ -231,6 +249,7 @@ var BaseCrudApp = Class.$extend({
      * en cuenta eso.
      */
     renderTableInformation: function(orderBy, orderDirection, currentPage) {
+        throw new Error('Tengo que volver a hacer este metodo...');
         this.tableView.orderBy = orderBy;
         this.tableView.orderDirection = orderDirection;
         this.tableView.currentPage = currentPage;
