@@ -61,6 +61,25 @@ var utils = {
                 // TODO en este caso estoy en un select...
             }
         }
+    },
+
+    /**
+     * Se encarga de pasar toda la informacion de los filtros a una forma de texto
+     * para que se los pueda usar en los llamados Ajax.
+     *
+     * @param {Array(Filter)} filters: toda la inforamcion de los filtros que se
+     *                                 tiene que pasar.
+     *
+     * @return {String} la informacion de los mismos para que se pueda hacer
+     *                  los llamados Ajax.
+     */
+    translateFiltersToAPI: function(filters) {
+        var filtersData = [];
+        for (var i = 0; i < filters.length; i++) {
+            var currentFilter = filters[i];
+            filtersData.push(currentFilter.tableName + '|' + currentFilter.columnName + '|' + currentFilter.operator + '|' + currentFilter.value);
+        }
+        return filtersData;
     }
 };
 

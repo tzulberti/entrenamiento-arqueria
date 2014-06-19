@@ -1,7 +1,10 @@
 # -*- coding: utf-8  -*-
 
+from datetime import date, datetime
+
 from flask import jsonify, request, session
 from flask.views import MethodView
+from sqlalchemy import func
 
 from entrenamiento.views.utils import LoggedUserData
 from entrenamiento.views.decorators import user_required
@@ -85,6 +88,21 @@ class BaseModelListCrudView(UserRequiredView):
 
         '''
         query = self.model_class.query
+        sqlalchemy_columns = []
+        if 'columns[]' in request.args:
+            columns = request.args.getlist('columns[]')
+            for column_name in columns:
+                aggregation_name = None
+                if '(' in column_name:
+                    aggregation_name = column_name[:column_name.index('(')]
+                    aggregation_name = aggregation_name.lower()
+                    column_name = column_name[column_name.index('(') + 1: column_name.index(')')]
+
+                column = getattr(self.model_class, column_name)
+                if aggregation_name:
+                    column = getattr(func, aggregation_name)(column)
+                query = query.add_column(column)
+                sqlalchemy_columns.append(column)
 
         if 'orderBy' in request.args:
             order_by = request.args['orderBy']
@@ -96,6 +114,12 @@ class BaseModelListCrudView(UserRequiredView):
                 else:
                     query = query.order_by(column)
 
+
+        if 'groupBy' in request.args:
+            group_by = request.args['groupBy']
+            if group_by:
+                column = getattr(self.model_class, group_by)
+                query = query.group_by(column)
 
         # entones de setear el tema de los limit, me fijo el tema
         # de los filtros de las cosas que puede ver el usuario.
@@ -133,7 +157,7 @@ class BaseModelListCrudView(UserRequiredView):
             if not logged_user.es_administrador:
                 query = query.filter(getattr(self.model_class, 'id_usuario') == logged_user.id)
 
-        if not 'fkInformation' in request.args:
+        if (not 'fkInformation' in request.args) and (not 'columns[]' in request.args):
             # esto lo tengo que poner antes del limit y offset porque sino
             # el count va a tener en cuenta esas cosas
             filter_count = query.count()
@@ -146,10 +170,26 @@ class BaseModelListCrudView(UserRequiredView):
             offset = int(request.args['offset'])
             query = query.offset(offset)
 
+
         if 'fkInformation' in request.args:
             total_count = 0
             filter_count = 0
             res = [dict(id=d.id, value=str(d)) for d in query.all()]
+        elif 'columns[]' in request.args:
+            total_count = 0
+            filter_count = 0
+            res = [d for d in query.values(*sqlalchemy_columns)]
+            # ahora me tengo que asegurar que todos los valores que uso
+            # sean serializables
+            tmp_res = []
+            for values in res:
+                tmp_values = []
+                for column_value in values:
+                    if isinstance(column_value, (date, datetime)):
+                        column_value = column_value.strftime('%d/%m/%Y')
+                    tmp_values.append(column_value)
+                tmp_res.append(tmp_values)
+            res = tmp_res
         else:
             res = [d.to_json() for d in query.all()]
 

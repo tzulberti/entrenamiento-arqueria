@@ -13,6 +13,15 @@ var BaseApp = Class.$extend({
      */
     __init__: function(historyManager) {
         this.historyManager = historyManager;
+    },
+
+
+    /**
+     * LLamado para que el usuario pueda trabajar con la opcion
+     * que selecciono del menu.
+     */
+    start: function() {
+        throw new Error('Se tiene que implementar este metodo');
     }
 });
 

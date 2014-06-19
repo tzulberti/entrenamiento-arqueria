@@ -40,12 +40,7 @@ var TableController = Class.$extend({
         this.addToHistory = true;
 
         // tengo que traducir la information de los filtros
-        var filtersQueryString = '';
-        var filtersData = [];
-        for (var i = 0; i < this.searchController.filters.length; i++) {
-            var currentFilter = this.searchController.filters[i];
-            filtersData.push(currentFilter.tableName + '|' + currentFilter.columnName + '|' + currentFilter.operator + '|' + currentFilter.value);
-        }
+        var filtersData = utils.translateFiltersToAPI(this.searchController.filters);
 
         var ajaxData = {
                 offset: this.currentPage * this.limit,

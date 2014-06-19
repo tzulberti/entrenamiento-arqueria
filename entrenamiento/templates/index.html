@@ -104,11 +104,30 @@
                             </ul>
                        </li>
                        <li>
-                            <a href="#"><i class="fa fa-edit fa-fw"></i> Escuela</a>
+                            <a href="#"><i class="fa fa-edit fa-fw"></i> Pagos</a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#" id="application-6" class="menu-option">Pagos</a>
+                                    <a href="#" id="application-6" class="menu-option">Cargar/Editar</a>
+                                <li>
+                                <li>
+                                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Graficos</a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Pagos por arquero</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" id="application-7" class="menu-option">Acumulado del año</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Mes a mes</a>
+                                        </li>
+                                    </ul>
                                 </li>
+                            </ul>
+                       </li>
+                       <li>
+                            <a href="#"><i class="fa fa-edit fa-fw"></i> Escuela</a>
+                            <ul class="nav nav-second-level">
                                 <li>
                                     <a href="#">Gastos</a>
                                 </li>
@@ -142,6 +161,7 @@
     {% include 'javascript/table-view.handlebars' %} 
     {% include 'javascript/filter.handlebars' %} 
     {% include 'javascript/crud.handlebars' %} 
+    {% include 'javascript/graficos.handlebars' %} 
 
 
 
@@ -182,6 +202,13 @@
     <script src="/static/js/apps/crud/pago.js"></script>
     <script src="/static/js/apps/crud/invitacion.js"></script>
     <script src="/static/js/apps/crud/arco-recurvado.js"></script>
+
+    <!--
+        Ahora tengo que poner todas las cosas de los graficos
+    -->
+    <script src="/static/js/base/graficos/app.js"></script>
+    <script src="/static/js/apps/graficos/pago/pagos-acumulados-controller.js"></script>
+    <script src="/static/js/apps/graficos/pago/acumulado.js"></script>
 
     <script src="/static/js/main/menu-view.js"></script>
     <script src="/static/js/main/main-application.js"></script>

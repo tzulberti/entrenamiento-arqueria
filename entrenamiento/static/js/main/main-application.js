@@ -74,6 +74,7 @@ var MainApplication = Class.$extend({
                                                                     this.apiManager,
                                                                     this.databaseInformation);
 
+
         this.appsManager.addApplication(1, crudLugarApp);
         this.appsManager.addApplication(3, arcoRecurvadoCrudApp);
         this.appsManager.addApplication(5, invitacionCrudApp);
@@ -82,6 +83,14 @@ var MainApplication = Class.$extend({
         this.appsManager.addApplication(4, crudTorneosApp);
         */
         this.appsManager.addApplication(6, crudPagoApp);
+
+        // ahora registro todo el tema relacionados a los graficos
+        this.pagosAcumuladosGraficoApp = new PagosAcumuladosGraficoApp($("#page-wrapper"),
+                                                                       this.historyManager,
+                                                                       this.apiManager,
+                                                                       this.databaseInformation);
+        this.appsManager.addApplication(7, this.pagosAcumuladosGraficoApp);
+
 
         this.menuView = new MainMenuView($("#side-menu"),
                                          this.appsManager);
