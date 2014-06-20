@@ -226,7 +226,6 @@ var BaseCrudApp = Class.$extend({
         this.$element.find('.table-container').show();
         this.$element.find('.form-container').hide();
         this.tableController.createdObject();
-        this.tableController.render();
     },
 
     /**

@@ -209,7 +209,7 @@ var TableController = Class.$extend({
             delay: 1500,
             type: 'success'
         });
-        this.getData();
+        this.render();
     }
 
 
