@@ -138,18 +138,27 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
             templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control">';
         }
 
+        // para que renderee la parte del help si es que tiene
+        if (fieldData.helpText) {
+            templateRes += '<span class="help-block">{{ helpText }}</span>';
+        }
+
+        // para que renderee los errores si es necesario
         templateRes += '{{raw "[[#if"}} validationErrors.{{columnInformation.databaseName }} {{ raw "]]" }}' +
                             '<span class="help-block error-message">' +
                                 '{{raw "[["}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]" }}' +
                             '</span>' +
                         '{{raw "[[/if]]" }}';
+
+
         templateRes += '</div>';
         templateRes += '</div>';
     }
     var res = Handlebars.render(templateRes, {
                             columnInformation: columnInformation,
                             required: required,
-                            fkValues: fkValues
+                            fkValues: fkValues,
+                            helpText: fieldData.helpText
     });
 
     return new Handlebars.SafeString(res);
