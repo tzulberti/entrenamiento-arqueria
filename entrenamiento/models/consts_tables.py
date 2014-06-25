@@ -111,3 +111,11 @@ class DominanciaOjo(BaseConstModel):
 class DominanciaMano(BaseConstModel):
 
     __tablename__ = 'dominancia_mano'
+
+
+class DiaDeSemana(BaseConstModel):
+    ''' Tiene los diferentes dia de la semana
+    '''
+
+    __tablename__ = 'dia_semana'
+

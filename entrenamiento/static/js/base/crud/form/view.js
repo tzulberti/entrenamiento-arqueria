@@ -69,6 +69,12 @@ var FormView = Class.$extend({
                 formField.datepicker({
                     format: 'dd/mm/yyyy'
                 });
+            } else if (columnInformation.type === 'time') {
+                formField.timepicker({
+                    showSeconds: false,
+                    minuteStep: 1,
+                    showMeridian: false
+                });
             } else if (columnInformation.isConst()) {
                 formField.chosen();
             } else if (columnInformation.foreignKey !== null) {

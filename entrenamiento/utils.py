@@ -10,7 +10,7 @@ import smtplib
 from email.MIMEText import MIMEText
 
 from entrenamiento.models.base import BaseModel
-from sqlalchemy.sql.sqltypes import Integer, Float, Date, String, Text, Boolean
+from sqlalchemy.sql.sqltypes import Integer, Float, Date, String, Text, Boolean, Time
 
 def random_text(size=10, chars=string.ascii_uppercase + string.digits):
     ''' Devuelve un texto creado de forma random usando los chars
@@ -142,6 +142,8 @@ class DatabaseInformation(object):
             return 'text'
         elif isinstance(column_type, Date):
             return 'date'
+        elif isinstance(column_type, Time):
+            return 'time'
         elif isinstance(column_type, Boolean):
             return 'boolean'
 

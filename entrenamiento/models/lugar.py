@@ -33,3 +33,6 @@ class Lugar(BaseModel):
     longitud = db.Column(db.Float, nullable=False)
     es_de_entrenamiento = db.Column(db.Boolean, nullable=False, default=True)
     es_outdoor = db.Column(db.Boolean, nullable=False)
+
+    def __str__(self):
+        return self.nombre

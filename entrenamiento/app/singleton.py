@@ -16,6 +16,7 @@ from entrenamiento.models.usuario import Usuario
 from entrenamiento.models.arco import Arco, ArcoRecurvado
 from entrenamiento.models.pago import Pago
 from entrenamiento.models.torneo import Torneo, Ronda, Serie
+from entrenamiento.models.turno import Turno
 
 
 from entrenamiento.utils import MailSender, DatabaseInformation
@@ -34,6 +35,7 @@ models = [
     ArcoRecurvado,
     Pago,
     Torneo,
+    Turno,
     Ronda,
     Serie
 ]
