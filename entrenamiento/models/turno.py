@@ -19,3 +19,6 @@ class Turno(BaseModel):
     id_dia_semana = db.Column(db.Integer, db.ForeignKey('dia_semana.id'))
     horario_inicio = db.Column(db.Time, nullable=False)
     horario_fin = db.Column(db.Time, nullable=False)
+
+    def __str__(self):
+        return '%s: %s - %s' % (self.lugar, self.horario_inicio, self.horario_fin)
