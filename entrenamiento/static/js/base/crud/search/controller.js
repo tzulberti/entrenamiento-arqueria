@@ -65,7 +65,7 @@ var SearchController = Class.$extend({
         this.filters.push(filter);
 
         this.existingFilterController.prepareView();
-        this.tableController.getData();
+        this.tableController.render();
     },
 
     /**
