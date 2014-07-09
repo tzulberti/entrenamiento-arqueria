@@ -20,7 +20,13 @@ setup(
         "alembic",
         "psycopg2",
         "Pillow",
+        "Flask-Script",
     ],
+    entry_points={
+        'console_scripts': {
+            'entrenamiento = entrenamiento.commands.main:main'
+        }
+    },
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
