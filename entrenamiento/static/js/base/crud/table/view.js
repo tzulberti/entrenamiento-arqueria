@@ -118,6 +118,7 @@ var TableView = Class.$extend({
         html += '<ul>';
         this.$element.find('#pagination-information-container').clean();
         this.$element.find('#pagination-information-container').html(html);
+        this.$element.find('#count-information').html('Showing ' + (limit * currentPage + 1)  + ' to ' + Math.min(totalCount, (limit * (currentPage + 1) + 1)) + ' out of ' + filterCount + ' (' + totalCount + ')');
     }
 
 
