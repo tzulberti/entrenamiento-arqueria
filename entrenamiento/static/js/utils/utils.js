@@ -57,8 +57,9 @@ var utils = {
                 inputField.blur();
             } else if (inputField.is('select')) {
                 inputField.val(value);
+                inputField.trigger("chosen:updated");
             } else {
-                // TODO en este caso estoy en un select...
+                throw new Error('No se en que tipo de campo estoy');
             }
         }
     },
