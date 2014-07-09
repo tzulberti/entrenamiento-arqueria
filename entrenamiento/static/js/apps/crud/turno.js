@@ -12,7 +12,7 @@ var TurnoCrudApplication = FieldCrudApp.$extend({
             new FormFieldData('horario_fin', null)
         ];
         this.$super(element, historyManager, apiManager, databaseInformation,
-                    'turno', ['id_lugar', 'id_dia_semana', 'horario_incio', 'horario_fin'], formFields);
+                    'turno', ['id_lugar', 'id_dia_semana', 'horario_inicio', 'horario_fin'], formFields);
     }
 });
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8- -*-
 
-from datetime import datetime, date
+from datetime import datetime, date, time
 from entrenamiento.app.app import db
 
 class BaseModel(db.Model):
@@ -34,6 +34,8 @@ class BaseModel(db.Model):
 
             elif isinstance(value, (date, datetime)):
                 value = value.strftime('%d/%m/%Y')
+            elif isinstance(value, time):
+                value = value.strftime('%H:%M')
 
             elif isinstance(value, list):
                 if value:

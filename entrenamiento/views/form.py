@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from flask.ext.wtf import Form
-from sqlalchemy.sql.sqltypes import Integer, Float, Date, String, Text, Boolean
+from sqlalchemy.sql.sqltypes import Integer, Float, Date, String, Text, Boolean, Time
 from wtforms.fields import (Field, StringField, IntegerField, TextAreaField,
                             BooleanField, DateField, FloatField)
 from wtforms.validators import ValidationError, InputRequired, Optional
 
 from entrenamiento.models.base import BaseModel
+from entrenamiento.views.utils import TimeField
 
 class ValidateUnique(object):
     ''' Valida que el campo sea unico teniendo en cuenta
@@ -195,6 +196,8 @@ class ModelForm(ValidationForm):
                 field_kwargs = dict(format='%d/%m/%Y')
             elif isinstance(column_information.type, Boolean):
                 field_class = BooleanField
+            elif isinstance(column_information.type, Time):
+                field_class = TimeField
 
             validators = []
             if column_information.nullable:
