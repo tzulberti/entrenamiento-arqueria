@@ -67,7 +67,7 @@ var FilterView = Class.$extend({
         this.$element.html(html);
 
         this.$element.find('.column-name').val(columnName);
-        this.$element.find('.column-name').chosen();
+        this.$element.find('.column-name').chosen({width: '300px'});
         if (columnInformation.type === 'date') {
             this.$element.find('.value').datepicker({
                 format: 'dd/mm/yyyy'
@@ -75,7 +75,7 @@ var FilterView = Class.$extend({
         }
 
         if (columnInformation.isConst() || ! _.isEmpty(fkValues)) {
-            this.$element.find('.value').chosen();
+            this.$element.find('.value').chosen({width: '300px'});
         }
     }
 

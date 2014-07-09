@@ -76,9 +76,9 @@ var FormView = Class.$extend({
                     showMeridian: false
                 });
             } else if (columnInformation.isConst()) {
-                formField.chosen();
+                formField.chosen({width: '300px'});
             } else if (columnInformation.foreignKey !== null) {
-                formField.chosen();
+                formField.chosen({width: '300px'});
             }
         }
 
