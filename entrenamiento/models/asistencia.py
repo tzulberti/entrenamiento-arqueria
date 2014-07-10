@@ -15,8 +15,8 @@ class Asistencia(BaseModel):
     '''
 
     id = db.Column(db.Integer, primary_key=True)
-    id_turno = db.Column(db.Integer, db.ForeignKey('turno.id'))
-    id_arquero = db.Column(db.Integer, db.ForeignKey('arquero.id'))
+    id_turno = db.Column(db.Integer, db.ForeignKey('turno.id'), nullable=False)
+    id_arquero = db.Column(db.Integer, db.ForeignKey('arquero.id'), nullable=False)
     cuando = db.Column(db.Date, nullable=False)
 
     __table_args__ = (

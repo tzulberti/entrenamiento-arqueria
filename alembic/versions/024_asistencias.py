@@ -17,8 +17,8 @@ import sqlalchemy as sa
 def upgrade():
     op.create_table('asistencia',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('id_turno', sa.Integer, sa.ForeignKey('turno.id')),
-        sa.Column('id_arquero', sa.Integer, sa.ForeignKey('arquero.id')),
+        sa.Column('id_turno', sa.Integer, sa.ForeignKey('turno.id'), nullable=False),
+        sa.Column('id_arquero', sa.Integer, sa.ForeignKey('arquero.id'), nullable=False),
         sa.Column('cuando', sa.Date, nullable=False),
     )
     op.create_unique_constraint("asistencia_turno_arquero_cuando", "asistencia", ['id_turno', 'id_arquero', 'cuando'])
