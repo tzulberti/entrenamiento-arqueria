@@ -46,7 +46,7 @@ var APIManager = Class.$extend({
             originalErrorCallback(jqXHR, textStatus, thrownError);
 
 
-        } else if (jqXHR.status === 500) {
+        } else if (jqXHR.status === 500 && originalErrorCallback === null) {
             // en este caso ocurrio un error de javascript por lo que tengo
             // que mostrar el mensaje de error por pantalla
             var opts = {
@@ -55,6 +55,10 @@ var APIManager = Class.$extend({
                 type: 'error',
             };
             new PNotify(opts);
+        } else if (jqXHR.status === 500 && originalErrorCallback !== null) {
+            // en este caso ocurrio un error del servidor, pero el que lo llamo
+            // asumia que esto era posible
+            originalErrorCallback(jqXHR, textStatus, thrownError);
         }
     },
 

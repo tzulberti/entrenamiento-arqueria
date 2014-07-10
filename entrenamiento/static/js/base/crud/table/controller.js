@@ -154,10 +154,10 @@ var TableController = Class.$extend({
 
 
         var self = this;
-        $.ajax({
+        this.apiManager.ajaxCallObject({
+            url: this.modelName + '/' + objectId + '/',
             type: 'DELETE',
-            url: '/api/v01/' + this.modelName + '/' + objectId + '/',
-            success: function(data, textStatus, jqXHR) {
+            successCallback: function(data, textStatus, jqXHR) {
                 new PNotify({
                     title: 'Delete',
                     text: 'Se borro la informacion',
@@ -166,8 +166,19 @@ var TableController = Class.$extend({
                 });
 
                 self.render();
+            },
+            errorCallback: function(jqXHR, textStatus, thrownError) {
+                // en este caso no se puede borrar el valor de la base de datos
+                // porque esta siendo referenciado por otro
+                var message = JSON.parse(jqXHR.responseText).error;
+                new PNotify({
+                    title: 'Error al borrar',
+                    text: message,
+                    delay: 3000,
+                    type: 'error'
+                });
             }
-        })
+        });
     },
 
     /**

@@ -5,6 +5,7 @@ from datetime import date, datetime
 from flask import jsonify, request, session
 from flask.views import MethodView
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 
 from entrenamiento.views.utils import LoggedUserData
 from entrenamiento.views.decorators import user_required
@@ -268,8 +269,20 @@ class BaseModelCrudView(UserRequiredView):
         if not data:
             # TODO tengo que ver que hacer en este caso
             return 'Ver mas adelante', 500
-        self.db.session.delete(data)
-        self.db.session.commit()
+        try:
+            self.db.session.delete(data)
+            self.db.session.commit()
+        except IntegrityError, e:
+            # en este caso esta intentando de actualizar la informacion de la
+            # tabla, pero no se la puede actualizar porque el valor FK no
+            # puede ser Null
+            table_name = e.statement[0: e.statement.index(' SET ')]
+            table_name = table_name.replace('UPDATE', '')
+            table_name = table_name.strip()
+            return jsonify(error='No se puede borrar el valor porque en %s '\
+                                 'existe un dato que lo usa. Primero se tiene '\
+                                 'que borrar los mismos' % table_name), 500
+
         return jsonify(id=data.id)
 
 
