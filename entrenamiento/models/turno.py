@@ -15,8 +15,8 @@ class Turno(BaseModel):
     '''
 
     id = db.Column(db.Integer, primary_key=True)
-    id_lugar = db.Column(db.Integer, db.ForeignKey('lugar.id'))
-    id_dia_semana = db.Column(db.Integer, db.ForeignKey('dia_semana.id'))
+    id_lugar = db.Column(db.Integer, db.ForeignKey('lugar.id'), nullable=False)
+    id_dia_semana = db.Column(db.Integer, db.ForeignKey('dia_semana.id'), nullable=False)
     horario_inicio = db.Column(db.Time, nullable=False)
     horario_fin = db.Column(db.Time, nullable=False)
 
