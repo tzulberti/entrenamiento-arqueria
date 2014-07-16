@@ -18,6 +18,7 @@ from entrenamiento.models.arco import Arco, ArcoRecurvado
 from entrenamiento.models.pago import Pago
 from entrenamiento.models.torneo import Torneo, Ronda, Serie
 from entrenamiento.models.turno import Turno
+from entrenamiento.models.historia_estado_arquero import HistoriaEstadoArquero
 
 from entrenamiento.views.base import (BaseModelListCrudView,
                                       BaseModelCrudView)
@@ -34,6 +35,7 @@ from entrenamiento.views.lugares.form import LugarForm
 from entrenamiento.views.pago.form import PagoForm
 from entrenamiento.views.torneo.forms import TorneoForm, RondaForm, SerieForm
 from entrenamiento.views.turno.form import TurnoForm
+from entrenamiento.views.historia_estado_arquero.form import HistoriaEstadoArqueroForm
 from entrenamiento.views.upload import UploadFileView
 from entrenamiento.views.usuarios.form import UserForm
 from entrenamiento.views.usuarios.change_password import ChangePasswordView
@@ -112,6 +114,7 @@ def register_views(app, db, bcrypt):
     register_url(app, db, 'pago', Pago, PagoForm)
     register_url(app, db, 'turno', Turno, TurnoForm)
     register_url(app, db, 'asistencia', Asistencia, AsistenciaForm)
+    register_url(app, db, 'historia_estado_arquero', HistoriaEstadoArquero, HistoriaEstadoArqueroForm)
 
     app.add_url_rule(BASE_API_URL + 'database-information/',
                     view_func=DatabaseInformationView.as_view('api.database.information',

@@ -119,3 +119,10 @@ class DiaDeSemana(BaseConstModel):
 
     __tablename__ = 'dia_semana'
 
+class EstadoArquero(BaseConstModel):
+    ''' Tiene la informacion sobre los diferentes estados de
+    actividad del arquero
+    '''
+
+    __tablename__ = 'estado_arquero'
+
