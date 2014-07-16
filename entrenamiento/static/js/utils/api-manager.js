@@ -45,20 +45,44 @@ var APIManager = Class.$extend({
             }
             originalErrorCallback(jqXHR, textStatus, thrownError);
 
+        } else if (jqXHR.status === 500) {
+            // me fijo si la respuesta del servidor de error en un JSON o no
+            // En funcion de eso, me puedo dar cuenta si era un error del servidor
+            // o no
+            var isJson = false;
+            try {
+                JSON.parse(jqXHR.responseText);
+                isJson = true;
+            } catch (error) {
+                // no me interesa hacer nada con ese error especifico.
+            }
 
-        } else if (jqXHR.status === 500 && originalErrorCallback === null) {
-            // en este caso ocurrio un error de javascript por lo que tengo
-            // que mostrar el mensaje de error por pantalla
-            var opts = {
-                title: "Error",
-                text: "Ocurrio un error en la pagina. Los developers ya fueron notificados",
-                type: 'error',
-            };
-            new PNotify(opts);
-        } else if (jqXHR.status === 500 && originalErrorCallback !== null) {
-            // en este caso ocurrio un error del servidor, pero el que lo llamo
-            // asumia que esto era posible
-            originalErrorCallback(jqXHR, textStatus, thrownError);
+            if (! isJson) {
+                // en este caso paso un error en el servidor, y yo no me lo
+                // esperaba. Esto basicamente pasa cuando se esta haciendo el
+                // form de submit, se tiene un erro handler (para cuando devuelve
+                // un error 400), pero el servidor devolvio un 500 porque hay algo
+                // mal en el codigo de python
+                var opts = {
+                    title: "Error",
+                    text: "Ocurrio un error en la pagina. Los developers ya fueron notificados",
+                    type: 'error',
+                };
+                new PNotify(opts);
+            } else if (originalErrorCallback === null) {
+                // en este caso ocurrio un error de javascript por lo que tengo
+                // que mostrar el mensaje de error por pantalla.
+                var opts = {
+                    title: "Error",
+                    text: "Ocurrio un error en la pagina. Los developers ya fueron notificados",
+                    type: 'error',
+                };
+                new PNotify(opts);
+            } else {
+                // en este caso ocurrio un error del servidor, pero el que lo llamo
+                // asumia que esto era posible
+                originalErrorCallback(jqXHR, textStatus, thrownError);
+            }
         }
     },
 
