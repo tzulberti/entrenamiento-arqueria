@@ -112,7 +112,12 @@ var MainApplication = Class.$extend({
                                                                        this.historyManager,
                                                                        this.apiManager,
                                                                        this.databaseInformation);
+        this.pagosPorMesGraficoApp = new PagosPorMesGraficoApp($("#page-wrapper"),
+                                                               this.historyManager,
+                                                               this.apiManager,
+                                                               this.databaseInformation);
         this.appsManager.addApplication(7, this.pagosAcumuladosGraficoApp);
+        this.appsManager.addApplication(12, this.pagosPorMesGraficoApp);
 
 
         this.menuView = new MainMenuView($("#side-menu"),
