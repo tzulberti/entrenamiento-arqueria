@@ -68,11 +68,16 @@ var PagosAcumuladosController = Class.$extend({
         var chartData = [];
         for (var i = 0; i < data.values.length; i++) {
             pointData = data.values[i];
-            chartData.push([pointData[0], pointData[1] + acumulado]);
+            var date = moment(pointData[0], 'DD/MM/YYYY');
+            var utcDate = Date.UTC(date.year(), date.month(), date.date());
+            chartData.push([utcDate, pointData[1] + acumulado]);
             acumulado += pointData[1];
         }
 
         this.$element.find('.chart-container').highcharts({
+            xAxis: {
+                type: 'datetime'
+            },
             series: [{
                 name: 'Acumulado',
                 data: chartData
