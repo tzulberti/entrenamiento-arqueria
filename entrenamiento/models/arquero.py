@@ -26,6 +26,7 @@ class Arquero(BaseModel):
     nombre = db.Column(db.String(1024), nullable=False)
     apellido = db.Column(db.String(1024), nullable=False)
     email = db.Column(db.String(250), nullable=True, unique=True)
+    codigo = db.Column(db.String(10), nullable=False, unique=True)
 
     def __str__(self):
         return '%s %s' % (self.apellido, self.nombre)

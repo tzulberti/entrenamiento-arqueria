@@ -10,7 +10,8 @@ class Invitacion(BaseModel):
 
     :param int id: un identificador autogenerado.
 
-    :param str email: el email de la persona a quien se le envio la invitacion.
+    :param int id_arquero: el identificador del arquero a quien se le
+                           envio el email para que se cree una cuenta.
 
     :param str codigo: un codigo de la invitacion. Esto es un campo interno
                        para asegurarse de quienes se le hayan enviado una
@@ -21,7 +22,7 @@ class Invitacion(BaseModel):
     '''
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(250), nullable=False)
-    codigo = db.Column(db.String(10), nullable=False)
+    id_arquero = db.Column(db.Integer, db.ForeignKey('arquero.id'), nullable=False)
+    codigo = db.Column(db.String(10), nullable=False, unique=True)
     usada = db.Column(db.Boolean, nullable=False, default=False)
 

@@ -10,6 +10,6 @@ class ArqueroForm(ModelForm):
 
     def __init__(self, model_class, object_id=None):
         super(ArqueroForm, self).__init__(model_class,
-                                          [],
+                                          ['codigo'],
                                           object_id)
 

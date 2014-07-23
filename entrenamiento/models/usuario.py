@@ -43,7 +43,6 @@ class Usuario(Arquero):
 
     id = db.Column(db.Integer, db.ForeignKey('arquero.id'), primary_key=True)
     password = db.Column(db.String(1024), nullable=False)
-    codigo = db.Column(db.String(10), nullable=False, unique=True)
     es_administrador = db.Column(db.Boolean, nullable=False, default=False)
 
     # estos datos son pedidos usados por la data de la EDA

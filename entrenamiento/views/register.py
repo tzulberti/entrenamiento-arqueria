@@ -26,6 +26,7 @@ from entrenamiento.views.auth.login import LoginView
 from entrenamiento.views.auth.logout import LogoutView
 from entrenamiento.views.arcos.form import ArcoRecurvadoForm
 from entrenamiento.views.arquero.form import ArqueroForm
+from entrenamiento.views.arquero.crud import ArqueroListCrudView
 from entrenamiento.views.asistencia.form import AsistenciaForm
 from entrenamiento.views.database_information import DatabaseInformationView
 from entrenamiento.views.index import IndexViewTemplate
@@ -102,7 +103,7 @@ def register_views(app, db, bcrypt):
 
     register_url(app, db, 'lugar', Lugar, LugarForm)
     register_url(app, db, 'usuario', Usuario, UserForm)
-    register_url(app, db, 'arquero', Arquero, ArqueroForm)
+    register_url(app, db, 'arquero', Arquero, ArqueroForm, ArqueroListCrudView)
     # TODO en esta view solo se deberia permitir el tema de la lectura
     # TODO en esta view solo se deberia permitir el tema de la lectura
     # del GET
