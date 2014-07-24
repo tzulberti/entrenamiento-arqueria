@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from wtforms.fields import StringField
-from wtforms.validators import InputRequired
 
-from entrenamiento.views.form import ValidationForm
+from entrenamiento.views.form import ModelForm
 
-class InvitacionForm(ValidationForm):
-    ''' Form para crear una invitacion.
+class InvitacionForm(ModelForm):
+    ''' Tiene toda la data del form de cuando se esta creando
+    o editando un :class:`entrenamiento.models.invitacion.Invitacion`
+
     '''
 
-    email = StringField('email', [InputRequired()])
+    def __init__(self, model_class, object_id=None):
+        super(InvitacionForm, self).__init__(model_class,
+                                             ['codigo', 'usada'],
+                                             object_id)
+
+

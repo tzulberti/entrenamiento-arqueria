@@ -2,6 +2,7 @@
 
 from flask import jsonify
 
+from entrenamiento.models.arquero import Arquero
 from entrenamiento.utils import random_text
 from entrenamiento.views.base import BaseModelListCrudView
 
@@ -27,9 +28,16 @@ class InvitacionListCrudView(BaseModelListCrudView):
             form.instance.codigo = random_text(10)
             form.instance.usada = False
 
-            self.mail_sender.send_mail([form.instance.email],
+
+            arquero = Arquero.query.filter(Arquero.id == form.instance.id_arquero).first()
+            url = '%s/crear/usuario/invitacion/%s/%s/' % (self.running_host,
+                                                         arquero.codigo,
+                                                         form.instance.codigo)
+
+
+            self.mail_sender.send_mail([arquero.email],
                                        'Invitacion al sistema de la EDA',
-                                       self.running_host + '/crear/usuario/invitacion/' + form.instance.codigo + '/')
+                                       url)
 
             self.db.session.add(form.instance)
             self.db.session.commit()

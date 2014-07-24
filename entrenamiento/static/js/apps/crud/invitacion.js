@@ -6,10 +6,10 @@ var InvitacionCrudApplication = FieldCrudApp.$extend({
 
     __init__: function(element, historyManager, apiManager, databaseInformation) {
         var formFields = [
-            new FormFieldData('email', null)
+            new FormFieldData('id_arquero', null)
         ];
         this.$super(element, historyManager, apiManager, databaseInformation,
-                    'invitacion', ['email', 'usada'], formFields);
+                    'invitacion', ['id_arquero', 'usada'], formFields);
     }
 });
 
