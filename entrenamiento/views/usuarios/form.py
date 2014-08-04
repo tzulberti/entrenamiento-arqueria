@@ -2,7 +2,7 @@
 
 from flask.ext.wtf import Form
 from wtforms.fields import (StringField, DateField,
-                            FileField, PasswordField, SelectField,
+                            FileField, PasswordField,
                             FloatField)
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import InputRequired, Email, Optional, EqualTo
@@ -33,20 +33,24 @@ class UserForm(ValidationForm):
 
     '''
 
+    # TODO falta validar que el email sea unico
     email = StringField('email',
-                        validators=[InputRequired(), Email(), ValidateUnique()],
+                        validators=[InputRequired(), Email()],
                         description='El email con el que te vas a loguear al sistema')
     nombre = StringField('nombre', [InputRequired()])
     apellido = StringField('apellido', [InputRequired()])
     password = PasswordField('password',
-                             validators=[InputRequired(), EqualTo('password_confirmation')])
+                             validators=[InputRequired(), EqualTo('password_confirmation')],
+                             description='El password que vas a usar para loguearte en el sistema')
     password_confirmation = PasswordField('password_confirmation',
                                           validators=[InputRequired()],
                                           description='El mismo password que ingresaste arriba')
-    foto_archivo = FileField('foto_archivo')
+    foto_archivo = FileField('foto_archivo',
+                             description='Una foto tuya. No es necesario este campo')
     fecha_ingreso = DateField('fecha_ingreso',
                               format='%d/%m/%Y',
-                              validators=[Optional()])
+                              validators=[Optional()],
+                              description='Cuando empezaste en la EDA')
     fecha_nacimiento = DateField('fecha_nacimiento',
                                  format='%d/%m/%Y',
                                  validators=[Optional()])
@@ -84,7 +88,10 @@ class UserForm(ValidationForm):
         res = super(UserForm, self).get_instance(['password_confirmation',
                                                   'foto_archivo',
                                                   'dominancia_ojo',
-                                                  'dominancia_mano'])
+                                                  'dominancia_mano',
+                                                  'nombre',
+                                                  'apellido',
+                                                  'email'])
         if self.dominancia_ojo.data:
             res.id_dominancia_ojo = self.dominancia_ojo.data.id
         if self.dominancia_mano.data:

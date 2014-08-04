@@ -18,6 +18,7 @@ from entrenamiento.models.arco import Arco, ArcoRecurvado
 from entrenamiento.models.pago import Pago
 from entrenamiento.models.torneo import Torneo, Ronda, Serie
 from entrenamiento.models.turno import Turno
+from entrenamiento.models.tipo_torneo import TipoTorneo
 from entrenamiento.models.historia_estado_arquero import HistoriaEstadoArquero
 
 from entrenamiento.views.base import (BaseModelListCrudView,
@@ -116,13 +117,14 @@ def register_views(app, db, bcrypt):
     register_url(app, db, 'turno', Turno, TurnoForm)
     register_url(app, db, 'asistencia', Asistencia, AsistenciaForm)
     register_url(app, db, 'historia_estado_arquero', HistoriaEstadoArquero, HistoriaEstadoArqueroForm)
+    register_url(app, db, 'tipo_torneo', TipoTorneo, None)
 
     app.add_url_rule(BASE_API_URL + 'database-information/',
                     view_func=DatabaseInformationView.as_view('api.database.information',
                                                             database_information=database_information))
 
 
-    app.add_url_rule('/crear/usuario/invitacion/<hash_invitacion>/',
+    app.add_url_rule('/crear/usuario/invitacion/<codigo_arquero>/<codigo_invitacion>/',
                     view_func=CrearUsuarioDesdeInvitacionView.as_view('auth.usuario.invitacion',
                                                                     db=db,
                                                                     base_upload_folder=app.config['UPLOAD_FOLDER']))

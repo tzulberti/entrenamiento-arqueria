@@ -4,7 +4,7 @@ from wtforms.fields import (StringField, IntegerField, BooleanField,
                             DateField)
 from wtforms.validators import InputRequired, Optional, NumberRange
 
-from entrenamiento.views.form import ValidationForm
+from entrenamiento.views.form import ValidationForm, ModelForm
 
 
 
@@ -32,17 +32,14 @@ class RondaForm(ValidationForm):
     distancia = IntegerField('distancia', [Optional()])
     foto = StringField('foto', [Optional()])
 
-class TorneoForm(ValidationForm):
+class TorneoForm(ModelForm):
     ''' Valida la data ingresada para poder crear la nueva
     informacion sobre un torneo.
 
     '''
 
-    cuando = DateField('cuando', [InputRequired()], format='%d/%m/%Y')
-    id_lugar = IntegerField('id_lugar', [Optional()])
-    id_arco = IntegerField('id_arco', [Optional()])
-    comentario = StringField('comentario', [Optional()])
-    tipo_de_torneo = StringField('tipo_de_torneo', [InputRequired()])
-    puntaje_final_torneo = IntegerField('puntaje_final_torneo', [Optional()])
-    fue_practica = BooleanField('fue_practica', [Optional()])
+    def __init__(self, model_class, object_id=None):
+        super(TorneoForm, self).__init__(model_class,
+                                        ['id_usuario'],
+                                        object_id)
 

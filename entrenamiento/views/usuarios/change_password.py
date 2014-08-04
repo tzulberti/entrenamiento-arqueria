@@ -2,6 +2,7 @@
 
 from flask import redirect, url_for, request, render_template
 
+from entrenamiento.models.arquero import Arquero
 from entrenamiento.models.usuario import Usuario
 from entrenamiento.views.base import UserRequiredView
 from entrenamiento.views.usuarios.form import ChangePasswordForm
@@ -30,7 +31,8 @@ class ChangePasswordView(UserRequiredView):
             # que el password sea el correcto
             logged_user = get_logged_user_data()
             query = Usuario.query
-            query = query.filter(Usuario.email == logged_user.email)
+            query = query.join(Arquero)
+            query = query.filter(Arquero.email == logged_user.email)
             user = query.first()
             if not user:
                 raise Exception('El usuario no existe pero el mismo estaba logueado')

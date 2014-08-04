@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from entrenamiento.app.app import db
-from entrenamiento.models.arquero import Arquero
+from entrenamiento.models.base import BaseModel
 
-class Usuario(Arquero):
+class Usuario(BaseModel):
     ''' Representa toda la informacion de un usuario que se
     puede loguear a la aplicacion.
 
 
-
-    :param str email: el email del usuario. El mismo es usado
-                      para mandarle mails con respecto a cambios
-                      en el sistema o si el usuario se olvido la
-                      clave.
 
     :param str password: el password del usuario. El mismo esta
                          encryptado usando Bcrypt.
@@ -41,7 +36,8 @@ class Usuario(Arquero):
                                 de la vida (escribir, comer, etc...)
     '''
 
-    id = db.Column(db.Integer, db.ForeignKey('arquero.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    id_arquero = db.Column(db.Integer, db.ForeignKey('arquero.id'), nullable=False)
     password = db.Column(db.String(1024), nullable=False)
     es_administrador = db.Column(db.Boolean, nullable=False, default=False)
 
@@ -76,5 +72,5 @@ class Usuario(Arquero):
                     longitud=self.longitud)
 
     def __str__(self):
-        return '%s %s' % (self.apellido, self.nombre)
+        return '%s %s' % (self.arquero.apellido, self.arquero.nombre)
 

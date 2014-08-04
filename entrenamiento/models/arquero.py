@@ -28,6 +28,8 @@ class Arquero(BaseModel):
     email = db.Column(db.String(250), nullable=True, unique=True)
     codigo = db.Column(db.String(10), nullable=False, unique=True)
 
+    usuario = db.relationship('Usuario', backref='arquero')
+
     def __str__(self):
         return '%s %s' % (self.apellido, self.nombre)
 

@@ -7,6 +7,7 @@ from flask import request, redirect, url_for, render_template, session
 from flask.views import MethodView
 
 from entrenamiento.app.app import bcrypt
+from entrenamiento.models.arquero import Arquero
 from entrenamiento.models.usuario import Usuario
 from entrenamiento.views.utils import LoggedUserData
 
@@ -25,7 +26,8 @@ class LoginView(MethodView):
         password = request.form.get('password')
 
         query = Usuario.query
-        query = query.filter(Usuario.email == email)
+        query = query.join(Arquero)
+        query = query.filter(Arquero.email == email)
         user = query.first()
         if not user:
             return render_template('login.html',
@@ -33,9 +35,9 @@ class LoginView(MethodView):
         else:
             if bcrypt.check_password_hash(user.password, password):
                 logged_user_data = LoggedUserData(user.id,
-                                                  user.email,
-                                                  user.nombre,
-                                                  user.apellido,
+                                                  user.arquero.email,
+                                                  user.arquero.nombre,
+                                                  user.arquero.apellido,
                                                   user.es_administrador)
                 session['logged_user'] = logged_user_data
                 return redirect(request.args.get('next') or url_for('index'))

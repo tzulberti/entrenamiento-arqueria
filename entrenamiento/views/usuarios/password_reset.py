@@ -4,6 +4,7 @@ from flask import request, render_template
 from flask.views import MethodView
 
 from entrenamiento.app.app import bcrypt
+from entrenamiento.models.arquero import Arquero
 from entrenamiento.models.usuario import Usuario
 from entrenamiento.utils import random_text
 
@@ -24,13 +25,14 @@ class PasswordResetView(MethodView):
         email = request.form.get('email')
 
         query = Usuario.query
-        query = query.filter(Usuario.email == email)
+        query = query.join(Arquero)
+        query = query.filter(Arquero.email == email)
         user = query.first()
         if user:
             password = random_text()
             encripted_password = bcrypt.generate_password_hash(password)
             user.password = encripted_password
-            self.mail_sender.send_mail([user.email],
+            self.mail_sender.send_mail([user.arquero.email],
                                        'Nuevo password Sistema EDA',
                                        'El nuevo password para poder loguearte al sistema es: %s' % password)
             self.db.session.add(user)

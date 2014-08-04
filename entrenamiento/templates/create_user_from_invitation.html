@@ -8,9 +8,21 @@
                 <strong>La invitacion no existe o ya fue usada</strong>
             </div>
         {% endif %}
-        <form role="form" class="form-horizontal" method="POST" action="/crear/usuario/invitacion/{{ hash_invitacion}}/" enctype="multipart/form-data">
+        <form role="form" class="form-horizontal" method="POST" action="/crear/usuario/invitacion/{{ codigo_arquero }}/{{ codigo_invitacion }}/" enctype="multipart/form-data">
             <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
             <h3>Crear nuevo usuario</h3>
+            <div class="alert alert-danger">
+                <strong>
+                    Cuando se los inscriba a FATARCO, los datos se sacan de aca. Por lo tanto, se pide que:
+                    <ul>
+                        <li>Nombre/s</li>
+                        <li>Apellido/s</li>
+                        <li>Fecha de naciemiento</li>
+                    </ul>
+                    Esten como figuran en sus documentos.
+                </strong>
+            </div>
+
             {{ form_field(form.email) }} 
             {{ form_field(form.nombre) }} 
             {{ form_field(form.apellido) }} 

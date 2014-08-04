@@ -57,6 +57,8 @@ class Arco(BaseModel):
     vbar_angulo_inclinacion = db.Column(db.Integer)
     modelo_rest = db.Column(db.String(1024))
 
+    def __str__(self):
+        return '%s' % self.nombre
 
 
 class ArcoRecurvado(Arco):
