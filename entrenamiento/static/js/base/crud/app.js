@@ -144,7 +144,6 @@ var BaseCrudApp = Class.$extend({
         this.searchController.tableController = this.tableController;
         this.tableController.render();
         this.searchController.render();
-
     },
 
     /**

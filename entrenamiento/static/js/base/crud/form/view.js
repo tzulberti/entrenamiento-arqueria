@@ -35,6 +35,14 @@ var FormView = Class.$extend({
     /**
      * Se encarga de renderear el form teniendo en cuenta los valores especificados,
      * y los posibles errores de validacion.
+     *
+     * @param {object} objectData: toda la informacion que ingreo el usuario. Esto
+     *                             es la informacion que ingreso el usuario cuando
+     *                             estaba editando algo como cuando lo estaba
+     *                             creando.
+     *
+     * @param {object} validationErros: todos los errores de validacion que tuvo
+     *                                  el usuario.
      */
     render: function(objectData, validationErrors) {
 
@@ -99,8 +107,6 @@ var FormView = Class.$extend({
                                  '');
         }
         this.$element.unmask();
-
-
     }
 });
 
