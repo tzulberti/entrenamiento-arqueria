@@ -9,7 +9,7 @@ var TorneoCrudApplication = BaseCrudApp.$extend({
                     apiManager,
                     databaseInformation,
                     'torneo',
-                    ['cuando']);
+                    ['cuando', 'fue_practica', 'puntaje_final_torneo', 'id_tipo_de_torneo']);
     },
 
 

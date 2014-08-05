@@ -5,26 +5,68 @@
 var TorneoFormView = Class.$extend({
 
     __init__: function(element, torneoColumnsInformation, torneoFkInformation,
-                       rondaColumnsInformation, rondasFkInformation) {
+                       rondaColumnsInformation, rondaFkInformation) {
         this.$element = element;
         this.torneoColumnsInformation = torneoColumnsInformation;
         this.torneoFkInformation = torneoFkInformation;
         this.rondaColumnsInformation = rondaColumnsInformation;
-        this.rondasFkInformation = rondasFkInformation;
+        this.rondaFkInformation = rondaFkInformation;
 
-        this.torneosSuperTemplate = '' +
+        var torneosSuperTemplate = '' +
             '<form role="form" class="form-horizontal">' +
                 '{{#each columnsNamesToShow}}' +
                     '{{renderFormField this ../columnsInformation ../fkInformation }}' +
                 '{{/each}}' +
-                '<div class="rondas-information">' +
+            '</form>' +
+            '<div class="rondas-information">' +
+            '</div>' +
+            '<div class="row">' +
+                '<div class="col-sm-offset-3">' +
+                    '<input type="submit" class="btn btn-primary button-save">' +
                 '</div>' +
-                '<div class="row">' +
-                    '<div class="col-sm-offset-3">' +
-                        '<input type="submit" class="btn btn-primary button-save">' +
-                    '</div>' +
-                '</div>' +
-            '</form>';
+            '</div>' ;
+
+        this.torneoTemplate = Handlebars.render(torneosSuperTemplate, {
+                        columnsInformation: this.torneoColumnsInformation,
+                        fkInformation: this.torneoFkInformation,
+                        columnsNamesToShow: [
+                            new FieldsetFieldData('Informacion del torneo', true),
+                                new FormFieldData('fue_practica', 'Si fue de practica el torneo (generalmente en el campode olivos o en Justo)'),
+                                new FormFieldData('cuando', null),
+                                new FormFieldData('comentario', null),
+                                new FormFieldData('id_tipo_de_torneo', null),
+                                new FormFieldData('puntaje_final_torneo', 'El puntaje sumado de todas las rondas del torneo'),
+                                new FormFieldData('id_arco', 'El arco con el que tiraste'),
+                                new FormFieldData('id_lugar', null),
+                            new FieldsetFieldData('Information del torneo', false),
+                        ]
+        });
+
+
+        var rondaSuperTemplate = '' +
+                '<form role="form" class="form-horizontal ronda-{{raw "[[ index ]]" }}-form" enctype="multipart/form-data">' +
+                    '<input type="hidden" name="ronda-{{raw "[[ index ]]" }}-id" id="id-ronda-{{raw "[[ index ]]" }}"></input>' +
+                    '<formset>' +
+                        '<h3>Ronda {{raw "[[ index ]]" }}</h3>' +
+                        '{{#each columnsNamesToShow}}' +
+                            '{{renderFormField this ../columnsInformation ../fkInformation }}' +
+                        '{{/each}}' +
+                    '</formset>' +
+                '</form>';
+
+        this.rondaTemplate = Handlebars.render(rondaSuperTemplate, {
+                                               columnsInformation: this.rondaColumnsInformation,
+                                               fkInformation: this.rondaFkInformation,
+                                               columnsNamesToShow: [
+                                                    new FormFieldData('puntaje', 'El puntaje que se hizo en esta ronda'),
+                                                    new FormFieldData('distancia', 'La distancia a la que se tiro en esta ronda'),
+                                                    new FormFieldData('foto_path', 'La foto de la planilla del ronda'),
+                                               ]
+        });
+
+
+
+
 
     },
 
@@ -33,35 +75,40 @@ var TorneoFormView = Class.$extend({
      * en cuenta la informacion de las rondas del mismo.
      */
     renderTorneoInformation: function(torneoObjectData, validationErrors) {
-        var template = Handlebars.render(this.torneosSuperTemplate, {
-                        columnsInformation: this.torneoColumnsInformation,
-                        fkInformation: this.torneoFkInformation,
-                        columnsNamesToShow: [
-                            new FieldsetFieldData('Informacion del torneo', true),
-                                new FormFieldData('fue_practica', null),
-                                new FormFieldData('cuando', null),
-                                new FormFieldData('comentario', null),
-                                new FormFieldData('id_tipo_de_torneo', null),
-                                new FormFieldData('puntaje_final_torneo', null),
-                                new FormFieldData('id_arco', null),
-                                new FormFieldData('id_lugar', null),
-                            new FieldsetFieldData('Information del torneo', false),
-                        ]
-        });
-        this.renderTemplate(template,
+        this._renderTemplate(this.torneoTemplate,
                             torneoObjectData,
                             validationErrors,
                             this.torneoColumnsInformation,
+                            this.$element,
                             null);
     },
 
-    renderTemplate: function(template, objectData, validationErrors, columnsInformation, index) {
+    /**
+     * Se encarga de mostrar toda la informacion de la ronda en cuestion
+     */
+    renderRondaInformation: function(rondaObjectData, validationErrors, index) {
+       this.$element.find('.rondas-information').append('<div class="ronda-' + index + '-div"></div>');
+       this._renderTemplate(this.rondaTemplate,
+                            rondaObjectData,
+                            validationErrors,
+                            this.rondaColumnsInformation,
+                            this.$element.find('.ronda-' + index + '-div'),
+                            index);
+
+    },
+
+    /**
+     * Se encarga de renderar el template, y meterlo en el lugar correspondiente.
+     */
+    _renderTemplate: function(template, objectData, validationErrors, columnsInformation,
+                             element, index) {
         var html = Handlebars.render(template, {
-                        validationErrors: validationErrors
+                        validationErrors: validationErrors,
+                        index: index
         });
 
-        this.$element.clean();
-        this.$element.html(html);
+        element.clean();
+        element.html(html);
 
         if (validationErrors) {
             new PNotify({
@@ -77,9 +124,9 @@ var TorneoFormView = Class.$extend({
             var columnInformation = columnsInformation[i];
             var formField = null;
             if (index === null) {
-                formField = this.$element.find('#' + columnInformation.databaseName)
+                formField = element.find('#' + columnInformation.databaseName)
             } else {
-                formField = this.$element.find('#' + columnInformation.databaseName + '-' + index);
+                formField = element.find('#' + columnInformation.databaseName + '-' + index);
             }
 
             if (! formField.exists()) {
@@ -107,7 +154,7 @@ var TorneoFormView = Class.$extend({
 
         // esto lo tengo que hacer aca porque sino no puedo distinguir entre
         // los textos comunes y los textare
-        this.$element.find('textarea').cleditor({
+        element.find('textarea').cleditor({
                 controls: "bold italic underline | " +
                           "font size | "  +
                           "color highlight | " +
@@ -117,10 +164,10 @@ var TorneoFormView = Class.$extend({
 
 
         if (objectData !== null) {
-            utils.renderFormData(this.$element,
+            utils.renderFormData(element,
                                  objectData,
                                  '');
         }
-        this.$element.unmask();
+        element.unmask();
     }
 })

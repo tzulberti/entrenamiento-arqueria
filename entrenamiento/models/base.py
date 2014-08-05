@@ -18,7 +18,7 @@ class BaseModel(db.Model):
 
         res = dict()
         for attr_name in attributes:
-            if attr_name in ('query', 'to_json', 'query_class', 'metadata'):
+            if attr_name in ('query', 'to_json', 'query_class', 'metadata', 'to_fk_information'):
                 continue
             value = getattr(self, attr_name)
             # TODO: ver si aca ya no estoy levantando toda la informacion

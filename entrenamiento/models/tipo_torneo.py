@@ -32,7 +32,9 @@ class TipoTorneo(BaseModel):
     distancia_ronda_4 = db.Column(db.Integer)
     series_de_practica_ronda_4 = db.Column(db.Integer)
 
-    def __str__(self):
-        return '%s -- %s' % (self.tipo, self.nombre)
 
+    def to_fk_information(self):
+        res = self.to_json()
+        res['value'] =  '%s -- %s' % (self.tipo, self.nombre)
+        return res
 

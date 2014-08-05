@@ -23,14 +23,15 @@ class SerieForm(ValidationForm):
     puntaje_total = IntegerField('puntaje_total')
 
 
-class RondaForm(ValidationForm):
+class RondaForm(ModelForm):
     ''' Valida los datos ingresados de uno de las rondas del torneo.
     '''
 
-    id_torneo = IntegerField('id_torneo', [InputRequired()])
-    puntaje = IntegerField('puntaje', [Optional()])
-    distancia = IntegerField('distancia', [Optional()])
-    foto = StringField('foto', [Optional()])
+    def __init__(self, model_class, object_id=None):
+        super(RondaForm, self).__init__(model_class,
+                                        [],
+                                        object_id)
+
 
 class TorneoForm(ModelForm):
     ''' Valida la data ingresada para poder crear la nueva
