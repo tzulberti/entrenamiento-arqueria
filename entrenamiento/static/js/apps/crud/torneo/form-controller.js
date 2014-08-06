@@ -173,7 +173,10 @@ var TorneoFormController = FormController.$extend({
      * una de las series.
      */
     savedInformation: function(response, textStatus, jqXHR) {
-        this._saveRonda(1, response.id);
+        var tipoTorneoId = this.formView.$element.find('#id_tipo_de_torneo').val();
+        tipoTorneoId = parseInt(tipoTorneoId, 10);
+        var tipoDeTorneoInformation = this.formView.torneoFkInformation.getValue('tipo_torneo', tipoTorneoId);
+        this._saveRonda(1, response.id, tipoDeTorneoInformation);
     },
 
     /**
@@ -187,7 +190,7 @@ var TorneoFormController = FormController.$extend({
      *
      * @param {int} idTorneo: el identificador del torneo que se quiere guardar.
      */
-    _saveRonda: function(rondaIndex, idTorneo) {
+    _saveRonda: function(rondaIndex, idTorneo, tipoDeTorneoInformation) {
 
         var divRonda = this.formView.$element.find('.ronda-' + rondaIndex + '-div');
         if (! divRonda.exists()) {
@@ -199,6 +202,7 @@ var TorneoFormController = FormController.$extend({
 
         var data = divRonda.find('form').serializeObject();
         data.id_torneo = idTorneo;
+        data.distancia = tipoDeTorneoInformation['distancia_ronda_' + rondaIndex];
 
         if (! (data.puntaje || data.foto_path)) {
             // en este caso no se cargo la informacion de las rondas, por lo
@@ -211,7 +215,7 @@ var TorneoFormController = FormController.$extend({
             url: 'ronda/',
             type: 'POST',
             data: data,
-            successCallback: $.proxy(this._saveRonda, this, rondaIndex + 1, idTorneo),
+            successCallback: $.proxy(this._saveRonda, this, rondaIndex + 1, idTorneo, tipoDeTorneoInformation),
             errorCallback: $.proxy(this.errorSavingInformation, this)
         });
     }
