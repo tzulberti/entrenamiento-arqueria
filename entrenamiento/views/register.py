@@ -44,6 +44,8 @@ from entrenamiento.views.usuarios.change_password import ChangePasswordView
 from entrenamiento.views.usuarios.crear_desde_invitacion import CrearUsuarioDesdeInvitacionView
 from entrenamiento.views.usuarios.password_reset import PasswordResetView
 
+from entrenamiento.views.javascript_error import JavascriptErrorView
+
 
 #: la url que forma parte de la base de las API Rest
 BASE_API_URL = '/api/v01/'
@@ -122,6 +124,12 @@ def register_views(app, db, bcrypt):
     app.add_url_rule(BASE_API_URL + 'database-information/',
                     view_func=DatabaseInformationView.as_view('api.database.information',
                                                             database_information=database_information))
+
+    app.add_url_rule(BASE_API_URL + 'javascript-error/',
+                    view_func=JavascriptErrorView.as_view('api.javascript.error',
+                                                          developers=app.config['DEVELOPERS'],
+                                                          development=app.config['DEVELOPMENT'],
+                                                          mail_sender=mail_sender))
 
 
     app.add_url_rule('/crear/usuario/invitacion/<codigo_arquero>/<codigo_invitacion>/',
