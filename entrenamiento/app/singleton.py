@@ -19,7 +19,8 @@ from entrenamiento.models.pago import Pago
 from entrenamiento.models.torneo import Torneo, Ronda, Serie
 from entrenamiento.models.turno import Turno
 from entrenamiento.models.historia_estado_arquero import HistoriaEstadoArquero
-
+from entrenamiento.models.entrenamiento_realizado import (EntrenamientoRealizado,
+                                                          EntrenamientoFlechas)
 
 from entrenamiento.utils import MailSender, DatabaseInformation
 
@@ -42,6 +43,8 @@ models = [
     Ronda,
     Serie,
     HistoriaEstadoArquero,
+    EntrenamientoRealizado,
+    EntrenamientoFlechas
 ]
 
 

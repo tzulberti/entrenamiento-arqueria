@@ -91,3 +91,10 @@ class EstadoArquero(BaseConstModel):
 
     __tablename__ = 'estado_arquero'
 
+
+class TipoEntrenamiento(BaseConstModel):
+    ''' Tiene todo los tipos de actividades que puede haber hecho
+    el arquero tirando (ATR)
+    '''
+
+    __tablename__ = 'tipo_entrenamiento'
