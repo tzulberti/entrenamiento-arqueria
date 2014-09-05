@@ -166,6 +166,129 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
 });
 
 /**
+ * Se encarga de renderar toda todos los campos del form para que uno este
+ * a la izquierda del otro en vez de hacer que uno este debajo del
+ * otro.
+ *
+ * @param {FormFieldData} fielData: toda la informacion sobre el campo en
+ *                                  cuestion que se tiene que renderar.
+ *
+ * @param {Array(ColumnInformation)} columnsInformation: la informaicon de
+ *                             todas las columnas en la que pertence
+ *                             la columna del form.
+ *
+ * @param {FkInformation} fkInformation: toda la informacion de la tablas
+ *                                       referenciadas a las que pertence la
+ *                                       columna.
+ *
+ * @param {String helpText: el texto de ayuda que se quiere mostrar junto al
+ *                          campo en cuestion.
+ *
+ *
+ * @param {boolean} required: si es true, entonces se va a marcar en especial
+ *                            el campo como requerido
+ */
+Handlebars.registerHelper('renderFormFieldInline', function(fieldData, columnsInformation, fkInformation, helpText, required) {
+    var fkValues = [];
+    var columnInformation = null;
+    if (fieldData instanceof FieldsetFieldData) {
+        var res = '';
+        if (fieldData.open) {
+            res = '<fieldset>';
+            if (fieldData.legend) {
+                res += '<legend>' + fieldData.legend + '</legend>';
+            }
+        } else {
+            res = '</fieldset>';
+        }
+
+        return new Handlebars.SafeString(res);
+    }
+
+
+    for (var i = 0; i < columnsInformation.length; i++) {
+        if (columnsInformation[i].databaseName === fieldData.databaseName) {
+            columnInformation = columnsInformation[i];
+            break;
+        }
+    }
+    if (columnInformation === null) {
+        throw new Error('No puede encontrar la informacion para la colun: ' +
+                        fieldData.databaseName);
+    }
+
+
+    var templateRes = ''
+    if (columnInformation.type === 'boolean') {
+        templateRes = '' +
+                    '<div clas="checkbox">' +
+                        '<label>' +
+                            '<input type="checkbox" name="{{ columnInformation.databaseName}}" id="{{ columnInformation.databaseName}}">' +
+                            '{{ columnInformation.frontendName }}' +
+                        '</label>' +
+                    '</div>';
+    } else {
+        templateRes = '' +
+            '<div class="form-group {{raw "[[#if"}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]has-error[[/if]]" }}">' +
+                '<label for="{{ columnInformation.databaseName }}" class="sr-only">' +
+                    '{{ columnInformation.frontendName }}{{#if required }}*{{/if}}' +
+                '</label>';
+        if (columnInformation.isConst() || columnInformation.foreignKey !== null) {
+            templateRes += '' +
+                    '<select name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}">' +
+                        '{{#if columnInformation.nullable }}' +
+                            '<option value=""></option>' +
+                        '{{/if }}' +
+                        '{{#each fkValues }}' +
+                            '<option value="{{ this.id }}">{{ this.value }}</option>' +
+                        '{{/each}}' +
+                    '</select>';
+
+            if (columnInformation.isConst()) {
+                fkValues = columnInformation.constValues;
+            } else {
+                fkValues = fkInformation.getTableValues(columnInformation.foreignKey);
+            }
+        } else if (_.str.include(columnInformation.databaseName, '_path')) {
+            templateRes += '<div class="existing-upload" id="{{ columnInformation.databaseName }}_existing"></div>';
+            templateRes += '<input type="hidden" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control">';
+            templateRes += '<input type="file" name="{{ columnInformation.databaseName }}_upload" id="{{ columnInformation.databaseName }}_upload" class="form-control">';
+        } else if (columnInformation.type === 'textarea') {
+            templateRes += '<textarea type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control"></textarea>';
+        } else {
+            templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control" placeholder="{{ columnINformation.frontendName }}">';
+        }
+
+        // para que renderee la parte del help si es que tiene
+        /*
+        if (fieldData.helpText) {
+            templateRes += '<span class="help-block">{{ helpText }}</span>';
+        }
+
+        // para que renderee los errores si es necesario
+        templateRes += '{{raw "[[#if"}} validationErrors.{{columnInformation.databaseName }} {{ raw "]]" }}' +
+                            '<span class="help-block error-message">' +
+                                '{{raw "[["}} validationErrors.{{ columnInformation.databaseName }} {{raw "]]" }}' +
+                            '</span>' +
+                        '{{raw "[[/if]]" }}';
+        */
+
+
+        templateRes += '</div>';
+    }
+    var res = Handlebars.render(templateRes, {
+                            columnInformation: columnInformation,
+                            required: required,
+                            fkValues: fkValues,
+                            helpText: fieldData.helpText
+    });
+
+    return new Handlebars.SafeString(res);
+
+});
+
+
+/**
  * Se necarga de renderar un filtro que el usuario creo cuando se esta viendo
  * toda la informacion en forma de tabla.
  *
@@ -208,6 +331,51 @@ Handlebars.registerHelper('renderFilterData', function(filter, databaseInformati
     return res;
 });
 
+
+
+
+/**
+ * Se necarga de renderar un filtro que el usuario creo cuando se esta viendo
+ * toda la informacion en forma de tabla.
+ *
+ * @param {Filter} filter: la informacion del filtro que aplico el usuario.
+ *
+ * @param {DatabaseInformation} databaseInformation: tiene toda la informacion
+ *                                  del schema de la base de datos.
+ *
+ * @param {FkInformation} fkInformation: tiene toda la informacion de las tablas
+ *                                       referenciadas que no son constantes.
+ */
+Handlebars.registerHelper('renderFilterData', function(filter, databaseInformation, fkInformation) {
+    var columnInformation = databaseInformation.getColumnInformation(filter.tableName,
+                                                                     filter.columnName);
+    var res = columnInformation.frontendName;
+    var readableOperators = {
+        'eq': '=',
+        'neq': '!=',
+        'lt': '<',
+        'let': '<=',
+        'gt': '>',
+        'get': '>='
+    }
+    res += ' ' + readableOperators[filter.operator];
+    if (columnInformation.isConst()) {
+        // si es por alguna constante entonces tengo que buscar el valor
+        // correspondiente de la misma
+        var id = parseInt(filter.value, 10);
+        var constValue = columnInformation.getConstValue(id);
+        res += ' ' + constValue.value;
+    } else if (columnInformation.foreignKey !== null) {
+        var id = parseInt(filter.value, 10);
+        var referencedInfo = fkInformation.getValue(columnInformation.foreignKey,
+                                                    id);
+        res += ' ' + referencedInfo.value;
+
+    } else {
+        res += ' ' + filter.value;
+    }
+    return res;
+});
 
 /**
  * Se encarga de rendrear todos los nombres de las columnas que tienen que ir
