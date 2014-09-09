@@ -143,6 +143,22 @@ var utils = {
             filtersData.push(currentFilter.tableName + '|' + currentFilter.columnName + '|' + currentFilter.operator + '|' + currentFilter.value);
         }
         return filtersData;
+    },
+
+    getMonthsDifference: function(minDate, maxDate) {
+        if (minDate.year() === maxDate.year() && minDate.month() === maxDate.month()) {
+            return 0
+        }
+        var difference = 0;
+        var aux = moment(minDate);
+        while (true) {
+            difference += 1;
+            aux.add('months', 1);
+            if (aux.year() === maxDate.year() && aux.month() === maxDate.month()) {
+                break;
+            }
+        }
+        return difference;
     }
 };
 
