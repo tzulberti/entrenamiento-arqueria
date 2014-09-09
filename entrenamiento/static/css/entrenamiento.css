@@ -17,3 +17,15 @@
 .ronda-form {
     padding-top: 30px;
 }
+
+/**
+ * Para el form del cuando se esta cargando la informacion 
+ * del entrenamiento realizado
+ */
+.add-flechas {
+    margin-right: 30px;
+}
+
+.flechas-div {
+    margin-bottom: 20px;
+}

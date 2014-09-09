@@ -14,11 +14,11 @@ var EntrenamientoRealizadoFormController = FormController.$extend({
      * Se encarga de renderar la informacion basica del torneo en cuestion.
      */
     _renderForm: function(objectData, validationErrors) {
-        this.formView.renderTorneoInformation(objectData, validationErrors);
+        this.formView.renderEntrenamientoRealizadoInformation(objectData, validationErrors);
 
 
         this.formView.$element.find('.button-save').on('click', $.proxy(this.saveInformation, this));
-        this.formView.$element.find('.add-flechas').on('click', $.proxy(this.addNuevasFlechas, this));
+        this.formView.$element.find('.add-flechas').on('click', $.proxy(this.addNuevasFlechasHandler, this));
     },
 
 
@@ -33,7 +33,6 @@ var EntrenamientoRealizadoFormController = FormController.$extend({
         this._renderForm(responseData, null);
 
         this.formView.$element.mask('Loading');
-        this._renderSeriesForms();
         this.apiManager.ajaxCallObject({
             url: 'entrenamiento_flechas/',
             data: {
@@ -54,7 +53,7 @@ var EntrenamientoRealizadoFormController = FormController.$extend({
         // ahora, para cada una de esas series, tengo que obtener la informacion
         //var ids = [];
         for (var i = 0; i < this.entrenamientoFlechasData.length; i++) {
-            this.formView.addNuevasFlechas();
+            this.formView.addEntrenamientoFlechas();
             utils.renderFormData(this.formView.$element.find('.flechas-' + (i + 1) + '-div'),
                                  this.entrenamientoFlechasData[i],
                                  '');
@@ -72,7 +71,7 @@ var EntrenamientoRealizadoFormController = FormController.$extend({
         ev.stopPropagation();
         ev.preventDefault();
 
-        this.view.addNuevasFlechas();
+        this.formView.addEntrenamientoFlechas();
     },
 
 
@@ -84,7 +83,7 @@ var EntrenamientoRealizadoFormController = FormController.$extend({
      * una de las series.
      */
     savedInformation: function(response, textStatus, jqXHR) {
-        this._saveEntrenamientoFlechas(1, response.id);
+        this.saveEntrenamientoFlechas(0, response.id);
     },
 
     /**
@@ -100,7 +99,7 @@ var EntrenamientoRealizadoFormController = FormController.$extend({
      *                                        al que pertencen las flechas.
      */
     saveEntrenamientoFlechas: function(flechasIndex, idEntrenamientoRealizado) {
-        var divFlechas = this.formView.$element.find('.ronda-' + rondaIndex + '-div');
+        var divFlechas = this.formView.$element.find('.flechas-' + flechasIndex + '-div');
         if (! divFlechas.exists()) {
             // sino existe un div con esa informacion entonces tengo que ya
             // guarde toda la informacion.
@@ -109,10 +108,10 @@ var EntrenamientoRealizadoFormController = FormController.$extend({
         }
 
         var data = divFlechas.find('form').serializeObject();
-        data.id_entrenamiento_realizado = idTorneo;
+        data.id_entrenamiento_realizado = idEntrenamientoRealizado;
 
 
-        if (! data.cantidad_flechas) {
+        if (! data.cantidad_de_flechas) {
             // sino ingreo la cantidad de flechas que queria entonces tengo que
             // parar
             this.crudView.createdObject(idEntrenamientoRealizado);
@@ -120,7 +119,7 @@ var EntrenamientoRealizadoFormController = FormController.$extend({
         }
 
         this.apiManager.ajaxCallObject({
-            url: 'entrenamiento_realizado/',
+            url: 'entrenamiento_flechas/',
             type: 'POST',
             data: data,
             successCallback: $.proxy(this.saveEntrenamientoFlechas, this, flechasIndex + 1, idEntrenamientoRealizado),

@@ -26,12 +26,12 @@ var EntrenamientoRealizadoFormView = Class.$extend({
                                                 '</div>' +
                                                 '<div class="row">' +
                                                     '<div class="col-sm-offset-3">' +
-                                                        '<a href="#" class="btn btn-primary .add-flechas">Agregar flechas</a>' +
+                                                        '<a href="#" class="btn btn-primary add-flechas">Agregar flechas</a>' +
                                                         '<input type="submit" class="btn btn-primary button-save">' +
                                                     '</div>' +
                                                 '</div>' ;
 
-        this.torneoTemplate = Handlebars.render(entrenamientoRealizadoSuperTemplate, {
+        this.entrenamientoRealizadoTemplate = Handlebars.render(entrenamientoRealizadoSuperTemplate, {
                         columnsInformation: this.entrenamientoRealizadoColumnsInformation,
                         fkInformation: this.entrenamientoRealizadoFkInformation,
                         columnsNamesToShow: [
@@ -44,12 +44,9 @@ var EntrenamientoRealizadoFormView = Class.$extend({
 
         var entrenamientoFlechasSuperTemplate = '' +
                 '<form role="form" class="form-inline flechas-{{raw "[[ index ]]" }}-form" enctype="multipart/form-data">' +
-                    '<input type="hidden" name="flechas-{{raw "[[ index ]]" }}-id" id="id-flechas-{{raw "[[ index ]]" }}"></input>' +
-                    '<formset>' +
-                        '{{#each columnsNamesToShow}}' +
-                            '{{renderFormFieldInline this ../columnsInformation ../fkInformation }}' +
-                        '{{/each}}' +
-                    '</formset>' +
+                    '{{#each columnsNamesToShow}}' +
+                        '{{renderFormFieldInline this ../columnsInformation ../fkInformation }}' +
+                    '{{/each}}' +
                 '</form>';
 
         this.entrenamientoFlechasTemplate = Handlebars.render(entrenamientoFlechasSuperTemplate, {
@@ -74,7 +71,7 @@ var EntrenamientoRealizadoFormView = Class.$extend({
      * Se encarga de renderar todo el form para la informacion del toreno, sin tener
      * en cuenta la informacion de las rondas del mismo.
      */
-    renderTorneoInformation: function(entrenamientoRealizadoObjectData, validationErrors) {
+    renderEntrenamientoRealizadoInformation: function(entrenamientoRealizadoObjectData, validationErrors) {
         this._renderTemplate(this.entrenamientoRealizadoTemplate,
                             entrenamientoRealizadoObjectData,
                             validationErrors,
@@ -87,7 +84,7 @@ var EntrenamientoRealizadoFormView = Class.$extend({
      * Se encarga de mostrar toda la informacion de la ronda en cuestion
      */
     renderEntrenamientoFlechasInformation: function(entrenamientoFlechasObjectData, validationErrors, index) {
-       this.$element.find('.flechas-information').append('<div class="flechas-' + index + '-div"></div>');
+       this.$element.find('.flechas-information').append('<div class="flechas-' + index + '-div flechas-div"></div>');
        this._renderTemplate(this.entrenamientoFlechasTemplate,
                             entrenamientoFlechsaObjectData,
                             validationErrors,
@@ -108,7 +105,7 @@ var EntrenamientoRealizadoFormView = Class.$extend({
             currentIndex += 1;
         }
 
-       this.$element.find('.flechas-information').append('<div class="flechas-' + currentIndex + '-div"></div>');
+       this.$element.find('.flechas-information').append('<div class="flechas-' + currentIndex + '-div flechas-div"></div>');
        this._renderTemplate(this.entrenamientoFlechasTemplate,
                             null,
                             null,
@@ -141,48 +138,7 @@ var EntrenamientoRealizadoFormView = Class.$extend({
 
         }
 
-        for (var i = 0; i < columnsInformation.length; i++) {
-            var columnInformation = columnsInformation[i];
-            var formField = null;
-            if (index === null) {
-                formField = element.find('#' + columnInformation.databaseName)
-            } else {
-                formField = element.find('#' + columnInformation.databaseName + '-' + index);
-            }
-
-            if (! formField.exists()) {
-                // en este caso estoy en una columna que esta en la base de datos
-                // pero que no la estoy renderando
-                continue;
-            }
-
-            if (columnInformation.type === 'date') {
-                formField.datepicker({
-                    format: 'dd/mm/yyyy'
-                });
-            } else if (columnInformation.type === 'time') {
-                formField.timepicker({
-                    showSeconds: false,
-                    minuteStep: 1,
-                    showMeridian: false
-                });
-            } else if (columnInformation.isConst()) {
-                formField.chosen({width: '300px'});
-            } else if (columnInformation.foreignKey !== null) {
-                formField.chosen({width: '300px'});
-            }
-        }
-
-        // esto lo tengo que hacer aca porque sino no puedo distinguir entre
-        // los textos comunes y los textare
-        element.find('textarea').cleditor({
-                controls: "bold italic underline | " +
-                          "font size | "  +
-                          "color highlight | " +
-                          "alignleft center alignright justify | " +
-                          "bullets numbering"
-        });
-
+        utils.applyJavascriptPluginsToForm(columnsInformation, element);
 
         if (objectData !== null) {
             utils.renderFormData(element,

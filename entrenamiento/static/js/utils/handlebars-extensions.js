@@ -256,7 +256,7 @@ Handlebars.registerHelper('renderFormFieldInline', function(fieldData, columnsIn
         } else if (columnInformation.type === 'textarea') {
             templateRes += '<textarea type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control"></textarea>';
         } else {
-            templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control" placeholder="{{ columnINformation.frontendName }}">';
+            templateRes += '<input type="text" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control" placeholder="{{ columnInformation.frontendName }}">';
         }
 
         // para que renderee la parte del help si es que tiene

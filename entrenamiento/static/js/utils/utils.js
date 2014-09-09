@@ -65,6 +65,68 @@ var utils = {
     },
 
     /**
+     * Se encarga de aplicar los plugins a los fields del form para tener en cuenta
+     * los diferentes casos en los que el usuario puede seleccionar los valores.
+     *
+     * Entre los plugins que se estan usando son:
+     *
+     * - chosen
+     * - datepicker
+     * - timepicker
+     *
+     *
+     * @param {Array(ColumnInformation)} columnsInformation: tiene toda la informacion sobre el
+     *                                                       schema de la base de datos.
+     *
+     * @param {jQuery} formElement: el elemento del DOM que tiene todos los fields
+     *                              correspondientes.
+     */
+    applyJavascriptPluginsToForm: function(columnsInformation, formElement) {
+        for (var i = 0; i < columnsInformation.length; i++) {
+            var columnInformation = columnsInformation[i];
+            var formField = formElement.find('#' + columnInformation.databaseName)
+
+            if (! formField.exists()) {
+                // en este caso estoy en una columna que esta en la base de datos
+                // pero que no la estoy renderando
+                continue;
+            }
+
+            if (columnInformation.type === 'date') {
+                formField.datepicker({
+                    format: 'dd/mm/yyyy'
+                });
+            } else if (columnInformation.type === 'time') {
+                formField.timepicker({
+                    showSeconds: false,
+                    minuteStep: 1,
+                    showMeridian: false
+                });
+            } else if (columnInformation.isConst()) {
+                formField.chosen({
+                    width: '300px',
+                    placeholder_text_single: columnInformation.frontendName
+                });
+            } else if (columnInformation.foreignKey !== null) {
+                formField.chosen({
+                    width: '300px',
+                    placeholder_text_single: columnInformation.frontendName
+                });
+            }
+        }
+
+        // esto lo tengo que hacer aca porque sino no puedo distinguir entre
+        // los textos comunes y los textare
+        formElement.find('textarea').cleditor({
+                controls: "bold italic underline | " +
+                          "font size | "  +
+                          "color highlight | " +
+                          "alignleft center alignright justify | " +
+                          "bullets numbering"
+        });
+    },
+
+    /**
      * Se encarga de pasar toda la informacion de los filtros a una forma de texto
      * para que se los pueda usar en los llamados Ajax.
      *
