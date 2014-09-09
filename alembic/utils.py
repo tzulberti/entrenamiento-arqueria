@@ -17,7 +17,7 @@ def create_categoric_table(table_name, values):
                     sa.Column('id', sa.Integer, primary_key=True),
                     sa.Column('value', sa.String(1024), unique=True, nullable=False),
                     sa.Column('show_order', sa.Integer, unique=True, nullable=False))
-    sql = "INSERT INTO {table_name} (id, value, show_order) VALUES ({id}, '{value}', '{show_order}');"
+    sql = u"INSERT INTO {table_name} (id, value, show_order) VALUES ({id}, '{value}', '{show_order}');"
     for id, value in enumerate(values):
         insert_sql = sql.format(table_name=table_name,
                                 id=id + 1,
