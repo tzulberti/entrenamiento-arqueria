@@ -15,4 +15,4 @@ class RunServer(Command):
         from entrenamiento.app.app import app, db, bcrypt
         from entrenamiento.views.register import register_views
         register_views(app, db, bcrypt)
-        app.run(port=port)
+        app.run(port=port, host='0.0.0.0')
