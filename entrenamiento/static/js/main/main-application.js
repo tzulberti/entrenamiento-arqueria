@@ -119,29 +119,38 @@ var MainApplication = Class.$extend({
         this.appsManager.addApplication(13, entrenamientoRealizadoCrudApp);
 
         // ahora registro todo el tema relacionados a los graficos
-        this.pagosAcumuladosGraficoApp = new PagosAcumuladosGraficoApp($("#page-wrapper"),
-                                                                       this.historyManager,
-                                                                       this.apiManager,
-                                                                       this.databaseInformation);
-        this.pagosPorMesGraficoApp = new PagosPorMesGraficoApp($("#page-wrapper"),
-                                                               this.historyManager,
-                                                               this.apiManager,
-                                                               this.databaseInformation);
-        this.cantidadEstadosPorMesApp = new CantidadEstadosPorMesGraficoApp($("#page-wrapper"),
-                                                                            this.historyManager,
-                                                                            this.apiManager,
-                                                                            this.databaseInformation);
-
-        this.appsManager.addApplication(7, this.pagosAcumuladosGraficoApp);
-        this.appsManager.addApplication(12, this.pagosPorMesGraficoApp);
-        this.appsManager.addApplication(14, this.cantidadEstadosPorMesApp);
-
+        this.registerGraficsApplication(PagosAcumuladosGraficoApp, 10001, 'pagosAcumuladosGraficoApp');
+        this.registerGraficsApplication(PagosPorMesGraficoApp, 10002, 'pagosPorMesGraficoApp');
+        this.registerGraficsApplication(CantidadEstadosPorMesGraficoApp, 10101, 'cantidadEstadosPorMesGraficoApp');
 
         this.menuView = new MainMenuView($("#side-menu"),
                                          this.appsManager);
         this.menuView.render();
 
         $('#side-menu').metisMenu();
+    },
 
+
+    /**
+     * Se encarga de crear una app para hacer los graficos, setearsela a esta
+     * aplicacion y registrarla en el appsManager.
+     *
+     * @param {Class} graphicsAppClass: la clase (no la instancia) que se tiene que
+     *                                  usar para crear la instancia.
+     *
+     * @param {Number} id: el identificador de la aplicacion que se tiene que usar
+     *                     para la aplicacion de graficos.
+     *
+     * @param {String} attributeName: el nombre del atributo de la instancia de
+     *                                la app de graficos en esta aplicacion.
+     */
+    registerGraficsApplication: function(graphicsAppClass, id, attributeName) {
+        this[attributeName] = new graphicsAppClass($("#page-wrapper"),
+                                                   this.historyManager,
+                                                   this.apiManager,
+                                                   this.databaseInformation);
+        this.appsManager.addApplication(id, this[attributeName]);
     }
+
+
 });
