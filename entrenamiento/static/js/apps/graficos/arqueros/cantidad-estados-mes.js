@@ -12,6 +12,7 @@ var CantidadEstadosPorMesGraficoApp = BaseGraficosApp.$extend({
     createChartController: function() {
         return new CantidadEstadosPorMesController(this.$element,
                                                    this.apiManager,
-                                                   this.searchController);
+                                                   this.searchController,
+                                                   this.databaseInformation);
     }
 });

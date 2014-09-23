@@ -15,11 +15,15 @@ var CantidadEstadosPorMesController = Class.$extend({
      *
      * @param {SearchController} searchController: el controller que se quiere usar
      *                                             para filtrar toda la informacion
+     *
+     * @param {DatabaseInformation} databaseInformation: tiene toda la informacion sobre
+     *                                                   los schemas de la base de datos
      */
-    __init__: function(element, apiManager, searchController) {
+    __init__: function(element, apiManager, searchController, databaseInformation) {
         this.$element = element;
         this.apiManager = apiManager;
         this.searchController = searchController;
+        this.databaseInformation = databaseInformation;
 
         this.missingCallbacks = null;
         this.responseData = null;
@@ -96,27 +100,30 @@ var CantidadEstadosPorMesController = Class.$extend({
 
         var datesDifference = utils.getMonthsDifference(minDate, maxDate);
         var finalData = [];
-        for (var id = 1; id < 4; id++) {
+        var columnInformation = this.databaseInformation.getColumnInformation('historia_estado_arquero',
+                                                                              'id_estado_arquero');
+        for (var id = 1; id <= 4; id++) {
             var idData = [];
-            for (var monthIndex = 0; monthIndex < datesDifference; monthIndex++) {
+            for (var monthIndex = 0; monthIndex <= datesDifference; monthIndex++) {
                 idData.push(0);
             }
             finalData.push({
-                name: 1,
+                name: columnInformation.getConstValue(id).value,
                 data: idData
             });
         }
 
         var xCategories = [];
         var aux = moment(minDate);
-        for (var monthIndex = 0; monthIndex < datesDifference; monthIndex++) {
+        for (var monthIndex = 0; monthIndex <= datesDifference; monthIndex++) {
             xCategories.push(aux);
+            aux = moment(aux);
             aux.add('months', 1);
         }
 
         // ahora para cada id tengo que contar la cantidad de valores
         // que hay
-        for (var id = 1; id < 4; id++) {
+        for (var id = 1; id <= 4; id++) {
             var dataForId = finalData[id - 1].data;
             for (var j = 0; j < parsedData.length; j++) {
                 var currentData = parsedData[j];
@@ -129,7 +136,7 @@ var CantidadEstadosPorMesController = Class.$extend({
                 if (id === consts.ESTADO_ARQUERO.activo || id === consts.ESTADO_ARQUERO.pasivo) {
                     // en este caso se tiene que acumular mes a mes el valor
                     // en el que estuvo en este estado.
-                    var startingIndex = utils.getMonthsDifference(minDate, currentData[0]) - 1;
+                    var startingIndex = utils.getMonthsDifference(minDate, currentData[0]);
                     if (currentData[1] === null) {
                         for (var k = startingIndex; k < dataForId.length; k++) {
                             dataForId[k] += 1;
@@ -145,7 +152,7 @@ var CantidadEstadosPorMesController = Class.$extend({
                     }
                 } else {
                     // en este caso solo sumo al mes correspondiente
-                    var startingIndex = utils.getMonthsDifference(minDate, currentData[0]) - 1;
+                    var startingIndex = utils.getMonthsDifference(minDate, currentData[0]);
                     dataForId[startingIndex] += 1;
                 }
             }
