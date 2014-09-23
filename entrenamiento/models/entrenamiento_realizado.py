@@ -32,3 +32,4 @@ class EntrenamientoFlechas(BaseModel):
                          db.ForeignKey('lugar.id'))
 
 
+    entrenamiento_realizado = db.relationship('EntrenamientoRealizado', backref='entrenamiento_flechas')

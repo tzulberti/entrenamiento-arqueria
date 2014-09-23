@@ -36,12 +36,27 @@ class BaseModelListCrudView(UserRequiredView):
        objeto creado todavia no tiene un ID por lo que no se puede
        llamar a la URL correspondiente.
 
+
+    :param db: la instancia de la applicacion db que se encarga de
+               manejar todo el tema de sessiones
+
+    :param model_class: la clase con la que va a trabajar esta view
+                        para leer toda la informacion.
+
+    :param form_class: la clase que se va a usar para validar la
+                       creacion de la instancia.
+
+    :param related_classes: es un diccionario con el nombre de las
+                            clases y la instancia de la misma con la
+                            cual esta clase tiene alguna relacion.
+
     '''
 
-    def __init__(self, db, model_class, form_class):
+    def __init__(self, db, model_class, form_class, related_classes=dict()):
         super(BaseModelListCrudView, self).__init__()
         self.model_class = model_class
         self.form_class = form_class
+        self.related_classes = related_classes
         self.db = db
 
     def get(self):
@@ -90,6 +105,13 @@ class BaseModelListCrudView(UserRequiredView):
         '''
         query = self.model_class.query
         sqlalchemy_columns = []
+        if 'join' in request.args:
+            # tengo que decirle antes de mano el tema del join
+            # porque si despues le especifico las columnas no me deja
+            # hacerlo
+            join = request.args['join']
+            query = query.join(self.related_classes[join])
+
         if 'columns[]' in request.args:
             columns = request.args.getlist('columns[]')
             for column_name in columns:
@@ -99,16 +121,19 @@ class BaseModelListCrudView(UserRequiredView):
                     aggregation_name = aggregation_name.lower()
                     column_name = column_name[column_name.index('(') + 1: column_name.index(')')]
 
-                column = getattr(self.model_class, column_name)
+                column = self._get_attribute(column_name)
                 if aggregation_name:
                     column = getattr(func, aggregation_name)(column)
-                query = query.add_column(column)
                 sqlalchemy_columns.append(column)
+
+            query = query.with_entities(*sqlalchemy_columns)
+
+
 
         if 'orderBy' in request.args:
             order_by = request.args['orderBy']
             if order_by:
-                column = getattr(self.model_class, order_by)
+                column = self._get_attribute(order_by)
                 order_direction = request.args.get('orderDirection', 'ASC')
                 if order_direction == 'DESC':
                     query = query.order_by(column.desc())
@@ -119,7 +144,7 @@ class BaseModelListCrudView(UserRequiredView):
         if 'groupBy' in request.args:
             group_by = request.args['groupBy']
             if group_by:
-                column = getattr(self.model_class, group_by)
+                column = self._get_attribute(group_by)
                 query = query.group_by(column)
 
         # entones de setear el tema de los limit, me fijo el tema
@@ -129,7 +154,7 @@ class BaseModelListCrudView(UserRequiredView):
         for filter_data in filters_data:
             table_name, column_name, operator, value = filter_data.split('|')
 
-            column = getattr(self.model_class, column_name)
+            column = self._get_attribute(column_name)
             if operator == 'eq':
                 query = query.filter(column == value)
             elif operator == 'lt':
@@ -173,7 +198,6 @@ class BaseModelListCrudView(UserRequiredView):
             offset = int(request.args['offset'])
             query = query.offset(offset)
 
-
         if 'fkInformation' in request.args:
             total_count = 0
             filter_count = 0
@@ -206,6 +230,19 @@ class BaseModelListCrudView(UserRequiredView):
         return jsonify(values=res,
                        totalCount=total_count,
                        filterCount=filter_count)
+
+
+    def _get_attribute(self, attribute_name):
+        ''' Se encarga de obtener el attributo de la clase correspondiente
+        teniendo en cuenta que el attributo no puede corresponder al modelo
+        sino que a una de las clases relacionadas.
+        '''
+        if '.' in attribute_name:
+            class_name, attribute_name = attribute_name.split('.')
+            return getattr(self.related_classes[class_name], attribute_name)
+        else:
+            return getattr(self.model_class, attribute_name)
+
 
     def post(self):
         ''' Esto es llamadao cuando el usuario quiere crear una instancia.
