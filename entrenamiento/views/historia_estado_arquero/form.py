@@ -75,8 +75,8 @@ class HistoriaEstadoArqueroForm(ModelForm):
             query = self.model_class.query
             query = query.filter(self.model_class.id_arquero == self.instance.id_arquero)
             query = query.filter(self.model_class.id_estado_arquero > 1)
-            query = query.filter(((self.model_class.hasta is None) & (self.model_class.desde > self.instance.desde)) |
-                                 ((self.model_class.hasta is not None) & (self.model_class.hasta > self.instance.desde)))
+            query = query.filter(((self.model_class.hasta == None) & (self.model_class.desde > self.instance.desde)) |
+                                 ((self.model_class.hasta != None) & (self.model_class.hasta > self.instance.desde)))
             if query.first():
                 self.errors['desde'] = 'Existe un estado para este arquero que '\
                                        'esta entre los valores dados de fechas'
@@ -84,6 +84,8 @@ class HistoriaEstadoArqueroForm(ModelForm):
 
         else:
             raise Exception('Estoy tratando con un ID que no es el que yo me esperaba')
+
+        return True
 
 
 
