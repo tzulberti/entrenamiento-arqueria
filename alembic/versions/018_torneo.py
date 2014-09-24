@@ -21,8 +21,8 @@ def upgrade():
 
         sa.Column('id_usuario', sa.Integer, sa.ForeignKey('usuario.id', ondelete='CASCADE'), nullable=False),
         sa.Column('id_tipo_de_torneo', sa.Integer, sa.ForeignKey('tipo_torneo.id'), nullable=False),
-        sa.Column('id_lugar', sa.Integer, sa.ForeignKey('lugar.id')),
-        sa.Column('id_arco', sa.Integer, sa.ForeignKey('arco.id')),
+        sa.Column('id_lugar', sa.Integer, sa.ForeignKey('lugar.id', ondelete='SET NULL')),
+        sa.Column('id_arco', sa.Integer, sa.ForeignKey('arco.id', ondelete='SET NULL')),
 
         sa.Column('comentario', sa.Text),
         sa.Column('puntaje_final_torneo', sa.Integer),

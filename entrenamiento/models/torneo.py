@@ -34,8 +34,8 @@ class Torneo(BaseModel):
 
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id', ondelete='CASCADE'), nullable=False)
     id_tipo_de_torneo = db.Column(db.Integer, db.ForeignKey('tipo_torneo.id'), nullable=False)
-    id_lugar = db.Column(db.Integer, db.ForeignKey('lugar.id'))
-    id_arco = db.Column(db.Integer, db.ForeignKey('arco.id'))
+    id_lugar = db.Column(db.Integer, db.ForeignKey('lugar.id', ondelete='SET NULL'))
+    id_arco = db.Column(db.Integer, db.ForeignKey('arco.id', ondelete='SET NULL'))
 
     comentario = db.Column(db.Text)
     puntaje_final_torneo = db.Column(db.Integer)
