@@ -5,6 +5,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.wtf.csrf import CsrfProtect
 
+from entrenamiento.app.logging_config import logging_configuration
 
 def create_app():
     ''' Se encarga de crear la applicaciones de flask.
@@ -20,6 +21,7 @@ def create_app():
     bcrypt = Bcrypt(app)
     csrf = CsrfProtect()
     csrf.init_app(app)
+    logging_configuration(app)
     return (app, db, bcrypt)
 
 
