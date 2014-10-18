@@ -53,10 +53,9 @@ var EntrenamientoRealizadoFormController = FormController.$extend({
         // ahora, para cada una de esas series, tengo que obtener la informacion
         //var ids = [];
         for (var i = 0; i < this.entrenamientoFlechasData.length; i++) {
-            this.formView.addEntrenamientoFlechas();
-            utils.renderFormData(this.formView.$element.find('.flechas-' + (i + 1) + '-div'),
-                                 this.entrenamientoFlechasData[i],
-                                 '');
+            this.formView.renderEntrenamientoFlechasInformation(this.entrenamientoFlechasData[i],
+                                                                null,
+                                                                i);
         }
 
         this.formView.$element.unmask();

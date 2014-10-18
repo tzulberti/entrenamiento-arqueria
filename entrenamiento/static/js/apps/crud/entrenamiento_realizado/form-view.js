@@ -86,7 +86,7 @@ var EntrenamientoRealizadoFormView = Class.$extend({
     renderEntrenamientoFlechasInformation: function(entrenamientoFlechasObjectData, validationErrors, index) {
        this.$element.find('.flechas-information').append('<div class="flechas-' + index + '-div flechas-div"></div>');
        this._renderTemplate(this.entrenamientoFlechasTemplate,
-                            entrenamientoFlechsaObjectData,
+                            entrenamientoFlechasObjectData,
                             validationErrors,
                             this.entrenamientoFlechasColumnsInformation,
                             this.$element.find('.flechas-' + index + '-div'),
