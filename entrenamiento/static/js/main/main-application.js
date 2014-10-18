@@ -122,6 +122,7 @@ var MainApplication = Class.$extend({
         this.registerGraficsApplication(PagosAcumuladosGraficoApp, 10001, 'pagosAcumuladosGraficoApp');
         this.registerGraficsApplication(PagosPorMesGraficoApp, 10002, 'pagosPorMesGraficoApp');
         this.registerGraficsApplication(CantidadEstadosPorMesGraficoApp, 10101, 'cantidadEstadosPorMesGraficoApp');
+        this.registerGraficsApplication(CantidadAsistenciasGraficoApp, 10102, 'cantidadAsistenciasGraficoApp');
         this.registerGraficsApplication(FlechasAcumuladasGraficoApp, 10201, 'flechasAcumuladasGraficoApp');
 
         this.menuView = new MainMenuView($("#side-menu"),

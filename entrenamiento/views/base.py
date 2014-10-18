@@ -123,7 +123,14 @@ class BaseModelListCrudView(UserRequiredView):
 
                 column = self._get_attribute(column_name)
                 if aggregation_name:
-                    column = getattr(func, aggregation_name)(column)
+                    if aggregation_name == 'month':
+                        sqlalchemy_columns.extend([
+                            func.extract('year', column),
+                            func.extract('month', column)
+                        ])
+                        continue
+                    else:
+                        column = getattr(func, aggregation_name)(column)
                 sqlalchemy_columns.append(column)
 
             query = query.with_entities(*sqlalchemy_columns)
@@ -144,8 +151,21 @@ class BaseModelListCrudView(UserRequiredView):
         if 'groupBy' in request.args:
             group_by = request.args['groupBy']
             if group_by:
+                aggregation_name = None
+                if '(' in group_by:
+                    aggregation_name = group_by[:group_by.index('(')]
+                    aggregation_name = aggregation_name.lower()
+                    group_by = group_by[group_by.index('(') + 1: group_by.index(')')]
+
                 column = self._get_attribute(group_by)
-                query = query.group_by(column)
+                if aggregation_name:
+                    if aggregation_name == 'month':
+                        query = query.group_by(func.extract('year', column))
+                        query = query.group_by(func.extract('month', column))
+                    else:
+                        raise Exception('Todavia no implemente este caso')
+                else:
+                    query = query.group_by(column)
 
         # entones de setear el tema de los limit, me fijo el tema
         # de los filtros de las cosas que puede ver el usuario.
