@@ -10,7 +10,9 @@ class EntrenamientoRealizado(BaseModel):
     '''
 
     id = db.Column(db.Integer, primary_key=True)
-    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id', ondelete='CASCADE'), nullable=False)
+    id_usuario = db.Column(db.Integer,
+                           db.ForeignKey('usuario.id', ondelete='CASCADE'),
+                           nullable=False)
     cuando = db.Column(db.Date, nullable=False)
 
 
@@ -31,5 +33,3 @@ class EntrenamientoFlechas(BaseModel):
     id_lugar = db.Column(db.Integer,
                          db.ForeignKey('lugar.id'))
 
-
-    entrenamiento_realizado = db.relationship('EntrenamientoRealizado', backref='entrenamiento_flechas')
