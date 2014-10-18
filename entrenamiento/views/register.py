@@ -11,6 +11,7 @@ from flask import send_from_directory
 from entrenamiento.app.singleton import mail_sender, database_information
 from entrenamiento.models.arquero import Arquero
 from entrenamiento.models.asistencia import Asistencia
+from entrenamiento.models.gasto import Gasto
 from entrenamiento.models.invitacion import Invitacion
 from entrenamiento.models.lugar import Lugar
 from entrenamiento.models.usuario import Usuario
@@ -40,6 +41,7 @@ from entrenamiento.views.index import IndexViewTemplate
 from entrenamiento.views.invitacion.crud import InvitacionListCrudView
 from entrenamiento.views.invitacion.form import InvitacionForm
 from entrenamiento.views.lugares.form import LugarForm
+from entrenamiento.views.gasto.form import GastoForm
 from entrenamiento.views.pago.form import PagoForm
 from entrenamiento.views.torneo.forms import TorneoForm, RondaForm, SerieForm
 from entrenamiento.views.turno.form import TurnoForm
@@ -130,6 +132,7 @@ def register_views(app, db, bcrypt):
     register_url(app, db, 'tipo_torneo', TipoTorneo, None)
     register_url(app, db, 'entrenamiento_realizado', EntrenamientoRealizado, EntrenamientoRealizadoForm)
     register_url(app, db, 'entrenamiento_flechas', EntrenamientoFlechas, EntrenamientoFlechasForm, related_classes=dict(entrenamiento_realizado=EntrenamientoRealizado))
+    register_url(app, db, 'gasto', Gasto, GastoForm)
 
     app.add_url_rule(BASE_API_URL + 'database-information/',
                     view_func=DatabaseInformationView.as_view('api.database.information',

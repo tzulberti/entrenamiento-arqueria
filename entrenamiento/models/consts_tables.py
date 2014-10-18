@@ -98,3 +98,9 @@ class TipoEntrenamiento(BaseConstModel):
     '''
 
     __tablename__ = 'tipo_entrenamiento'
+
+class RazonGasto(BaseConstModel):
+    ''' Tiene llas diferentes opciones de porque se hizo el gasto
+    '''
+
+    __tablename__ = 'razon_gasto'

@@ -118,6 +118,8 @@ var MainApplication = Class.$extend({
         this.appsManager.addApplication(11, historiaEstadoArqueroCrudApp);
         this.appsManager.addApplication(13, entrenamientoRealizadoCrudApp);
 
+        this.registerCrudApplication(GastoCrudApplication, 2, 'gastoCrudApp');
+
         // ahora registro todo el tema relacionados a los graficos
         this.registerGraficsApplication(PagosAcumuladosGraficoApp, 10001, 'pagosAcumuladosGraficoApp');
         this.registerGraficsApplication(PagosPorMesGraficoApp, 10002, 'pagosPorMesGraficoApp');
@@ -132,6 +134,27 @@ var MainApplication = Class.$extend({
         $('#side-menu').metisMenu();
     },
 
+
+    /**
+     * Se necarga de crear una app para los CRUD, setearla a este objecto, y
+     * registrarla en el appsManager.
+     *
+     * @param {Class} crudAppClass: la clase (no la instancia que se tiene que
+     *                              usar para crear la instancia.
+     *
+     * @param {Number} id: el identificador de la aplicacion que se tiene que usar
+     *                     para la aplicacion de graficos.
+     *
+     * @param {String} attributeName: el nombre del atributo de la instancia de
+     *                                la app de graficos en esta aplicacion.
+     */
+    registerCrudApplication: function(crudAppClass, id, attributeName) {
+        this[attributeName] = new crudAppClass($("#page-wrapper"),
+                                               this.historyManager,
+                                               this.apiManager,
+                                               this.databaseInformation);
+        this.appsManager.addApplication(id, this[attributeName]);
+    },
 
     /**
      * Se encarga de crear una app para hacer los graficos, setearsela a esta
