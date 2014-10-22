@@ -11,6 +11,7 @@ from entrenamiento.models import consts_tables
 from entrenamiento.models.arquero import Arquero
 from entrenamiento.models.asistencia import Asistencia
 from entrenamiento.models.base import BaseConstModel
+from entrenamiento.models.flechas import Flechas
 from entrenamiento.models.gasto import Gasto
 from entrenamiento.models.invitacion import Invitacion
 from entrenamiento.models.lugar import Lugar
@@ -47,6 +48,7 @@ models = [
     EntrenamientoRealizado,
     EntrenamientoFlechas,
     Gasto,
+    Flechas,
 ]
 
 

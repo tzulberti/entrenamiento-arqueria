@@ -104,3 +104,23 @@ class RazonGasto(BaseConstModel):
     '''
 
     __tablename__ = 'razon_gasto'
+
+class MarcaFlechas(BaseConstModel):
+    ''' Tiene toda la informacion de los fabricantes de flechas
+    '''
+
+    __tablename__ = 'marca_flechas'
+
+class ModeloFlechas(BaseConstModel):
+    ''' Tiene toda la informacion sobre los diferentes modelos de
+    flechas que existen.
+    '''
+
+    __tablename__ = 'modelo_flechas'
+
+class TipoUsoFlechas(BaseConstModel):
+    ''' Tiene toda la informacion sobre los diferentes tipos de uso
+    que se le pueden dar a las flechas.
+    '''
+
+    __tablename__ = 'tipo_uso_flechas'
