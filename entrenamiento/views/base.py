@@ -224,7 +224,7 @@ class BaseModelListCrudView(UserRequiredView):
             if hasattr(self.model_class, 'to_fk_information'):
                 res = [d.to_fk_information() for d in query.all()]
             else:
-                res = [dict(id=d.id, value=str(d)) for d in query.all()]
+                res = [dict(id=d.id, value=unicode(d)) for d in query.all()]
         elif 'columns[]' in request.args:
             total_count = 0
             filter_count = 0
