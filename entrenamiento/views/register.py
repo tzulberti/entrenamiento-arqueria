@@ -56,6 +56,7 @@ from entrenamiento.views.usuarios.password_reset import PasswordResetView
 
 from entrenamiento.views.javascript_error import JavascriptErrorView
 
+from entrenamiento.views.jinja_extensions import has_permission
 
 #: la url que forma parte de la base de las API Rest
 BASE_API_URL = '/api/v01/'
@@ -85,6 +86,8 @@ def register_url(app, db, model_name, model_class, form_class,
 def register_views(app, db, bcrypt):
     ''' Se encarga de registrar todas las views que puede llegar a ver el usuario.
     '''
+    app.jinja_env.globals['has_permission'] = has_permission
+
     app.add_url_rule('/login/',
                     view_func=LoginView.as_view('auth.login'))
     app.add_url_rule('/logout/',

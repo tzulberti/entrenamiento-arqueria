@@ -7,7 +7,7 @@ from wtforms.fields import Field
 from wtforms.widgets import TextInput
 
 LoggedUserData = namedtuple('LoggedUserData',
-                            ['id', 'email', 'nombre', 'apellido', 'es_administrador'])
+                            ['id', 'email', 'nombre', 'apellido', 'es_administrador', 'permisos'])
 
 def get_logged_user_data():
     if not 'logged_user' in session:

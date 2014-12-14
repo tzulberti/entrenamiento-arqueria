@@ -23,6 +23,7 @@ from entrenamiento.models.turno import Turno
 from entrenamiento.models.historia_estado_arquero import HistoriaEstadoArquero
 from entrenamiento.models.entrenamiento_realizado import (EntrenamientoRealizado,
                                                           EntrenamientoFlechas)
+from entrenamiento.models.permiso import Permiso, PermisoUsuario
 
 from entrenamiento.utils import MailSender, DatabaseInformation
 
@@ -49,6 +50,8 @@ models = [
     EntrenamientoFlechas,
     Gasto,
     Flechas,
+    Permiso,
+    PermisoUsuario,
 ]
 
 

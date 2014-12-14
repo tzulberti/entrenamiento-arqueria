@@ -12,15 +12,17 @@ setup(
     url='https://github.com/tzulberti/entrenamiento-arqueria',
     install_requires=[
         "Flask",
-        "requests",
         "Flask-SQLAlchemy",
         "flask-bcrypt",
         "Flask-Restless",
         "Flask-WTF",
+        "Flask-Script",
+        "Flask-Mail",
+
         "alembic",
         "psycopg2",
         "Pillow",
-        "Flask-Script",
+        "requests",
     ],
     entry_points={
         'console_scripts': {

@@ -9,6 +9,7 @@ from flask.views import MethodView
 from entrenamiento.app.app import bcrypt
 from entrenamiento.models.arquero import Arquero
 from entrenamiento.models.usuario import Usuario
+from entrenamiento.models.permiso import Permiso, PermisoUsuario
 from entrenamiento.views.utils import LoggedUserData
 
 class LoginView(MethodView):
@@ -34,11 +35,19 @@ class LoginView(MethodView):
                                     email=email or " ")
         else:
             if bcrypt.check_password_hash(user.password, password):
+                # tengo que buscar todos los permisos que tiene el usuario
+                # en cuestion
+                query = Permiso.query
+                query = query.join(PermisoUsuario)
+                query = query.join(Usuario)
+                query = query.filter(Usuario.id == user.id)
+                permisos = query.all()
                 logged_user_data = LoggedUserData(user.id,
                                                   user.arquero.email,
                                                   user.arquero.nombre,
                                                   user.arquero.apellido,
-                                                  user.es_administrador)
+                                                  user.es_administrador,
+                                                  [p.value for p in permisos])
                 session['logged_user'] = logged_user_data
                 return redirect(request.args.get('next') or url_for('index'))
             else:

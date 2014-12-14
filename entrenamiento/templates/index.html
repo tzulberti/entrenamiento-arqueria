@@ -125,6 +125,7 @@
                                 </li>
                             </ul>
                        </li>
+                       {% if has_permission('es_de_tesoreria') %}
                        <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i> Pago <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -144,6 +145,8 @@
                                 </li>
                             </ul>
                        </li>
+                       {% endif %}
+                       {% if has_permission('es_entrenador') %}
                        <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i> Arqueros <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -175,6 +178,7 @@
                                 </li>
                             </ul>
                         </li>
+                        {% endif %}
 
                        <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i> Escuela <span class="fa arrow"></span></a>
@@ -185,9 +189,11 @@
                                 <li>
                                     <a href="#" id="application-9" class="menu-option"> Turnos</a>
                                 </li>
+                                {% if has_permission('es_de_tesoreria') %}
                                 <li>
                                     <a href="#" id="application-2" class="menu-option">Gastos</a>
                                 </li>
+                                {% endif %}
                             </ul>
                         </li>
                     </ul>

@@ -28,5 +28,8 @@ class PermisoUsuario(BaseModel):
     :param int permiso: el identificador del permiso que se le esta
                         asignando al usuario.
     '''
+
+
+    id = db.Column(db.Integer, primary_key=True)
     usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     permiso = db.Column(db.Integer, db.ForeignKey('permiso.id'), nullable=False)
