@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from entrenamiento.app.app import db
 from entrenamiento.models.base import BaseModel
