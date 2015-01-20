@@ -24,6 +24,8 @@ from entrenamiento.models.historia_estado_arquero import HistoriaEstadoArquero
 from entrenamiento.models.entrenamiento_realizado import (EntrenamientoRealizado,
                                                           EntrenamientoFlechas)
 from entrenamiento.models.flechas import Flechas
+from entrenamiento.models.tipo_dia_especial import TipoDiaEspecial
+from entrenamiento.models.fechas_especiales import FechaEspecial
 
 from entrenamiento.views.base import (BaseModelListCrudView,
                                       BaseModelCrudView)
@@ -53,6 +55,7 @@ from entrenamiento.views.usuarios.form import UserForm
 from entrenamiento.views.usuarios.change_password import ChangePasswordView
 from entrenamiento.views.usuarios.crear_desde_invitacion import CrearUsuarioDesdeInvitacionView
 from entrenamiento.views.usuarios.password_reset import PasswordResetView
+from entrenamiento.views.fecha_especiales.form import FechaEspecialForm
 
 from entrenamiento.views.javascript_error import JavascriptErrorView
 
@@ -119,9 +122,15 @@ def register_views(app, db, bcrypt):
                                                         model_class=Invitacion,
                                                         form_class=InvitacionForm))
 
+    # Estas son tablas que son constantes pero que no tienen el mismo
+    # schema que const tables
+    register_url(app, db, 'tipo_torneo', TipoTorneo, None)
+    register_url(app, db, 'tipo_dia_especial', TipoDiaEspecial, None)
+
     register_url(app, db, 'lugar', Lugar, LugarForm)
     register_url(app, db, 'usuario', Usuario, UserForm)
     register_url(app, db, 'arquero', Arquero, ArqueroForm, ArqueroListCrudView)
+
     # TODO en esta view solo se deberia permitir el tema de la lectura
     # TODO en esta view solo se deberia permitir el tema de la lectura
     # del GET
@@ -134,7 +143,8 @@ def register_views(app, db, bcrypt):
     register_url(app, db, 'turno', Turno, TurnoForm)
     register_url(app, db, 'asistencia', Asistencia, AsistenciaForm)
     register_url(app, db, 'historia_estado_arquero', HistoriaEstadoArquero, HistoriaEstadoArqueroForm)
-    register_url(app, db, 'tipo_torneo', TipoTorneo, None)
+    register_url(app, db, 'fecha_especial', FechaEspecial, FechaEspecialForm)
+
     register_url(app, db, 'entrenamiento_realizado', EntrenamientoRealizado, EntrenamientoRealizadoForm)
     register_url(app, db, 'entrenamiento_flechas', EntrenamientoFlechas, EntrenamientoFlechasForm, related_classes=dict(entrenamiento_realizado=EntrenamientoRealizado))
     register_url(app, db, 'gasto', Gasto, GastoForm)
