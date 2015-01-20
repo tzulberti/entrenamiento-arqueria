@@ -69,9 +69,23 @@ var TableView = Class.$extend({
         var previousPages = 0;
         var nextPages = 0;
         var maxNumberOfPages = filterCount / limit;
+
+        // los tengo que limpiar aca arrbia para tener en cuenta el caso en donde
+        // no hay informacion
+        this.$element.find('#pagination-information-container').clean();
+        this.$element.find('#count-information').clean();
+
+        if (totalCount === 0) {
+            // no hay informacion en la base de datos, asique no puedo hacer
+            // nada
+            return
+        }
+
         if (filterCount === 0) {
             // en este caso no hay informacion porque la tabla no tiene
-            // informacion o por los filtros que se aplicaron
+            // informacion o por los filtros que se aplicaron, pero si
+            // hay en la base de datos
+            this.$element.find('#count-information').html('Showing 0 to 0 out of 0 (' + totalCount + ')');
             return
         }
 
@@ -79,12 +93,6 @@ var TableView = Class.$extend({
             // en este caso le tengo que restar uno porque es justo cuando
             // es multiplo de la cantidad de paginas que se estan mostrando.
             maxNumberOfPages -= 1;
-        }
-
-        if (filterCount === 0) {
-            // en este caso no se tiene que mostrar informacion de paginacion
-            // porque no hay data teniendo en cuenta los filtros aplicados
-            return ;
         }
 
         if (currentPage === 0) {
@@ -116,7 +124,6 @@ var TableView = Class.$extend({
         }
 
         html += '<ul>';
-        this.$element.find('#pagination-information-container').clean();
         this.$element.find('#pagination-information-container').html(html);
         this.$element.find('#count-information').html('Showing ' + (limit * currentPage + 1)  + ' to ' + Math.min(totalCount, (limit * (currentPage + 1) + 1)) + ' out of ' + filterCount + ' (' + totalCount + ')');
     }
