@@ -29,7 +29,16 @@ var APIManager = Class.$extend({
      * de error.
      */
     ajaxError: function(originalErrorCallback, jqXHR, textStatus, thrownError) {
-        if (jqXHR.status === 401) {
+        if (jqXHR.status === 0) {
+            // en este caso no se pudo conectar para ver la informacion con
+            // el servidor
+            var opts = {
+                title: "Error",
+                text: "No se pudo conectar con el servidor. Por favor mandar un mail a tomas@escuela-de-arqueria.com.ar",
+                type: 'error',
+            };
+            new PNotify(opts);
+        } else if (jqXHR.status === 401) {
             // el usuario nunca se logueo, por lo que lo redirigo a la pagina
             // correspondiente
             window.location = '/login/';
