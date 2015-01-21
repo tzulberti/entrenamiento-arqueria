@@ -121,6 +121,7 @@ var MainApplication = Class.$extend({
         this.registerCrudApplication(GastoCrudApplication, 2, 'gastoCrudApp');
         this.registerCrudApplication(FlechasCrudApplication, 14, 'flechasCrudApp');
         this.registerCrudApplication(FechaEspecialCrudApplication, 44, 'fechaEspecialCrudAPP');
+        this.registerCrudApplication(PermisoUsuarioCrudApplication, 99, 'permisoUsuarioCrudAPP');
 
         // ahora registro todo el tema relacionados a los graficos
         this.registerGraficsApplication(PagosAcumuladosGraficoApp, 10001, 'pagosAcumuladosGraficoApp');

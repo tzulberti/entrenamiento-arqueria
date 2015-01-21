@@ -17,6 +17,9 @@ class Permiso(BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Text, unique=True)
 
+    def __str__(self):
+        return self.value
+
 class PermisoUsuario(BaseModel):
     ''' Tiene toda la informacion de como es que se relacionan los permisos
     con los usuarios del sistema correspondiente.
@@ -31,5 +34,9 @@ class PermisoUsuario(BaseModel):
 
 
     id = db.Column(db.Integer, primary_key=True)
-    usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    permiso = db.Column(db.Integer, db.ForeignKey('permiso.id'), nullable=False)
+    id_usuario = db.Column(db.Integer,
+                           db.ForeignKey('usuario.id', ondelete='CASCADE'),
+                           nullable=False)
+    id_permiso = db.Column(db.Integer,
+                           db.ForeignKey('permiso.id', ondelete='CASCADE'),
+                           nullable=False)

@@ -26,6 +26,7 @@ from entrenamiento.models.entrenamiento_realizado import (EntrenamientoRealizado
 from entrenamiento.models.flechas import Flechas
 from entrenamiento.models.tipo_dia_especial import TipoDiaEspecial
 from entrenamiento.models.fechas_especiales import FechaEspecial
+from entrenamiento.models.permiso import PermisoUsuario, Permiso
 
 from entrenamiento.views.base import (BaseModelListCrudView,
                                       BaseModelCrudView)
@@ -56,10 +57,11 @@ from entrenamiento.views.usuarios.change_password import ChangePasswordView
 from entrenamiento.views.usuarios.crear_desde_invitacion import CrearUsuarioDesdeInvitacionView
 from entrenamiento.views.usuarios.password_reset import PasswordResetView
 from entrenamiento.views.fecha_especiales.form import FechaEspecialForm
+from entrenamiento.views.permiso.form import PermisoUsuarioForm
 
 from entrenamiento.views.javascript_error import JavascriptErrorView
 
-from entrenamiento.views.jinja_extensions import has_permission
+from entrenamiento.views.jinja_extensions import has_permission, is_admin
 
 #: la url que forma parte de la base de las API Rest
 BASE_API_URL = '/api/v01/'
@@ -90,6 +92,7 @@ def register_views(app, db, bcrypt):
     ''' Se encarga de registrar todas las views que puede llegar a ver el usuario.
     '''
     app.jinja_env.globals['has_permission'] = has_permission
+    app.jinja_env.globals['is_admin'] = is_admin
 
     app.add_url_rule('/login/',
                     view_func=LoginView.as_view('auth.login'))
@@ -126,6 +129,7 @@ def register_views(app, db, bcrypt):
     # schema que const tables
     register_url(app, db, 'tipo_torneo', TipoTorneo, None)
     register_url(app, db, 'tipo_dia_especial', TipoDiaEspecial, None)
+    register_url(app, db, 'permiso', Permiso, None)
 
     register_url(app, db, 'lugar', Lugar, LugarForm)
     register_url(app, db, 'usuario', Usuario, UserForm)
@@ -144,6 +148,7 @@ def register_views(app, db, bcrypt):
     register_url(app, db, 'asistencia', Asistencia, AsistenciaForm)
     register_url(app, db, 'historia_estado_arquero', HistoriaEstadoArquero, HistoriaEstadoArqueroForm)
     register_url(app, db, 'fecha_especial', FechaEspecial, FechaEspecialForm)
+    register_url(app, db, 'permiso_usuario', PermisoUsuario, PermisoUsuarioForm)
 
     register_url(app, db, 'entrenamiento_realizado', EntrenamientoRealizado, EntrenamientoRealizadoForm)
     register_url(app, db, 'entrenamiento_flechas', EntrenamientoFlechas, EntrenamientoFlechasForm, related_classes=dict(entrenamiento_realizado=EntrenamientoRealizado))

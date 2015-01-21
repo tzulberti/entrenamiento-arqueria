@@ -26,3 +26,19 @@ def has_permission(required_permission):
         return True
 
     return False
+
+def is_admin():
+    ''' Se fija si el usuario en cuestion es administrador.
+
+    Esto se lo usa para poder renderar el HTML correpondiente solo
+    cuando es admin del sistema.
+    '''
+    logged_user = get_logged_user_data()
+    if not logged_user:
+        return False
+
+    if logged_user.es_administrador:
+        return True
+
+    return False
+

@@ -197,6 +197,11 @@
                                     <a href="#" id="application-2" class="menu-option">Gastos</a>
                                 </li>
                                 {% endif %}
+                                {% if is_admin() %}
+                                <li>
+                                    <a href="#" id="application-99" class="menu-option">Permisos Usuario</a>
+                                </li>
+                                {% endif %}
                             </ul>
                         </li>
                     </ul>
@@ -275,6 +280,7 @@
     <script src="/static/js/apps/crud/entrenamiento_realizado.js"></script>
     <script src="/static/js/apps/crud/flechas.js"></script>
     <script src="/static/js/apps/crud/fecha_especial.js"></script>
+    <script src="/static/js/apps/crud/permiso-usuario.js"></script>
     <!--
         Ahora tengo que poner todas las cosas de los graficos
     -->
