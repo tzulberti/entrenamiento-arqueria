@@ -45,6 +45,15 @@ var APIManager = Class.$extend({
         } else if (jqXHR.status === 403) {
             // en este caso el usuario no tiene el permiso para ver los datos
             // de la persona en cuestion.
+        } else if (jqXHR.status === 404) {
+            // no se encontro la URL porque falto registrarla en las views
+            var opts = {
+                title: "Error",
+                text: "No se pudo conectar con el servidor. Por favor mandar un mail a tomas@escuela-de-arqueria.com.ar",
+                type: 'error',
+            };
+            new PNotify(opts);
+
         } else if (jqXHR.status === 400) {
             // en este caso hubo algun tipo de error de validacion en el servidor
             // por lo que llamo al errorParser original para que me parsee
