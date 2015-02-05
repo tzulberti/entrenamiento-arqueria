@@ -202,7 +202,9 @@ class BaseModelListCrudView(UserRequiredView):
         # administrador entonces solo va a poder ver su informacion
         if hasattr(self.model_class, 'id_usuario'):
             logged_user = LoggedUserData(*session['logged_user'])
-            if not logged_user.es_administrador:
+            if not (logged_user.es_administrador or logged_user.permissions):
+                # TODO se deberia ver que tenga los permisos correspondientes para
+                # poder ejecutar la view en cuestion
                 query = query.filter(getattr(self.model_class, 'id_usuario') == logged_user.id)
 
         if (not 'fkInformation' in request.args) and (not 'columns[]' in request.args):
