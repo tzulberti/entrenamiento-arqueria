@@ -9,7 +9,7 @@ var PagosPorMesGraficoApp = BaseGraficosApp.$extend({
 
     __init__: function(element, historyManager, apiManager, databaseInformation) {
         this.$super(element, historyManager, apiManager,
-                    databaseInformation, 'pago', 'Pagos PagosPorMes');
+                    databaseInformation, 'pago', 'Pagos por mes');
     },
 
 
