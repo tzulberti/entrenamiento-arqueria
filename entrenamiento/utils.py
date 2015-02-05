@@ -80,58 +80,71 @@ class DatabaseInformation(object):
 
     def get(self):
         for model in self.models:
-            columns = []
-            self.information[model.__tablename__] = columns
-            if not (model.__base__ == BaseModel):
-                # entonces la clase que estoy viendo hereda de otra
-                # clase, y por lo tanto le tengo que agregar la informacion
-                # de las columnas a esta
-                base_model = model.__base__
-                if not base_model.__tablename__:
-                    raise Exception('Las clases bases deberian ir primero')
-
-                columns.extend(self.information[base_model.__tablename__])
-
-            for column_information in model.__table__.columns:
-
-                column_data = dict(name=column_information.key,
-                                   type=self.get_type(column_information.type),
-                                   primary_key=column_information.primary_key,
-                                   nullable=column_information.nullable)
-
-                foreign_keys = []
-                for data in column_information.foreign_keys:
-                    reference_information = data.target_fullname
-                    referenced_table = reference_information.split('.')[0]
-                    foreign_keys.append(referenced_table)
-
-                if len(foreign_keys) > 1:
-                    raise Exception('Estoy al horno')
-                elif foreign_keys:
-                    column_data['foreign_key'] = foreign_keys[0]
-                else:
-                    column_data['foreign_key'] = None
-
-                const_values = None
-                if column_data['foreign_key']:
-                    # me fijo si la FK es una que apunta a las tablas
-                    # que son constantes, y si es asi, busco la informacion
-                    # de la misma
-                    for const_model in self.const_tables:
-                        if const_model.__tablename__ == column_data['foreign_key']:
-                            values = const_model.query.all()
-                            const_values = []
-                            for value in values:
-                                const_values.append(dict(id=value.id,
-                                                         value=value.value,
-                                                         show_order=value.show_order))
-
-                column_data['const_values'] = const_values
+            self.get_columns(model)
 
 
+    def get_columns(self, model):
+        ''' Se encarga de obtener toda la informacion de todas las columnas
+        que tiene el modelo.
 
-                columns.append(column_data)
+        En caso de que el modelo extienda de otro, entonces esta funcion
+        se va a llamar recursivamente.
+        '''
+        if model.__tablename__ in self.information:
+            # en este caso ya se lo habia calculado por lo que
+            # devuelvo las columnas del mismo. Esto puede llegar
+            # a pasar con las clases bases
+            return self.information[model.__tablename__]
 
+        columns = []
+        self.information[model.__tablename__] = columns
+        if not (model.__base__ == BaseModel):
+            # entonces la clase que estoy viendo hereda de otra
+            # clase, y por lo tanto le tengo que agregar la informacion
+            # de las columnas a esta
+            base_model = model.__base__
+            if not base_model.__tablename__:
+                raise Exception('las clases bases deberian ir primero')
+
+            base_model_columns = self.get_columns(base_model)
+            columns.extend(base_model_columns)
+
+        for column_information in model.__table__.columns:
+            column_data = dict(name=column_information.key,
+                                type=self.get_type(column_information.type),
+                                primary_key=column_information.primary_key,
+                                nullable=column_information.nullable)
+
+            foreign_keys = []
+            for data in column_information.foreign_keys:
+                reference_information = data.target_fullname
+                referenced_table = reference_information.split('.')[0]
+                foreign_keys.append(referenced_table)
+
+            if len(foreign_keys) > 1:
+                raise Exception('estoy al horno')
+            elif foreign_keys:
+                column_data['foreign_key'] = foreign_keys[0]
+            else:
+                column_data['foreign_key'] = None
+
+            const_values = None
+            if column_data['foreign_key']:
+                # me fijo si la fk es una que apunta a las tablas
+                # que son constantes, y si es asi, busco la informacion
+                # de la misma
+                for const_model in self.const_tables:
+                    if const_model.__tablename__ == column_data['foreign_key']:
+                        values = const_model.query.all()
+                        const_values = []
+                        for value in values:
+                            const_values.append(dict(id=value.id,
+                                                        value=value.value,
+                                                        show_order=value.show_order))
+
+            column_data['const_values'] = const_values
+            columns.append(column_data)
+        return columns
 
     def get_type(self, column_type):
         if isinstance(column_type, (Integer, Float)):
