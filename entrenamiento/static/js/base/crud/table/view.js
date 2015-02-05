@@ -66,9 +66,6 @@ var TableView = Class.$extend({
      * @param {int} currentPage: la pagina actul que esta viendo el usuario
      */
     renderPaginationInformation: function(totalCount, filterCount, limit, currentPage) {
-        var previousPages = 0;
-        var nextPages = 0;
-        var maxNumberOfPages = filterCount / limit;
 
         // los tengo que limpiar aca arrbia para tener en cuenta el caso en donde
         // no hay informacion
@@ -89,6 +86,10 @@ var TableView = Class.$extend({
             return
         }
 
+        var previousPages = 0;
+        var nextPages = 0;
+        var maxNumberOfPages = filterCount / limit;
+
         if (filterCount % limit === 0) {
             // en este caso le tengo que restar uno porque es justo cuando
             // es multiplo de la cantidad de paginas que se estan mostrando.
@@ -103,24 +104,26 @@ var TableView = Class.$extend({
             // en este caso estoy en la ultima pagina
             previousPages = 5;
         } else {
-            previousPages = 2;
+            previousPages = 3;
             nextPages = 3;
         }
 
         var html = '<ul class="pagination">';
-        for (var i = 1; i < previousPages; i++) {
-            if ((currentPage + 1 - i) < 1) {
-                break;
+        for (var i = currentPage - previousPages; i < currentPage; i++) {
+            if (i < 0) {
+                continue;
             }
 
-            html += '<li><a href="#" class="pagination-page">' + (currentPage + 1 - i) + '</a></li>';
+            html += '<li><a href="#" class="pagination-page">' + (i + 1) + '</a></li>';
         }
+
         html += '<li class="active"><a href="#">' + (currentPage + 1) + '</a></li>';
-        for (var j = 1; j < nextPages; j++) {
-            if (currentPage + j > maxNumberOfPages) {
-                break;
+
+        for (var j = currentPage  + 1; j < currentPage + nextPages; j++) {
+            if (j > maxNumberOfPages) {
+                continue;
             }
-            html += '<li><a href="#" class="pagination-page">' + (currentPage + 1 + j) + '</a></li>';
+            html += '<li><a href="#" class="pagination-page">' + (j + 1) + '</a></li>';
         }
 
         html += '<ul>';
