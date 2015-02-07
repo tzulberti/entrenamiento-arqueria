@@ -393,21 +393,26 @@ Handlebars.registerHelper('renderFilterData', function(filter, databaseInformati
  *                          sobre el schema de las columnas de la tabla.
  */
 Handlebars.registerHelper('renderColumnHeader', function(columnName, orderBy, orderDirection, columnsInformation) {
-    var columnInformation = _.find(columnsInformation, function(ci) { return ci.databaseName == columnName});
-    if (! columnInformation) {
-        throw new Error('La columna: ' + columnName + ' no corresponde a la tabla');
-    }
-    var res = '<a href="#" class="column-name" id="column-' + columnInformation.databaseName + '">';
-    res += columnInformation.frontendName;
-    if (columnName == orderBy) {
-        if (orderDirection === 'ASC') {
-            res += '<span class="glyphicon glyphicon-chevron-down"></span>';
-        } else {
-            res += '<span class="glyphicon glyphicon-chevron-up"></span>';
+    if (_.contains(columnName, '.')) {
+        var tmp = columnName.split('.');
+        return _.last(tmp);
+    } else {
+        var columnInformation = _.find(columnsInformation, function(ci) { return ci.databaseName == columnName});
+        if (! columnInformation) {
+            throw new Error('La columna: ' + columnName + ' no corresponde a la tabla');
         }
+        var res = '<a href="#" class="column-name" id="column-' + columnInformation.databaseName + '">';
+        res += columnInformation.frontendName;
+        if (columnName == orderBy) {
+            if (orderDirection === 'ASC') {
+                res += '<span class="glyphicon glyphicon-chevron-down"></span>';
+            } else {
+                res += '<span class="glyphicon glyphicon-chevron-up"></span>';
+            }
+        }
+        res += '</a>';
+        return new Handlebars.SafeString(res);
     }
-    res += '</a>';
-    return new Handlebars.SafeString(res);
 });
 
 /**
@@ -436,10 +441,27 @@ Handlebars.registerHelper('renderTableRow', function(data, columnNames, columnsI
     for (var index in columnNames) {
         var columnName = columnNames[index];
         var columnSchema = null;
-        for (var i = 0; i< columnsInformation.length; i++) {
-            if (columnsInformation[i].databaseName === columnName) {
-                columnSchema = columnsInformation[i];
-                break;
+
+        if (_.contains(columnName, '.')) {
+            // no es de lo mas lindo pero deberia funcionar
+            var tmp = columnName.split('.');
+            var tableName = tmp[0];
+            var anotherColumnName = tmp[1];
+
+            var anotherTableColumns = window.app.databaseInformation.getTableColumns(tableName);
+            for (var i = 0; i < anotherTableColumns.length; i++) {
+                if (anotherTableColumns[i].databaseName === anotherColumnName) {
+                    columnSchema = anotherTableColumns[i];
+                    break;
+                }
+            }
+
+        } else {
+            for (var i = 0; i< columnsInformation.length; i++) {
+                if (columnsInformation[i].databaseName === columnName) {
+                    columnSchema = columnsInformation[i];
+                    break;
+                }
             }
         }
 
@@ -449,7 +471,16 @@ Handlebars.registerHelper('renderTableRow', function(data, columnNames, columnsI
         }
 
 
-        var value = data[columnName];
+        var value = null;
+        if (_.contains(columnName, '.')) {
+            var tmp = columnName.split('.');
+            value = data
+            for (var i = 0; i< tmp.length; i++) {
+                value = value[tmp[i]];
+            }
+        } else {
+            value = data[columnName];
+        }
         if (value === true) {
             value = '<span class="glyphicon glyphicon-ok"></span>';
         } else if (value === false) {
