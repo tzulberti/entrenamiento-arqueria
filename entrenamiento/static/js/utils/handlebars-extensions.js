@@ -87,7 +87,7 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
         }
     }
     if (columnInformation === null) {
-        throw new Error('No puede encontrar la informacion para la colun: ' +
+        throw new Error('No puede encontrar la informacion para la columna: ' +
                         fieldData.databaseName);
     }
 
