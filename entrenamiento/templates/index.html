@@ -91,7 +91,6 @@
                                     <a href="#" id="application-44" class="menu-option">Fechas Especiales</a>
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i> Entrenamiento<span class="fa arrow"></span></a>
@@ -114,7 +113,6 @@
                                 </li>
 
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i> Informacion del Equipo <span class="fa arrow"></span></a>
@@ -132,13 +130,13 @@
                                 -->
                             </ul>
                        </li>
-                       {% if has_permission('es_de_tesoreria') %}
                        <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i> Pago <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="#" id="application-6" class="menu-option">Cargar/Editar</a>
                                 <li>
+                                {% if has_permission('es_entrenador') or has_permission('es_de_tesoreria') or has_permission('es_de_secretaria') %}
                                 <li>
                                     <a href="#">Graficos <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
@@ -150,10 +148,10 @@
                                         </li>
                                     </ul>
                                 </li>
+                                {% endif %}
                             </ul>
                        </li>
-                       {% endif %}
-                       {% if has_permission('es_entrenador') %}
+                       {% if has_permission('es_entrenador') or has_permission('es_de_tesoreria') or has_permission('es_de_secretaria') or has_permission('es_vocal') %}
                        <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i> Arqueros <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -161,47 +159,50 @@
                                     <a href="#" id="application-8" class="menu-option">Cargar/Editar </a>
                                 </li>
                                 <li>
-                                    <a href="#" id="application-10" class="menu-option"> Asistencia</a>
+                                    <a href="#" id="application-10" class="menu-option">Asistencia</a>
                                 </li>
                                 <li>
-                                    <a href="#" id="application-11" class="menu-option"> Estado Actividad</a>
+                                    <a href="#" id="application-11" class="menu-option">Estado Actividad</a>
                                 </li>
                                 <li>
-                                    <a href="#" id="application-5" class="menu-option"> Invitaciones</a>
+                                    <a href="#" id="application-5" class="menu-option">Invitaciones</a>
+                                </li>
+                                <li>
+                                    <a href="#" id="application-5" class="menu-option">Usuarios</a>
                                 </li>
                                 <li>
                                     <a href="#">Graficos <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
-                                            <a href="#" id="application-10101" class="menu-option"> Estados por mes</a>
+                                            <a href="#" id="application-10101" class="menu-option">Estados por mes</a>
                                         </li>
                                         <li>
-                                            <a href="#" id="application-10102" class="menu-option"> Cantidad Asistencias</a>
+                                            <a href="#" id="application-10102" class="menu-option">Cantidad Asistencias</a>
                                         </li>
                                         <li>
-                                            <a href="#" id="application-10103" class="menu-option"> Mapa Usuarios</a>
+                                            <a href="#" id="application-10103" class="menu-option">Mapa Usuarios</a>
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
                         </li>
                         {% endif %}
-
+                        {% if is_admin() or has_permission('es_de_tesoreria') %}
                        <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i> Escuela <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="#" id="application-1" class="menu-option"> Lugares</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="application-9" class="menu-option"> Turnos</a>
-                                </li>
                                 {% if has_permission('es_de_tesoreria') %}
                                 <li>
                                     <a href="#" id="application-2" class="menu-option">Gastos</a>
                                 </li>
                                 {% endif %}
                                 {% if is_admin() %}
+                                <li>
+                                    <a href="#" id="application-1" class="menu-option">Lugares</a>
+                                </li>
+                                <li>
+                                    <a href="#" id="application-9" class="menu-option">Turnos</a>
+                                </li>
                                 <li>
                                     <a href="#" id="application-99" class="menu-option">Permisos Usuario</a>
                                 </li>
