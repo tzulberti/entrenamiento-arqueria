@@ -82,7 +82,7 @@
                 <div class="sidebar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
-                            <a href="#"><i class="fa fa-edit fa-fw"></i> Torneos<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-edit fa-fw"></i>Torneos<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="#" id="application-4" class="menu-option">Torneos / Practicas</a>
@@ -93,13 +93,13 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-edit fa-fw"></i> Entrenamiento<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-edit fa-fw"></i>Entrenamiento<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="#" id="application-13" class="menu-option">Entrenamiento Realizado</a>
                                 </li>
                                 <li>
-                                    <a href="#">Graficos <span class="fa arrow"></span></a>
+                                    <a href="#"><i class="fa fa-area-chart fa-fw"></i>Graficos <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
                                             <a href="#" id="application-10201" class="menu-option">Cantidad de flechas acumuladas</a>
@@ -138,7 +138,7 @@
                                 <li>
                                 {% if has_permission('es_entrenador') or has_permission('es_de_tesoreria') or has_permission('es_de_secretaria') %}
                                 <li>
-                                    <a href="#">Graficos <span class="fa arrow"></span></a>
+                                    <a href="#"><i class="fa fa-area-chart fa-fw"></i>Graficos <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
                                             <a href="#" id="application-10001" class="menu-option">Acumulado del año</a>
@@ -171,7 +171,7 @@
                                     <a href="#" id="application-5" class="menu-option">Usuarios</a>
                                 </li>
                                 <li>
-                                    <a href="#">Graficos <span class="fa arrow"></span></a>
+                                    <a href="#"><i class="fa fa-area-chart fa-fw"></i>Graficos <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
                                             <a href="#" id="application-10101" class="menu-option">Estados por mes</a>
@@ -209,6 +209,7 @@
                                 {% endif %}
                             </ul>
                         </li>
+                        {% endif %}
                     </ul>
                     <!-- /#side-menu -->
                 </div>
