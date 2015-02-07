@@ -47,7 +47,8 @@ class LoginView(MethodView):
                                                   user.arquero.nombre,
                                                   user.arquero.apellido,
                                                   user.es_administrador,
-                                                  [p.value for p in permisos])
+                                                  [p.value for p in permisos],
+                                                  user.id_arquero)
                 session['logged_user'] = logged_user_data
                 return redirect(request.args.get('next') or url_for('index'))
             else:
