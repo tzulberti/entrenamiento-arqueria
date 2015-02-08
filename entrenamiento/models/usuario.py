@@ -59,17 +59,12 @@ class Usuario(BaseModel):
     latitud = db.Column(db.Float)
     longitud = db.Column(db.Float)
 
-
     def to_json(self):
-        return dict(id=self.id,
-                    email=self.email,
-                    nombre=self.nombre,
-                    apellido=self.apellido,
-                    es_entrenador=self.es_entrenador,
-                    es_administrador=self.es_administrador,
-                    foto=self.foto,
-                    latitud=self.latitud,
-                    longitud=self.longitud)
+        res = super(Usuario, self).to_json()
+        res['arquero'] = self.arquero.to_json()
+        del res['password']
+        del res['es_administrador']
+        return res
 
     def __str__(self):
         return u'%s %s' % (self.arquero.apellido, self.arquero.nombre)

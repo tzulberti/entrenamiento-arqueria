@@ -7,7 +7,10 @@ from flask.views import MethodView
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
-from entrenamiento.views.utils import LoggedUserData
+from entrenamiento.consts import JAVASCRIPT_MODEL_MAPPER
+from entrenamiento.models.arquero import Arquero
+from entrenamiento.models.usuario import Usuario
+from entrenamiento.views.utils import get_logged_user_data
 from entrenamiento.views.decorators import user_required
 
 
@@ -18,8 +21,30 @@ class BaseEntrenamientoView(MethodView):
 
 
 class UserRequiredView(BaseEntrenamientoView):
+    ''' La view de la que tienen que extender todas las views
+    que se usan para el CRUD
+
+    :param str required_permission: el permiso que tiene que tener el
+                                    arquero para poder ejecutar la view.
+                                    Si es None, entonces todo usuario
+                                    puede ver esta informacion
+
+
+    :param str view_others_required_permission: el permiso que tiene que
+                                                tener el usuario para
+                                                ver la informacion de los
+                                                otros arqueros/usuarios.
+
+    '''
 
     decorators = [user_required]
+
+    def __init__(self, required_permission=None,
+                 view_others_required_permission=None):
+        super(BaseEntrenamientoView, self).__init__()
+        self.required_permission = required_permission
+        self.view_others_required_permission = view_others_required_permission
+
 
 
 class BaseModelListCrudView(UserRequiredView):
@@ -46,17 +71,13 @@ class BaseModelListCrudView(UserRequiredView):
     :param form_class: la clase que se va a usar para validar la
                        creacion de la instancia.
 
-    :param related_classes: es un diccionario con el nombre de las
-                            clases y la instancia de la misma con la
-                            cual esta clase tiene alguna relacion.
-
     '''
 
-    def __init__(self, db, model_class, form_class, related_classes=dict()):
+    def __init__(self, db, model_class, form_class,
+                 related_classes=dict()):
         super(BaseModelListCrudView, self).__init__()
         self.model_class = model_class
         self.form_class = form_class
-        self.related_classes = related_classes
         self.db = db
 
     def get(self):
@@ -104,14 +125,49 @@ class BaseModelListCrudView(UserRequiredView):
 
         '''
         query = self.model_class.query
-        sqlalchemy_columns = []
+        joined_tables = []
         if 'join' in request.args:
             # tengo que decirle antes de mano el tema del join
             # porque si despues le especifico las columnas no me deja
             # hacerlo
             join = request.args['join']
-            query = query.join(self.related_classes[join])
+            query = query.join(JAVASCRIPT_MODEL_MAPPER[join])
+            joined_tables.append(JAVASCRIPT_MODEL_MAPPER[join])
 
+        # ahora tengo que hacer lo mismo pero teniendo en cuenta si hay
+        # algun filro que no es por la tabla por la que estoy filtrando.
+        filters_data = request.args.getlist('filters[]')
+        for filter_data in filters_data:
+            table_name, column_name, operator, value = filter_data.split('|')
+            filter_model = JAVASCRIPT_MODEL_MAPPER[table_name]
+            if not (filter_model is self.model_class) and not (filter_model in joined_tables):
+                query = query.join(filter_model)
+                joined_tables.append(filter_model)
+
+
+
+            column = self._get_attribute(column_name, table_name=table_name)
+            if operator == 'eq':
+                query = query.filter(column == value)
+            elif operator == 'lt':
+                query = query.filter(column < value)
+            elif operator == 'let':
+                query = query.filter(column <= value)
+            elif operator == 'gt':
+                query = query.filter(column > value)
+            elif operator == 'get':
+                query = query.filter(column >= value)
+            elif operator == 'in':
+                query = query.filter(column.in_(value.split(',')))
+            elif operator == 'neq':
+                query = query.filter(column != value)
+            elif operator == 'not_null':
+                query = query.filter(column.isnot(None))
+            else:
+                raise Exception('Todavia me falta manejar este caso')
+
+
+        sqlalchemy_columns = []
         if 'columns[]' in request.args:
             columns = request.args.getlist('columns[]')
             for column_name in columns:
@@ -167,45 +223,64 @@ class BaseModelListCrudView(UserRequiredView):
                 else:
                     query = query.group_by(column)
 
-        # entones de setear el tema de los limit, me fijo el tema
-        # de los filtros de las cosas que puede ver el usuario.
-        filter_index = 0
-        filters_data = request.args.getlist('filters[]')
-        for filter_data in filters_data:
-            table_name, column_name, operator, value = filter_data.split('|')
-
-            column = self._get_attribute(column_name)
-            if operator == 'eq':
-                query = query.filter(column == value)
-            elif operator == 'lt':
-                query = query.filter(column < value)
-            elif operator == 'let':
-                query = query.filter(column <= value)
-            elif operator == 'gt':
-                query = query.filter(column > value)
-            elif operator == 'get':
-                query = query.filter(column >= value)
-            elif operator == 'in':
-                query = query.filter(column.in_(value.split(',')))
-            elif operator == 'neq':
-                query = query.filter(column != value)
-            elif operator == 'not_null':
-                query = query.filter(column.isnot(None))
-            else:
-                raise Exception('Todavia me falta manejar este caso')
-            filter_index +=1
 
 
 
         # ahora solo tengo que filtrar por el usuario correspondiente.
         # en caso de que el usuario logueado no sea entrenador o
         # administrador entonces solo va a poder ver su informacion
+        logged_user = get_logged_user_data()
+        if not logged_user.es_administrador:
+            # en este caso, me tengo que fijar de ver si el usuario
+            # puede ver todos los valores que corresponden a todos
+            # los otros arqueros. Pero si es otro modelo, tengo
+            # que ver que el mismo tenga los permisos correspondientes
+            if isinstance(self.model_class, Arquero):
+                # si estoy viendo la lista de arqueros, entonces
+                # solo la comision puede ver a todos ellos. Sino,
+                # solo me puedo ver a mi mismo
+                if not logged_user.permisos:
+                    query = query.filter(Arquero.id == logged_user.id_arquero)
+            elif isinstance(self.model_class, Usuario):
+                # Lo mismo que cuando estan viendo los arqueros
+                if not logged_user.permisos:
+                    query = query.filter(Usuario.id == logged_user.id)
+
+
+            #elif isinstance(self.model_class, (Torneo, EntrenamientoRealizado, ArcoRecurvado, Flechas)):
+            #    # solo los entrenadores pueden ver la informacion de otras personas.
+            #    self.add_filter_for_permission(self.model_class, 'es_entrenador')
+            #elif isinstance(self.model_class, (Pago, Gastos)):
+            #    # solo los de tesoreria pueden ver estas opciones
+            #    self.add_filter_for_permission(self.model_class, ['es_de_tesoreria', 'es_entreneador'])
+            #elif isinstance(self.model_class, None):
+            #    raise Exception('TODO')
+
+
+
+
         if hasattr(self.model_class, 'id_usuario'):
-            logged_user = LoggedUserData(*session['logged_user'])
-            if not (logged_user.es_administrador or logged_user.permissions):
+            if not (logged_user.es_administrador or logged_user.permisos):
                 # TODO se deberia ver que tenga los permisos correspondientes para
                 # poder ejecutar la view en cuestion
                 query = query.filter(getattr(self.model_class, 'id_usuario') == logged_user.id)
+        elif hasattr(self.model_class, 'id_arquero'):
+            logged_user = get_logged_user_data()
+            if not (logged_user.es_administrador or logged_user.permisos):
+                # TODO ver como manejo los permisos cuando alguien
+                # pertence a la comisicion
+                query = query.filter(getattr(self.model_class, 'id_arquero') == logged_user.id_arquero)
+        elif isinstance(self.model_class, Arquero):
+            # si estoy viendo los arqueros, entonces una persona normal
+            # solo se puede ver a si solo. No tengo que hacer esto para
+            # el caso de los usuarios porque cae en el if anterior
+            logged_user = get_logged_user_data()
+            if not (logged_user.es_administrador or logged_user.permisos):
+                # TODO ver como manejo los permisos cuando alguien
+                # pertence a la comisicion
+                query = query.filter(Arquero.id == logged_user.id_arquero)
+
+
 
         if (not 'fkInformation' in request.args) and (not 'columns[]' in request.args):
             # esto lo tengo que poner antes del limit y offset porque sino
@@ -254,14 +329,16 @@ class BaseModelListCrudView(UserRequiredView):
                        filterCount=filter_count)
 
 
-    def _get_attribute(self, attribute_name):
+    def _get_attribute(self, attribute_name, table_name=None):
         ''' Se encarga de obtener el attributo de la clase correspondiente
         teniendo en cuenta que el attributo no puede corresponder al modelo
         sino que a una de las clases relacionadas.
         '''
         if '.' in attribute_name:
             class_name, attribute_name = attribute_name.split('.')
-            return getattr(self.related_classes[class_name], attribute_name)
+            return getattr(JAVASCRIPT_MODEL_MAPPER[class_name], attribute_name)
+        elif table_name:
+            return getattr(JAVASCRIPT_MODEL_MAPPER[table_name], attribute_name)
         else:
             return getattr(self.model_class, attribute_name)
 
@@ -275,8 +352,13 @@ class BaseModelListCrudView(UserRequiredView):
             # si tiene el usuario, entonces se lo tengo que agregar.
             if hasattr(self.model_class, 'id_usuario'):
                 if form.instance.id_usuario is None:
-                    logged_user = LoggedUserData(*session['logged_user'])
+                    logged_user = get_logged_user_data()
                     form.instance.id_usuario = logged_user.id
+            elif hasattr(self.model_class, 'id_arquero'):
+                if form.instance.id_arquero is None:
+                    logged_user = get_logged_user_data()
+                    form.instance.id_arquero = logged_user.id_arquero
+
             self.db.session.add(form.instance)
             self.db.session.commit()
             return jsonify(id=form.instance.id)

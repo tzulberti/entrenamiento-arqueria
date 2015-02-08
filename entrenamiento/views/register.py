@@ -70,15 +70,13 @@ def register_url(app, db, model_name, model_class, form_class,
                  list_crud_view_class=BaseModelListCrudView,
                  instance_crud_view_class=BaseModelCrudView,
                  list_crud_view_kwargs=dict(),
-                 instance_crud_view_kwargs=dict(),
-                 related_classes=dict()):
+                 instance_crud_view_kwargs=dict()):
 
     app.add_url_rule(BASE_API_URL + model_name + '/',
                      view_func=list_crud_view_class.as_view('api.%s.list' % model_name,
                                                             db=db,
                                                             model_class=model_class,
                                                             form_class=form_class,
-                                                            related_classes=related_classes,
                                                             **list_crud_view_kwargs))
     app.add_url_rule(BASE_API_URL +  model_name + '/<int:object_id>/',
                      view_func=instance_crud_view_class.as_view('api.%s.instance' % model_name,
@@ -151,7 +149,7 @@ def register_views(app, db, bcrypt):
     register_url(app, db, 'permiso_usuario', PermisoUsuario, PermisoUsuarioForm)
 
     register_url(app, db, 'entrenamiento_realizado', EntrenamientoRealizado, EntrenamientoRealizadoForm)
-    register_url(app, db, 'entrenamiento_flechas', EntrenamientoFlechas, EntrenamientoFlechasForm, related_classes=dict(entrenamiento_realizado=EntrenamientoRealizado))
+    register_url(app, db, 'entrenamiento_flechas', EntrenamientoFlechas, EntrenamientoFlechasForm)
     register_url(app, db, 'gasto', Gasto, GastoForm)
     register_url(app, db, 'flechas', Flechas, FlechasForm)
 
