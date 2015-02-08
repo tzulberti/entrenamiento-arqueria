@@ -219,8 +219,10 @@ var BaseCrudApp = Class.$extend({
      * un nuevo objecto.
      */
     createNew: function(ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
+        if (ev !== null) {
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
 
         this.historyManager.pushNewInstanceStatus(this.tableName, null);
         this.$element.find('.table-container').hide();

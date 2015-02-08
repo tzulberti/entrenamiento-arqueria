@@ -37,23 +37,22 @@ var HistoryManager = Class.$extend({
         }
 
         var application = this.applications[ev.state.modelName];
-        application.start($.proxy(this.renderTableInformation, this, application, ev));
+        application.start($.proxy(this.finishedLoadingApp, this, application, ev));
 
+    },
+
+    finishedLoadingApp: function(application, ev) {
         if (ev.state.type === 'table') {
             application.renderTableInformation(ev.state.orderBy,
                                                ev.state.orderDirection,
                                                ev.state.currentPage);
-
         } else if (ev.state.type === 'form') {
-            var application = this.applications[ev.state.modelName];
-            application.renderForm(ev.state.objectId);
+            if (ev.state.objectId) {
+                application.editObject(ev.state.objectId);
+            } else {
+                application.createNew(null);
+            }
         }
-    },
-
-    renderTableInformation: function(application, ev) {
-            application.renderTableInformation(ev.state.orderBy,
-                                               ev.state.orderDirection,
-                                               ev.state.currentPage);
     },
 
 
