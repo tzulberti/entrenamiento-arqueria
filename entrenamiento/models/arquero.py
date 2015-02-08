@@ -38,8 +38,8 @@ class Arquero(BaseModel):
     localidad = db.Column(db.String(1024))
     dni = db.Column(db.String(20))
     apodo_eda = db.Column(db.String(1024))
-    id_dominancia_ojo = db.Column(db.Integer, db.ForeignKey('dominancia_ojo.id'))
-    id_dominancia_mano = db.Column(db.Integer, db.ForeignKey('dominancia_mano.id'))
+    id_dominancia_ojo = db.Column(db.Integer, db.ForeignKey('dominancia_ojo.id'), nullable=True)
+    id_dominancia_mano = db.Column(db.Integer, db.ForeignKey('dominancia_mano.id'), nullable=True)
     codigo_postal = db.Column(db.String(20))
 
 
