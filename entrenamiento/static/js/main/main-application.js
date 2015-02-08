@@ -36,88 +36,16 @@ var MainApplication = Class.$extend({
         this.databaseInformation = new DatabaseInformation();
         this.databaseInformation.parseResponse(data.res);
 
-
-        // aca van todas las apps relacionadas al tema del CRUD.
-        /*
-        var crudLugarApp = new LugarApplication(this.historyManager,
-                                                this.apiManager,
-                                                $('.container'));
-        var crudUsuariosApp = new UsuariosCrudApplication(this.historyManager,
-                                                          this.apiManager,
-                                                          $('.container'));
-        var crudArcosRecurvadosApp = new ArcosRecurvadosCrudApplication(this.historyManager,
-                                                                        this.apiManager,
-                                                                        $('.container'));
-        var crudTorneosApp = new TorneosCrudApplication(this.historyManager,
-                                                        this.apiManager,
-                                                        $('.container'));
-        var crudInvitacionApp = new InvitacionCrudApplication(this.historyManager,
-                                                              this.apiManager,
-                                                              $('.container'));
-        */
-
-        var crudLugarApp = new LugarCrudApplication($('#page-wrapper'),
-                                                    this.historyManager,
-                                                    this.apiManager,
-                                                    this.databaseInformation);
-
-        var crudPagoApp = new PagoCrudApplication($('#page-wrapper'),
-                                                  this.historyManager,
-                                                  this.apiManager,
-                                                  this.databaseInformation);
-        var invitacionCrudApp = new InvitacionCrudApplication($('#page-wrapper'),
-                                                              this.historyManager,
-                                                              this.apiManager,
-                                                              this.databaseInformation);
-        var arcoRecurvadoCrudApp = new ArcoRecurvadoCrudApplication($('#page-wrapper'),
-                                                                    this.historyManager,
-                                                                    this.apiManager,
-                                                                    this.databaseInformation);
-
-        var arqueroCrudApp = new ArqueroCrudApplication($('#page-wrapper'),
-                                                        this.historyManager,
-                                                        this.apiManager,
-                                                        this.databaseInformation);
-
-        var turnoCrudApp = new TurnoCrudApplication($('#page-wrapper'),
-                                                    this.historyManager,
-                                                    this.apiManager,
-                                                    this.databaseInformation);
-
-        var asistenciaCrudApp = new AsistenciaCrudApplication($('#page-wrapper'),
-                                                              this.historyManager,
-                                                              this.apiManager,
-                                                              this.databaseInformation);
-
-        var historiaEstadoArqueroCrudApp = new HistoriaEstadoArqueroCrudApplication($('#page-wrapper'),
-                                                                                    this.historyManager,
-                                                                                    this.apiManager,
-                                                                                    this.databaseInformation);
-
-        var torneoCrudApp = new TorneoCrudApplication($('#page-wrapper'),
-                                                      this.historyManager,
-                                                      this.apiManager,
-                                                      this.databaseInformation);
-
-        var entrenamientoRealizadoCrudApp = new EntrenamientoRealizadoCrudApplication($('#page-wrapper'),
-                                                                                      this.historyManager,
-                                                                                      this.apiManager,
-                                                                                      this.databaseInformation);
-
-        this.appsManager.addApplication(1, crudLugarApp);
-        this.appsManager.addApplication(3, arcoRecurvadoCrudApp);
-        this.appsManager.addApplication(5, invitacionCrudApp);
-        this.appsManager.addApplication(4, torneoCrudApp);
-        /*
-        this.appsManager.addApplication(2, crudUsuariosApp);
-        */
-        this.appsManager.addApplication(6, crudPagoApp);
-        this.appsManager.addApplication(8, arqueroCrudApp);
-        this.appsManager.addApplication(9, turnoCrudApp);
-        this.appsManager.addApplication(10, asistenciaCrudApp);
-        this.appsManager.addApplication(11, historiaEstadoArqueroCrudApp);
-        this.appsManager.addApplication(13, entrenamientoRealizadoCrudApp);
-
+        this.registerCrudApplication(LugarCrudApplication, 1, 'lugarCrudApp', 'lugar');
+        this.registerCrudApplication(ArcoRecurvadoCrudApplication, 3, 'arcoRecuvadoCrudApp', 'arco_recurvado');
+        this.registerCrudApplication(InvitacionCrudApplication, 5, 'invitacionCrudApp', 'invitacion');
+        this.registerCrudApplication(TorneoCrudApplication, 4, 'torneoCrudApp', 'torneo');
+        this.registerCrudApplication(PagoCrudApplication, 6, 'pagoCrudApp', 'pago');
+        this.registerCrudApplication(ArqueroCrudApplication, 8, 'arqueroCrudApp', 'arquero');
+        this.registerCrudApplication(TurnoCrudApplication, 9, 'turnoCrudApp', 'turno');
+        this.registerCrudApplication(AsistenciaCrudApplication, 10, 'asistenciaCrudApp', 'asistencia');
+        this.registerCrudApplication(HistoriaEstadoArqueroCrudApplication, 11, 'historiaEstadoArqueroCrudApp', 'historia_estado_arquero');
+        this.registerCrudApplication(EntrenamientoRealizadoCrudApplication, 13, 'entrenamientoRealizadoCrudApp', 'entrenamiento_realizado');
         this.registerCrudApplication(GastoCrudApplication, 2, 'gastoCrudApp', 'gasto');
         this.registerCrudApplication(FlechasCrudApplication, 14, 'flechasCrudApp', 'flechas');
         this.registerCrudApplication(FechaEspecialCrudApplication, 44, 'fechaEspecialCrudAPP', 'fecha_especial');
