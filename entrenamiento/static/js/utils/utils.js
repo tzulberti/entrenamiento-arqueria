@@ -41,7 +41,9 @@ var utils = {
                     if (_.str.endsWith(attributeName, '_path')) {
                         // en este caso se que estoy con lo de pekeupload,
                         // por lo que busco donde va el nombre correspondiente, y lo mustro ahi
-                        $element.find('#' + attributeName + '_existing').html(value);
+                        var thumb_name = value;
+                        thumb_name = thumb_name.replace('/', '/thumb_');
+                        $element.find('#' + attributeName + '_existing').html('<a href="/uploads/' + value + '"><img src="/uploads/' + thumb_name + '"></a>');
                     }
                 } else if (inputField.attr('type') === 'text') {
                     inputField.val(value);
