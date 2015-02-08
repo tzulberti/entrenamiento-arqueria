@@ -39,6 +39,11 @@ var utils = {
                 if (inputField.attr('type') === 'hidden') {
                     inputField.val(value);
                     if (_.str.endsWith(attributeName, '_path')) {
+                        if (value == null || _.isEmpty(value)) {
+                            // como no se subio una imagen, entonces no quiero que se
+                            // muestre el thumb de la misma porque es un link roto
+                            continue;
+                        }
                         // en este caso se que estoy con lo de pekeupload,
                         // por lo que busco donde va el nombre correspondiente, y lo mustro ahi
                         var thumb_name = value;
