@@ -65,10 +65,12 @@ class UploadFileView(BaseEntrenamientoView):
                     break
 
             file.save(complete_path)
-            # ahora me encargo de crear un thumb de la imagen
-            img = Image.open(complete_path)
-            img.thumbnail((120, 120), Image.ANTIALIAS)
-            img.save(os.path.join(self.upload_folder, path, "thumb_%s" % filename))
+            # ahora me encargo de crear un thumb de la imagen si lo que el usuario
+            # subio es una imagen y no un PDF
+            if not extension in ('pdf'):
+                img = Image.open(complete_path)
+                img.thumbnail((120, 120), Image.ANTIALIAS)
+                img.save(os.path.join(self.upload_folder, path, "thumb_%s" % filename))
 
             return jsonify(filename=os.path.join(path, filename),
                            thumb_filename=os.path.join(path, 'thumb_%s' % filename),
