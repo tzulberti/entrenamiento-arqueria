@@ -27,6 +27,15 @@ class Torneo(BaseModel):
                                  en si, sino que fue una practica.
 
     :param str comentario: el comentario que quiere poner el usuario en cuestion.
+
+    :param int posicion_classificacion: la posicion que termino el tirador
+                                        teniendo en cuenta las X rondas del torneo.
+                                        Esto no es para la posicion dentro si se gano
+                                        medalla
+
+    :param int posicion_eliminatorias: la posicion que se tiene en las eliminatorias.
+                                       Basicamente esto es para ver si se termino 1,
+                                       2 o 3°
     '''
 
     id = db.Column(db.Integer, primary_key=True)
@@ -40,6 +49,8 @@ class Torneo(BaseModel):
     comentario = db.Column(db.Text)
     puntaje_final_torneo = db.Column(db.Integer)
     fue_practica = db.Column(db.Boolean, nullable=False)
+    posicion_classificacion = db.Column(db.Integer)
+    posicion_eliminatoria = db.Column(db.Integer)
 
 
 class Ronda(BaseModel):

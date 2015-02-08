@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from sqlalchemy import UniqueConstraint
+
 from entrenamiento.app.app import db
 from entrenamiento.models.base import BaseModel
 
@@ -32,6 +34,9 @@ class PermisoUsuario(BaseModel):
                         asignando al usuario.
     '''
 
+    __table_args__ = (
+        UniqueConstraint('id_usuario', 'id_permiso', name='usuario_permiso_unique'),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
     id_usuario = db.Column(db.Integer,

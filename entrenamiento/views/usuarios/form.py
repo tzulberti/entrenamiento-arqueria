@@ -36,7 +36,8 @@ class UserForm(ValidationForm):
     # TODO falta validar que el email sea unico
     email = StringField('email',
                         validators=[InputRequired(), Email()],
-                        description='El email con el que te vas a loguear al sistema')
+                        description='El email con el que te vas a loguear al sistema, '\
+                                    'y el que se va a usar para enviarte mails de la escuela')
     nombre = StringField('nombre', [InputRequired()])
     apellido = StringField('apellido', [InputRequired()])
     password = PasswordField('password',
@@ -59,6 +60,7 @@ class UserForm(ValidationForm):
     celular = StringField('celular')
     direccion = StringField('direccion')
     localidad = StringField('localidad')
+    codigo_postal = StringField('codigo_postal')
     apodo_eda = StringField('apodo_eda')
     latitud = FloatField('latitud', validators=[Optional()])
     longitud = FloatField('longitud', validators=[Optional()])
@@ -85,16 +87,27 @@ class UserForm(ValidationForm):
         return bcrypt.generate_password_hash(form_data)
 
     def get_instance(self):
-        res = super(UserForm, self).get_instance(['password_confirmation',
-                                                  'foto_archivo',
-                                                  'dominancia_ojo',
-                                                  'dominancia_mano',
-                                                  'nombre',
-                                                  'apellido',
-                                                  'email'])
-        if self.dominancia_ojo.data:
-            res.id_dominancia_ojo = self.dominancia_ojo.data.id
-        if self.dominancia_mano.data:
-            res.id_dominancia_mano = self.dominancia_mano.data.id
+        ignore_fields = [
+            'nombre',
+            'apellido',
+            'email',
+            'fecha_ingreso',
+            'fecha_nacimiento',
+            'dni',
+            'telefono',
+            'celular',
+            'direccion',
+            'localidad',
+            'codigo_postal',
+            'apodo_eda',
+            'latitud',
+            'longitud',
+            'password_confirmation',
+            'dominancia_ojo',
+            'dominancia_mano',
+            'foto_archivo',
+        ]
+        res = super(UserForm, self).get_instance(ignore_fields)
+
         return res
 

@@ -37,6 +37,29 @@ class CrearUsuarioDesdeInvitacionView(BaseEntrenamientoView):
         if form_usuario.validate_on_submit() and invitacion and not invitacion.usada:
             invitacion.usada = True
 
+
+            # el usuario tiene que estar relacionado al arquero en cuestion
+            arquero = Arquero.query.filter(Arquero.codigo == codigo_arquero).first()
+            arquero.nombre = form_usuario.nombre.data
+            arquero.apellido = form_usuario.apellido.data
+            arquero.email = form_usuario.email.data
+            arquero.fecha_ingreso = form_usuario.fecha_ingreso.data
+            arquero.fecha_nacimiento = form_usuario.fecha_nacimiento.data
+            arquero.dni = form_usuario.dni.data
+            arquero.telefono = form_usuario.telefono.data
+            arquero.celular = form_usuario.celular.data
+            arquero.direccion = form_usuario.direccion.data
+            arquero.localidad = form_usuario.localidad.data
+            arquero.codigo_postal = form_usuario.codigo_postal.data
+            arquero.apodo_eda = form_usuario.apodo_eda.data
+            arquero.latitud = form_usuario.latitud.data
+            arquero.longitud = form_usuario.longitud.data
+
+            if form_usuario.dominancia_ojo.data:
+                arquero.id_dominancia_ojo = form_usuario.dominancia_ojo.data.id
+            if form_usuario.dominancia_mano.data:
+                arquero.id_dominancia_mano = form_usuario.dominancia_mano.data.id
+
             if 'foto_archivo' in request.files:
                 filename = None
                 foto_stream = request.files['foto_archivo']
@@ -48,15 +71,10 @@ class CrearUsuarioDesdeInvitacionView(BaseEntrenamientoView):
                         filename = '%s.%s' % (random_text(), extension)
                         if not os.path.exists(os.path.join(self.upload_folder, filename)):
                             break
-                    form_usuario.instance.foto = filename
                     foto_stream.save(os.path.join(self.upload_folder, filename))
+                    arquero.foto = filename
 
-            # el usuario tiene que estar relacionado al arquero en cuestion
-            arquero = Arquero.query.filter(Arquero.codigo == codigo_arquero).first()
-            arquero.nombre = form_usuario.nombre.data
-            arquero.apellido = form_usuario.apellido.data
-            arquero.email = form_usuario.email.data
-            form_usuario.instance.id = arquero.id
+            #form_usuario.instance.id = arquero.id
             form_usuario.instance.id_arquero = arquero.id
 
 
