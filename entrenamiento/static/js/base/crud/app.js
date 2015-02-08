@@ -45,8 +45,11 @@ var BaseCrudApp = Class.$extend({
      * Se encarga de obtener toda la informacion de las FK de la
      * tabla que esta viendo el usario para despues renderar el view
      * correspondiente.
+     *
+     * @param {Function} callback: la funcion que se tiene que llamar una vez
+     *                             que se terminaron de crear todos los controllers
      */
-    start: function() {
+    start: function(callback) {
         // antes que nada tengo que cargar toda la informacion de todas las columnas
         // que son FK a tablas que no son constantes.
         this.missingCallbacks = {};
@@ -73,14 +76,14 @@ var BaseCrudApp = Class.$extend({
                     fkInformation: true
                 },
                 type: 'GET',
-                successCallback: $.proxy(this.gotInformation, this, columnInfo.foreignKey)
+                successCallback: $.proxy(this.gotInformation, this, columnInfo.foreignKey, callback)
             });
         }
 
         if (! hasFks) {
             // en el caso de que no tenga ninguan FK, entones
             // simplemente tengo que crear los controllers
-            this.createControllers();
+            this.createControllers(callback);
         }
     },
 
@@ -96,7 +99,7 @@ var BaseCrudApp = Class.$extend({
      *
      *
      */
-    gotInformation: function(modelName, response, textStatus, jqXHR) {
+    gotInformation: function(modelName, callback, response, textStatus, jqXHR) {
         this.missingCallbacks[modelName] = false;
         this.fkInformation.parseTableResponse(modelName, response.values);
 
@@ -114,14 +117,17 @@ var BaseCrudApp = Class.$extend({
         }
 
 
-        this.createControllers();
+        this.createControllers(callback);
     },
 
     /**
      * Se encarga de crear los controllers del form y del table
      * view para mostrarselos al usuario.
+     *
+     * @param {Functon} callback: la funcion que se tiene que ejecutar una vez que se
+     *                            termino de crear todos los controllers
      */
-    createControllers: function() {
+    createControllers: function(callback) {
         // rendero el template de basico en donde despues se va a renderar
         // la tabla y el form
         var html = Handlebars.render(this.template, {
@@ -142,8 +148,15 @@ var BaseCrudApp = Class.$extend({
         this.tableController.tableView.$element.show();
 
         this.searchController.tableController = this.tableController;
+        if (! (_.isUndefined(callback) || _.isNull(callback))) {
+            this.tableController.addToHistory = false;
+        }
         this.tableController.render();
         this.searchController.render();
+
+        if (! (_.isUndefined(callback) || _.isNull(callback))) {
+            callback()
+        }
     },
 
     /**
@@ -248,18 +261,15 @@ var BaseCrudApp = Class.$extend({
      * en cuenta eso.
      */
     renderTableInformation: function(orderBy, orderDirection, currentPage) {
-        throw new Error('Tengo que volver a hacer este metodo...');
-        this.tableView.orderBy = orderBy;
-        this.tableView.orderDirection = orderDirection;
-        this.tableView.currentPage = currentPage;
+        this.tableController.orderBy = orderBy;
+        this.tableController.orderDirection = orderDirection;
+        this.tableController.currentPage = currentPage;
 
-        this.formController.formView.$element.hide();
-        this.tableView.$element.show();
-        this.tableView.addToHistory = false;
+        this.tableController.addToHistory = false;
 
         // necesito llamar al render para que cambie todo el tema
         // de los eventos.
-        this.tableView.render();
+        this.showTable();
     }
 
 });

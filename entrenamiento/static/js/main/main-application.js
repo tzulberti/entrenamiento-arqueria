@@ -118,11 +118,11 @@ var MainApplication = Class.$extend({
         this.appsManager.addApplication(11, historiaEstadoArqueroCrudApp);
         this.appsManager.addApplication(13, entrenamientoRealizadoCrudApp);
 
-        this.registerCrudApplication(GastoCrudApplication, 2, 'gastoCrudApp');
-        this.registerCrudApplication(FlechasCrudApplication, 14, 'flechasCrudApp');
-        this.registerCrudApplication(FechaEspecialCrudApplication, 44, 'fechaEspecialCrudAPP');
-        this.registerCrudApplication(PermisoUsuarioCrudApplication, 99, 'permisoUsuarioCrudAPP');
-        this.registerCrudApplication(UsuarioCrudApplication, 45, 'usuarioCrudAPP');
+        this.registerCrudApplication(GastoCrudApplication, 2, 'gastoCrudApp', 'gasto');
+        this.registerCrudApplication(FlechasCrudApplication, 14, 'flechasCrudApp', 'flechas');
+        this.registerCrudApplication(FechaEspecialCrudApplication, 44, 'fechaEspecialCrudAPP', 'fecha_especial');
+        this.registerCrudApplication(PermisoUsuarioCrudApplication, 99, 'permisoUsuarioCrudAPP', 'permiso_usuario');
+        this.registerCrudApplication(UsuarioCrudApplication, 45, 'usuarioCrudAPP', 'usuario');
 
         // ahora registro todo el tema relacionados a los graficos
         this.registerGraficsApplication(PagosAcumuladosGraficoApp, 10001, 'pagosAcumuladosGraficoApp');
@@ -153,12 +153,13 @@ var MainApplication = Class.$extend({
      * @param {String} attributeName: el nombre del atributo de la instancia de
      *                                la app de graficos en esta aplicacion.
      */
-    registerCrudApplication: function(crudAppClass, id, attributeName) {
+    registerCrudApplication: function(crudAppClass, id, attributeName, modelName) {
         this[attributeName] = new crudAppClass($("#page-wrapper"),
                                                this.historyManager,
                                                this.apiManager,
                                                this.databaseInformation);
         this.appsManager.addApplication(id, this[attributeName]);
+        this.historyManager.addApplicationForModel(modelName, this[attributeName]);
     },
 
     /**

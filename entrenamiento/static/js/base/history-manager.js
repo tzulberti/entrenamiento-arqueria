@@ -35,8 +35,11 @@ var HistoryManager = Class.$extend({
         if (ev.state === null) {
             return;
         }
+
+        var application = this.applications[ev.state.modelName];
+        application.start($.proxy(this.renderTableInformation, this, application, ev));
+
         if (ev.state.type === 'table') {
-            var application = this.applications[ev.state.modelName];
             application.renderTableInformation(ev.state.orderBy,
                                                ev.state.orderDirection,
                                                ev.state.currentPage);
@@ -45,6 +48,12 @@ var HistoryManager = Class.$extend({
             var application = this.applications[ev.state.modelName];
             application.renderForm(ev.state.objectId);
         }
+    },
+
+    renderTableInformation: function(application, ev) {
+            application.renderTableInformation(ev.state.orderBy,
+                                               ev.state.orderDirection,
+                                               ev.state.currentPage);
     },
 
 
