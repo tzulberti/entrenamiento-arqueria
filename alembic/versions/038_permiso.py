@@ -23,9 +23,11 @@ def upgrade():
     values = [
         'es_entrenador',
         'es_comision_revisora',
-        'es_de_tesoreria',
+        'es_tesorero',
         'es_secretario',
         'es_vocal',
+        'es_presidente',
+        'es_vice_presidente',
     ]
     for id, value in enumerate(values):
         insert_sql = sql.format(id=id + 1,

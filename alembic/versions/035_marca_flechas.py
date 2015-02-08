@@ -23,6 +23,7 @@ def upgrade():
     utils = imp.load_source('', utils_path)
     utils.create_categoric_table('marca_flechas',
                                 [
+                                    'Otra',
                                     'Beman',
                                     'Black Eagle',
                                     'BloodSport',

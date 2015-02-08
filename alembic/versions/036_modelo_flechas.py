@@ -23,6 +23,7 @@ def upgrade():
     utils = imp.load_source('', utils_path)
     utils.create_categoric_table('modelo_flechas',
                                 [
+                                    'Otra',
                                     'Beman Diva',
                                     'Black Eagle X-Impact',
                                     'Black Eagle Magnum',
