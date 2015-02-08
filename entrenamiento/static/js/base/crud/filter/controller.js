@@ -33,11 +33,11 @@ var FilterController = Class.$extend({
         } else {
             // en caso de que no haya seleccionado ninguna entonces marco
             // como opcion la primer columna de la tabla.
-            var columnsInformation = this.databaseInformation.getTableColumns(this.tableName);
-            selectedColumnName = columnsInformation[0].databaseName;
+            selectedColumnName = this.view.columns[0].databaseName;
+            selectedColumnName = this.tableName + '.' + selectedColumnName;
         }
 
-        this.view.render(this.tableName, selectedColumnName);
+        this.view.render(selectedColumnName);
         this.view.$element.find('.column-name').on('change', $.proxy(this.changedSelectedColumnName, this));
         this.view.$element.find('.operator').on('change', $.proxy(this.changedSelectedOperator, this));
         this.view.$element.find('.create').on('click', $.proxy(this.createFilter, this));
@@ -66,7 +66,11 @@ var FilterController = Class.$extend({
         ev.stopPropagation();
         ev.preventDefault();
 
-        var selectedColumn = this.view.$element.find('.column-name').val();
+        var tmp = this.view.$element.find('.column-name').val();
+        tmp = tmp.split('.');
+
+        var selectedTable = tmp[0];
+        var selectedColumn = tmp[1];
         var selectedOperator = this.view.$element.find('.operators').val();
         var selectedValue = this.view.$element.find('.value').val();
 
@@ -84,7 +88,7 @@ var FilterController = Class.$extend({
             return;
         }
 
-        var filter = new Filter(this.tableName,
+        var filter = new Filter(selectedTable,
                                 selectedColumn,
                                 selectedOperator,
                                 selectedValue);

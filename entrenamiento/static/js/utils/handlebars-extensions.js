@@ -543,6 +543,24 @@ Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
     }
 });
 
+/**
+ * Se fija si el valor especificado es una instancia del segundo valor.
+ *
+ * En este caso, el segundo valor esta especificado en un string, pero
+ * luego se va a buscar la instancia correspondiente en funcion de ese
+ * string.
+ *
+ */
+Handlebars.registerHelper('isInstance', function(value, klassName, options) {
+    var klass = null;
+    switch (klassName) {
+        case 'ColumnInformation':
+            return (value instanceof ColumnInformation) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+});
+
 
 /**
  * Iteracion usada para trabajar con el tema de un rango de valores en vez

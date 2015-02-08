@@ -16,11 +16,16 @@ var FilterView = Class.$extend({
      * @param {FkInformation} fkInformation: tiene toda la informacion sobre
      *                                       los valores referenciados por la
      *                                       tabla que se esta filtrando.
+     *
+     * @param {String} tableName: el nombre de la tabla por la que se esta
+     *                            aplicando los filtros correspondientes
      */
-    __init__: function(element, databaseInformation, fkInformation) {
+    __init__: function(element, databaseInformation, fkInformation, tableName) {
         this.$element = element;
         this.databaseInformation = databaseInformation;
         this.fkInformation = fkInformation;
+
+        this.columns = this.getColumns(tableName, 0);
 
         this.template = $("#filter-view-handlebars-template").html();
     },
@@ -48,9 +53,10 @@ var FilterView = Class.$extend({
      * @param {Integer} id: el identificador de este filtro.
      *
      */
-    render: function(tableName, columnName, id) {
-        var columnInformation = this.databaseInformation.getColumnInformation(tableName,
-                                                                              columnName);
+    render: function(columnName, id) {
+        var tmp = columnName.split('.');
+        var columnInformation = this.databaseInformation.getColumnInformation(tmp[0],
+                                                                              tmp[1]);
         var fkValues = [];
         if (columnInformation.foreignKey !== null && (! columnInformation.isConst())) {
             // en este caso la columna que selecciono el usuario es una FK a otra
@@ -59,7 +65,7 @@ var FilterView = Class.$extend({
         }
         var html = Handlebars.render(this.template, {
                         id: id,
-                        columnsInformation: this.databaseInformation.getTableColumns(tableName),
+                        columnsInformation: this.columns,
                         constValues: columnInformation.constValues,
                         fkValues: fkValues
         });
@@ -77,6 +83,47 @@ var FilterView = Class.$extend({
         if (columnInformation.isConst() || ! _.isEmpty(fkValues)) {
             this.$element.find('.value').chosen({width: '300px'});
         }
+    },
+
+    /**
+     * Se encarga de agregar todas las columnas que se pueden llegar a mostrar en
+     * el combo teniendo en cuenta las columnas de las tablas a las que
+     * referencia la misma para que se muestren para que el usuario pueda filtrar.
+     *
+     * @param {String} tableName: todas las columnas que se pueden llegar a mostrar
+     *                            al momento de filtrar por la data.
+     */
+    getColumns: function(tableName, depth) {
+        if (depth > 1) {
+            return null;
+        }
+
+        var tmp = this.databaseInformation.getTableColumns(tableName);
+        var res = []
+        for (var i = 0; i < tmp.length; i++) {
+            var currentColumnInfo = tmp[i];
+            if (currentColumnInfo.primaryKey) {
+                // el usuario nunca puede filtrar por los valores que son
+                // primary key
+                continue;
+            }
+
+            if (currentColumnInfo.isConst() || currentColumnInfo.foreignKey === null) {
+                res.push(currentColumnInfo);
+            } else if (depth > 0) {
+                // no puedo filtrar por las FK de la tabla, porque
+                // el FKInformation no tiene la informacion de las mismas
+                continue;
+            } else {
+                res.push(currentColumnInfo);
+                var anotherTableColumns = this.getColumns(currentColumnInfo.foreignKey, depth + 1);
+                if (anotherTableColumns !== null) {
+                    res.push({frontendName: currentColumnInfo.frontendName,  columns: anotherTableColumns});
+                }
+            }
+        }
+
+        return res;
     }
 
 

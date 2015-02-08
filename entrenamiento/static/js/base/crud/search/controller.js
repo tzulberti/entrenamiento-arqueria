@@ -46,7 +46,8 @@ var SearchController = Class.$extend({
 
         var filterView = new FilterView(this.$element.find('.filter'),
                                         this.databaseInformation,
-                                        this.fkInformation);
+                                        this.fkInformation,
+                                        this.tableName);
         this.filterController = new FilterController(filterView,
                                                      this.databaseInformation,
                                                      this.tableName,

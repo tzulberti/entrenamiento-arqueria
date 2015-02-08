@@ -3,9 +3,15 @@
         <span class="filter-field"> 
             <select class="column-name">
                 {{#each columnsInformation }}
-                    {{#ifCond this.primaryKey '!' ''}}
-                        <option value="{{ this.databaseName }}">{{ this.frontendName }}</option>
-                    {{/ifCond}}
+                    {{#isInstance this 'ColumnInformation' }}
+                        <option value="{{this.tableName}}.{{ this.databaseName }}">{{ this.frontendName }}</option>
+                    {{else}}
+                        <optgroup label="{{ this.frontendName }}">
+                            {{#each this.columns }}
+                                <option value="{{this.tableName}}.{{ this.databaseName }}">{{ this.frontendName }}</option>
+                            {{/each }}
+                        </optgroup>
+                    {{/isInstance}}
                 {{/each}}
             </select>
         </span>
