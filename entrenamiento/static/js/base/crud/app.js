@@ -210,6 +210,7 @@ var BaseCrudApp = Class.$extend({
     showTable: function() {
         this.$element.find('.table-container').show();
         this.$element.find('.form-container').hide();
+        this.$element.find('.button-create').show();
 
         this.tableController.render();
     },
@@ -227,6 +228,7 @@ var BaseCrudApp = Class.$extend({
         this.historyManager.pushNewInstanceStatus(this.tableName, null);
         this.$element.find('.table-container').hide();
         this.$element.find('.form-container').show();
+        this.$element.find('.button-create').hide();
         this.formController.render(null);
 
     },
@@ -251,6 +253,7 @@ var BaseCrudApp = Class.$extend({
     editObject: function(objectId) {
         this.$element.find('.table-container').hide();
         this.$element.find('.form-container').show();
+        this.$element.find('.button-create').hide();
         this.formController.render(objectId);
     },
 
