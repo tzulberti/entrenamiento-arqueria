@@ -53,22 +53,3 @@
         </span>
     {% endraw %}
 </script>
-
-<script id="filters-view-handlebars-template" type="text/x-handlebars-template">
-    {% raw %}
-        {{#if filters}}
-            <div class="row">
-                <ul>
-                    {{#each filters}}
-                    <li class="filter-list-item">
-                        <a class="remove-filter" href="#">
-                            <span id="remove-filter-{{@index}}" class="glyphicon glyphicon-remove-circle"></span>
-                        </a>
-                        {{renderFilterData this ../databaseInformation ../fkInformation}}
-                    </li>
-                    {{/each}}
-                </ul>
-            </div>
-        {{/if}}
-    {% endraw %}
-</script>
