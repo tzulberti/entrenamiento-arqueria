@@ -69,6 +69,7 @@ class MailSender(object):
 
         # Build the Gmail service from discovery
         self.gmail_service = build('gmail', 'v1', http=http)
+        self.username = username
 
 
     def send_mail(self, tos, subject, message):
