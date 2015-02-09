@@ -16,8 +16,8 @@ from entrenamiento.models import consts_tables
 from entrenamiento.utils import MailSender, DatabaseInformation
 
 #: la instancia que se va a usar para enviarle mails a los diferentes usuarios.
-mail_sender = MailSender(app.config['EMAIL_USERNAME'],
-                         app.config['EMAIL_PASSWORD'])
+mail_sender = MailSender(app.config['EMAIL_SECRET_FILE'],
+                         app.config['EMAIL_USERNAME'])
 
 
 models_klass = set()

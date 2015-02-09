@@ -22,7 +22,7 @@ def has_permission(required_permission):
     if logged_user.es_administrador:
         return True
 
-    if required_permission in logged_user.permissos:
+    if required_permission in logged_user.permisos:
         return True
 
     return False

@@ -6,8 +6,15 @@ del codigo
 
 import string
 import random
-import smtplib
+import httplib2
+import base64
+
 from email.MIMEText import MIMEText
+from apiclient.discovery import build
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.file import Storage
+from oauth2client.tools import run
+
 
 from entrenamiento.models.base import BaseModel
 from sqlalchemy.sql.sqltypes import Integer, Float, Date, String, Text, Boolean, Time
@@ -28,11 +35,41 @@ def random_text(size=10, chars=string.ascii_uppercase + string.digits):
 class MailSender(object):
     ''' Se encarga de mandar el mail con toda la informacion
     especificada.
+
+    En de vez de usar el SMTPLib y conectarse a GMail, el mismo esta usando
+    la API para mandar los mails. Se puede ver informacion de lo que hice
+    aca:
+
+    http://stackoverflow.com/questions/25944883/how-to-send-an-email-through-gmail-without-enabling-insecure-access
+
+    :param client_secret_file: el path en donde esta el archivo .json con las
+                               credenciales para poder mandar mails
+
+    :param str username: la direccion de mail que manda el mail en cuestion
     '''
 
-    def __init__(self, gmail_username, gmail_password):
-        self.gmail_username = gmail_username
-        self.gmail_password = gmail_password
+    def __init__(self, client_secret_file, username):
+        # Check https://developers.google.com/gmail/api/auth/scopes for all available scopes
+        OAUTH_SCOPE = 'https://www.googleapis.com/auth/gmail.compose'
+
+        # Location of the credentials storage file
+        STORAGE = Storage('gmail.storage')
+
+        # Start the OAuth flow to retrieve credentials
+        flow = flow_from_clientsecrets(client_secret_file, scope=OAUTH_SCOPE)
+        http = httplib2.Http()
+
+        # Try to retrieve credentials from storage or run the flow to generate them
+        credentials = STORAGE.get()
+        if credentials is None or credentials.invalid:
+            credentials = run(flow, STORAGE, http=http)
+
+        # Authorize the httplib2.Http object with our credentials
+        http = credentials.authorize(http)
+
+        # Build the Gmail service from discovery
+        self.gmail_service = build('gmail', 'v1', http=http)
+
 
     def send_mail(self, tos, subject, message):
         ''' Se encarga de mandar el mail.
@@ -44,16 +81,15 @@ class MailSender(object):
 
         :param str message: el contenido del mail.
         '''
-        mailServer = smtplib.SMTP('smtp.gmail.com',587)
-        mailServer.ehlo()
-        mailServer.starttls()
-        mailServer.ehlo()
-        mailServer.login(self.gmail_username, self.gmail_password)
-        msg = MIMEText(message)
-        msg['From'] = self.gmail_username
-        msg['To'] = ','.join(tos)
-        msg['Subject'] = subject
-        mailServer.sendmail(self.gmail_username, ','.join(tos), msg.as_string())
+
+        message = MIMEText(message)
+        message['to'] = ','.join(tos)
+        message['from'] = self.username
+        message['subject'] = subject
+        body = {'raw': base64.b64encode(message.as_string())}
+
+        # send it
+        message = (self.gmail_service.users().messages().send(userId="me", body=body).execute())
 
 
 class DatabaseInformation(object):
