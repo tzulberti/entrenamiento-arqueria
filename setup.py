@@ -23,6 +23,8 @@ setup(
         "psycopg2",
         "Pillow",
         "requests",
+        "google-api-python-client",
+        "python-gflags",
     ],
     entry_points={
         'console_scripts': {
