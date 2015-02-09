@@ -43,3 +43,7 @@ def logging_configuration(app):
         logger.setLevel(logging.DEBUG)
         logger.addHandler(gm)
         logger.addHandler(ch)
+
+        logging.basicConfig()
+        logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
