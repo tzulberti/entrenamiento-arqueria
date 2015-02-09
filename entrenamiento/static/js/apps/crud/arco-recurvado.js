@@ -28,9 +28,9 @@ var ArcoRecurvadoCrudApplication = FieldCrudApp.$extend({
 
             new FieldsetFieldData('Cuerda', true),
                 new FormFieldData('id_tipo_hilo_cuerda', null),
-                new FormFieldData('brace', null),
+                new FormFieldData('brace', 'Si tenes algo como 8 3/4, entonces pone 8.75. Este valor deberia ser en pulgadas'),
                 new FormFieldData('cantidad_hilos_cuerda', null),
-                new FormFieldData('altura_nocking_point', null),
+                new FormFieldData('altura_nocking_point', 'Si tenes 1/8, entonces pone 0.125. Este valor deberia estar en pulgadas'),
                 new FormFieldData('largo_cuerda', 'El largo (en cm) de la cuerda cuando la misma no tenia niguna vueltas'),
                 new FormFieldData('cantidad_vueltas_cuerda', null),
             new FieldsetFieldData('Cuerda', false),
