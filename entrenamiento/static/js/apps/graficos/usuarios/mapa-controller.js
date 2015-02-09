@@ -42,7 +42,7 @@ var MapaUsuariosController = Class.$extend({
             filters: filtersData
         };
 
-        this.apiManager.ajaxCall('usuario/',
+        this.apiManager.ajaxCall('arquero/',
                                  ajaxData,
                                  'GET',
                                  $.proxy(this.renderInformation, this));
