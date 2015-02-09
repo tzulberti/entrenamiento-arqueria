@@ -241,6 +241,7 @@ var BaseCrudApp = Class.$extend({
     createdObject: function(objectId) {
         this.$element.find('.table-container').show();
         this.$element.find('.form-container').hide();
+        this.$element.find('.button-create').show();
         this.tableController.createdObject();
     },
 
