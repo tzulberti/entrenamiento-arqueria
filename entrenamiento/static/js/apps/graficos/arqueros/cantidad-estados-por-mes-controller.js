@@ -89,6 +89,12 @@ var CantidadEstadosPorMesController = Class.$extend({
         }
 
 
+        if (_.isEmpty(parsedData)) {
+            this.$element.unmask();
+            this.$element.find('.chart-container').html('<h3>No se encontro información</h3>');
+            return
+        }
+
         // ahora voy a ir juntando la informacion mes a mes, para ver cual
         // es el maximo y cual es el minimo
         var minDate = _.min(parsedData, function(d) {
