@@ -50,11 +50,10 @@ class Usuario(BaseModel):
         return res
 
     def __str__(self):
+        return unicode(self.arquero)
         return u'%s %s' % (self.arquero.apellido, self.arquero.nombre)
 
     def to_fk_information(self):
-        return dict(image_path=self.arquero.foto,
-                    id=self.id,
-                    value=unicode(self))
+        return self.arquero.to_fk_information()
 
 

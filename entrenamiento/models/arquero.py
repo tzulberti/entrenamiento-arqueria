@@ -54,7 +54,7 @@ class Arquero(BaseModel):
         return '%s %s' % (self.apellido, self.nombre)
 
     def to_fk_information(self):
-        return dict(imagePath=self.foto,
+        return dict(imagePath='user_images/' + self.foto if self.foto else None,
                     id=self.id,
                     value=unicode(self))
 
