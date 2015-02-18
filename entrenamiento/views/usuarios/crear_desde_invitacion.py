@@ -73,7 +73,7 @@ class CrearUsuarioDesdeInvitacionView(BaseEntrenamientoView):
                 foto_stream.save(os.path.join(self.upload_folder, filename))
                 arquero.foto = filename
 
-            form_usuario.instance.id = arquero.id
+            #form_usuario.instance.id = arquero.id
             form_usuario.instance.id_arquero = arquero.id
 
 
