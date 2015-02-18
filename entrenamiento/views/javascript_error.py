@@ -3,6 +3,7 @@
 from flask import request, jsonify
 
 from entrenamiento.views.base import BaseEntrenamientoView
+from entrenamiento.views.utils import get_logged_user_data
 
 class JavascriptErrorView(BaseEntrenamientoView):
     ''' Se encarga de mandarle un mail a los developers indicando
@@ -31,32 +32,31 @@ class JavascriptErrorView(BaseEntrenamientoView):
     def post(self):
         if self.development:
             return jsonify(ok=True)
-        line_number = request.form['lineNumber']
-        filename = request.form['url']
-        error_message = request.form['errorMessage']
-        column_number = None
-        stacktrace = None
 
+        logged_user = get_logged_user_data()
+        format_data = dict(
+            line_number=request.form['lineNumber'],
+            filename=request.form['url'],
+            error_message=request.form['errorMessage'],
+            user_url=request.form['userURL'],
+        )
+
+
+        mail_content = 'Archivo: {filename}\nLine Number: {line_number}\nMessage: {error_message}\nURL: {user_url}\n'
 
         if 'columnNumber' in request.form:
-            column_number = request.form['columnNumber']
+            mail_content += 'Column Number: {column_number}\n'
+            format_data['column_number'] = request.form['columnNumber']
 
         if 'stacktrace' in request.form:
-            stacktrace = request.form['stacktrace']
-
-        mail_content = 'Archivo: {filename}\nLine Number: {line_number}\nMessage: {error_message}\n'
-
-        if column_number:
-            mail_content += 'Column Number: {column_number}\n'
-
-        if stacktrace:
             mail_content += 'Stacktrace: {stacktrace}\n'
+            format_data['stacktrace'] = request.form['stacktrace']
 
-        mail_content = mail_content.format(line_number=line_number,
-                                           filename=filename,
-                                           error_message=error_message,
-                                           column_number=column_number,
-                                           stacktrace=stacktrace)
+        if logged_user:
+            mail_content += 'Username: {username}\n'
+            format_data['username'] = logged_user.email
+
+        mail_content = mail_content.format(**format_data)
         self.mail_sender.send_mail(self.developers,
                                    '[Sistema-EDA] Javascript Error',
                                    mail_content)

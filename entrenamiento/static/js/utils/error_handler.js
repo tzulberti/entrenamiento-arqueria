@@ -6,12 +6,15 @@
 /**
  * Se encarga de notificarle al servidor de que hubo un error de JS y toda
  * la informacion que se tiene del mismo.
+ *
+ * @param {String} url: la URL del archivo de javascript que tiro el error
  */
 window.onerror = function(errorMessage, url, lineNumber, columnNumber, error) {
     var data = {
         errorMessage: errorMessage,
         url: url,
-        lineNumber: lineNumber
+        lineNumber: lineNumber,
+        userURL: window.location.href
     };
     if (columnNumber) {
         data['columnNumber'] = columnNumber;
