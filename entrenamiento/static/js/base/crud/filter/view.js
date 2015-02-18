@@ -87,13 +87,16 @@ var FilterView = Class.$extend({
         }
 
         if (columnInformation.isConst() || ! _.isEmpty(fkValues)) {
-            this.$element.find('.value').chosen({width: '300px'});
-            /*
             if (hasImagePath) {
-                this.$element.find('.value').chosenImage({width: '300px'});
+                this.$element.find('.value').chosen({
+                            width: '300px',
+                            max_selected_options: 1
+                });
             } else {
+                this.$element.find('.value').chosen({
+                            width: '300px'
+                });
             }
-            */
         }
     },
 
