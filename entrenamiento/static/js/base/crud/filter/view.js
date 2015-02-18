@@ -63,11 +63,17 @@ var FilterView = Class.$extend({
             // tabla de la base de datos.
             fkValues = this.fkInformation.getTableValues(columnInformation.foreignKey);
         }
+
+        var hasImagePath = false;
+        if (! _.isEmpty(fkValues)) {
+            hasImagePath = _.has(fkValues[0], 'imagePath');
+        }
         var html = Handlebars.render(this.template, {
                         id: id,
                         columnsInformation: this.columns,
                         constValues: columnInformation.constValues,
-                        fkValues: fkValues
+                        fkValues: fkValues,
+                        hasImagePath: hasImagePath
         });
         this.$element.clean();
         this.$element.html(html);
@@ -82,6 +88,12 @@ var FilterView = Class.$extend({
 
         if (columnInformation.isConst() || ! _.isEmpty(fkValues)) {
             this.$element.find('.value').chosen({width: '300px'});
+            /*
+            if (hasImagePath) {
+                this.$element.find('.value').chosenImage({width: '300px'});
+            } else {
+            }
+            */
         }
     },
 
