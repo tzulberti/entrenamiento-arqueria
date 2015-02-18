@@ -288,49 +288,6 @@ Handlebars.registerHelper('renderFormFieldInline', function(fieldData, columnsIn
 });
 
 
-/**
- * Se necarga de renderar un filtro que el usuario creo cuando se esta viendo
- * toda la informacion en forma de tabla.
- *
- * @param {Filter} filter: la informacion del filtro que aplico el usuario.
- *
- * @param {DatabaseInformation} databaseInformation: tiene toda la informacion
- *                                  del schema de la base de datos.
- *
- * @param {FkInformation} fkInformation: tiene toda la informacion de las tablas
- *                                       referenciadas que no son constantes.
- */
-Handlebars.registerHelper('renderFilterData', function(filter, databaseInformation, fkInformation) {
-    var columnInformation = databaseInformation.getColumnInformation(filter.tableName,
-                                                                     filter.columnName);
-    var res = columnInformation.frontendName;
-    var readableOperators = {
-        'eq': '=',
-        'neq': '!=',
-        'lt': '<',
-        'let': '<=',
-        'gt': '>',
-        'get': '>='
-    }
-    res += ' ' + readableOperators[filter.operator];
-    if (columnInformation.isConst()) {
-        // si es por alguna constante entonces tengo que buscar el valor
-        // correspondiente de la misma
-        var id = parseInt(filter.value, 10);
-        var constValue = columnInformation.getConstValue(id);
-        res += ' ' + constValue.value;
-    } else if (columnInformation.foreignKey !== null) {
-        var id = parseInt(filter.value, 10);
-        var referencedInfo = fkInformation.getValue(columnInformation.foreignKey,
-                                                    id);
-        res += ' ' + referencedInfo.value;
-
-    } else {
-        res += ' ' + filter.value;
-    }
-    return res;
-});
-
 
 
 

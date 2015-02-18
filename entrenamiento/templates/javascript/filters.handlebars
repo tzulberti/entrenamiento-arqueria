@@ -8,7 +8,7 @@
                 <a href="#" class="remove-filter" id="remove-filter-{{ @index }}">
                     <span class="glyphicon glyphicon-remove-circle" id="remove-filter-{{ @index}}"></span>
                 </a>
-                {{renderFilterData this ../databaseInformation }}
+                {{renderFilterData this ../databaseInformation ../fkInformation}}
             </li>
         {{/each }}
         </ul>
