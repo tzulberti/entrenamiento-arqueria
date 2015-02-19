@@ -38,7 +38,7 @@ var MapaUsuariosController = Class.$extend({
         var filtersData = utils.translateFiltersToAPI(this.searchController.filters);
 
         var ajaxData = {
-            columns: ['latitud', 'longitud', 'direccion'],
+            columns: ['latitud', 'longitud', 'direccion', 'nombre', 'apellido'],
             filters: filtersData
         };
 
@@ -59,7 +59,9 @@ var MapaUsuariosController = Class.$extend({
             parsedData.push({
                 latitud: currentValue[0],
                 longitud: currentValue[1],
-                direccion: currentValue[2]
+                direccion: currentValue[2],
+                nombre: currentValue[3],
+                apellido: currentValue[4]
             });
         }
 
@@ -79,6 +81,7 @@ var MapaUsuariosController = Class.$extend({
             if (currentValue.latitud) {
                 var marker = new google.maps.Marker({
                         map: map,
+                        title: currentValue.nombre + ' ' + currentValue.apellido,
                         position: new google.maps.LatLng(currentValue.latitud,
                                                          currentValue.longitud)
                 });
@@ -100,8 +103,10 @@ var MapaUsuariosController = Class.$extend({
             }
         }
 
-        valoresEncontrados = 0;
-        valoresOverQueryLimit = 0;
+        // ahora para los que no cargaron la latitud/longitud la busco en funcion
+        // de la direccion
+        var valoresEncontrados = 0;
+        var valoresOverQueryLimit = 0;
         var numberOfCalls = 0;
         var self = this;
         intervalID = setInterval(function() {
@@ -129,8 +134,6 @@ var MapaUsuariosController = Class.$extend({
                 function(results, status) {
                     numberOfCalls -= 1;
                     if (status == google.maps.GeocoderStatus.OK) {
-                        console.log('UPDATE usuario SET latitud = ' + results[0].geometry.location.lat() + ', longitud = ' + results[0].geometry.location.lng() + " WHERE direccion LIKE '%" + direccion + "';");
-                        console.log(results[0]);
                         var marker = new google.maps.Marker({
                                 map: map,
                                 position: results[0].geometry.location
@@ -149,7 +152,6 @@ var MapaUsuariosController = Class.$extend({
             );
         },
         200);
-
 
     }
 
