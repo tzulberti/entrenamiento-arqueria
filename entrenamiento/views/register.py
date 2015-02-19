@@ -55,6 +55,7 @@ from entrenamiento.views.upload import UploadFileView
 from entrenamiento.views.usuarios.form import UserForm
 from entrenamiento.views.usuarios.change_password import ChangePasswordView
 from entrenamiento.views.usuarios.crear_desde_invitacion import CrearUsuarioDesdeInvitacionView
+from entrenamiento.views.usuarios.change_my_data import ChangeMyDataView
 from entrenamiento.views.usuarios.password_reset import PasswordResetView
 from entrenamiento.views.fecha_especiales.form import FechaEspecialForm
 from entrenamiento.views.permiso.form import PermisoUsuarioForm
@@ -110,6 +111,10 @@ def register_views(app, db, bcrypt):
                                                         db=db,
                                                         bcrypt=bcrypt))
 
+    app.add_url_rule('/change-my-data/',
+                    view_func=ChangeMyDataView.as_view('auth.change_my_data',
+                                                        db=db,
+                                                        base_upload_folder=app.config['UPLOAD_FOLDER']))
     app.add_url_rule(BASE_API_URL + 'invitacion/',
                     view_func=InvitacionListCrudView.as_view('api.invitacion.list',
                                                             mail_sender=mail_sender,

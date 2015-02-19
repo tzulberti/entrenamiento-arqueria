@@ -27,6 +27,67 @@ class ChangePasswordForm(Form):
 
 
 
+class ArqueroForm(ValidationForm):
+    ''' Tiene toda la data del form de cuando se esta creando
+    o editando un :class:`entrenamiento.models.arquero.Arquero`
+    '''
+
+    # TODO falta validar que el email sea unico
+    email = StringField('email',
+                        validators=[InputRequired(), Email()],
+                        description='El email con el que te vas a loguear al sistema, '\
+                                    'y el que se va a usar para enviarte mails de la escuela')
+    nombre = StringField('nombre', [InputRequired()])
+    apellido = StringField('apellido', [InputRequired()])
+    foto_archivo = FileField('foto_archivo',
+                             description='Una foto tuya. No es necesario este campo')
+    fecha_ingreso = DateField('fecha_ingreso',
+                              format='%d/%m/%Y',
+                              validators=[Optional()],
+                              description='Cuando empezaste en la EDA')
+    fecha_nacimiento = DateField('fecha_nacimiento',
+                                 format='%d/%m/%Y',
+                                 validators=[Optional()])
+    dni = StringField('dni')
+    telefono = StringField('telefono')
+    celular = StringField('celular')
+    direccion = StringField('direccion')
+    localidad = StringField('localidad')
+    codigo_postal = StringField('codigo_postal')
+    apodo_eda = StringField('apodo_eda')
+    latitud = FloatField('latitud', validators=[Optional()])
+    longitud = FloatField('longitud', validators=[Optional()])
+    dominancia_ojo = QuerySelectField('dominancia_ojo',
+                                       description='Cual es el ojo con el que apuntas?',
+                                       query_factory=DominanciaOjo.query.all,
+                                       get_label='value',
+                                       allow_blank=True)
+    dominancia_mano = QuerySelectField('dominancia_mano',
+                                        query_factory=DominanciaMano.query.all,
+                                        get_label='value',
+                                        description='Cual es la mano que usas para hacer las cosas genearlmente (comer, escribir, etc...)?',
+                                        allow_blank=True)
+
+
+    def get_attr_value(self, attr_name, form_data):
+        ''' Se encarga de codificar el password que vino por el request.
+
+        Todo el resto de la informacion lo deja talcual.
+        '''
+        return super(ArqueroForm, self).get_attr_value(attr_name, form_data)
+
+
+    def get_instance(self):
+        ignore_fields = [
+            'foto_archivo',
+            'dominancia_ojo',
+            'dominancia_mano',
+        ]
+        res = super(ArqueroForm, self).get_instance(ignore_fields)
+
+        return res
+
+
 class UserForm(ValidationForm):
     ''' Tiene toda la data del form de cuando se esta creando
     o editando un :class:`entrenamiento.models.user.User`
