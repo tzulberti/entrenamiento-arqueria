@@ -113,21 +113,42 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
                 '</label>' +
                 '<div class="col-sm-10">';
         if (columnInformation.isConst() || columnInformation.foreignKey !== null) {
-            templateRes += '' +
-                    '<select name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}">' +
-                        '{{#if columnInformation.nullable }}' +
-                            '<option value=""></option>' +
-                        '{{/if }}' +
-                        '{{#each fkValues }}' +
-                            '<option value="{{ this.id }}">{{ this.value }}</option>' +
-                        '{{/each}}' +
-                    '</select>';
-
             if (columnInformation.isConst()) {
                 fkValues = columnInformation.constValues;
             } else {
                 fkValues = fkInformation.getTableValues(columnInformation.foreignKey);
             }
+
+            var hasImagePath = false;
+            if (! _.isEmpty(fkValues)) {
+                hasImagePath = _.has(fkValues[0], 'imagePath');
+            }
+            if (hasImagePath) {
+                templateRes += '' +
+                        '<select name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="chosen-with-image">' +
+                            '{{#if columnInformation.nullable }}' +
+                                '<option value=""></option>' +
+                            '{{/if }}' +
+                            '{{#each fkValues }}' +
+                                '{{#if this.imagePath}}' +
+                                    '<option value="{{ this.id}}" data-img-src="/uploads/{{ this.imagePath }}">{{ this.value }}</option>' +
+                                '{{else }}'+
+                                    '<option value="{{ this.id}}" data-img-src="">{{ this.value }}</option>'+
+                                '{{/if}}' +
+                            '{{/each}}' +
+                        '</select>';
+            } else {
+                templateRes += '' +
+                        '<select name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}">' +
+                            '{{#if columnInformation.nullable }}' +
+                                '<option value=""></option>' +
+                            '{{/if }}' +
+                            '{{#each fkValues }}' +
+                                '<option value="{{ this.id }}">{{ this.value }}</option>' +
+                            '{{/each}}' +
+                        '</select>';
+            }
+
         } else if (_.str.include(columnInformation.databaseName, '_path')) {
             templateRes += '<div class="existing-upload" id="{{ columnInformation.databaseName }}_existing"></div>';
             templateRes += '<input type="hidden" name="{{ columnInformation.databaseName }}" id="{{ columnInformation.databaseName }}" class="form-control">';

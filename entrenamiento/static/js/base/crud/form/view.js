@@ -63,43 +63,8 @@ var FormView = Class.$extend({
 
         }
 
-        for (var i = 0; i < this.columnsInformation.length; i++) {
-            var columnInformation = this.columnsInformation[i];
-            var formField = this.$element.find('#' + columnInformation.databaseName)
-
-            if (! formField.exists()) {
-                // en este caso estoy en una columna que esta en la base de datos
-                // pero que no la estoy renderando
-                continue;
-            }
-
-            if (columnInformation.type === 'date') {
-                formField.datepicker({
-                    format: 'dd/mm/yyyy'
-                });
-            } else if (columnInformation.type === 'time') {
-                formField.timepicker({
-                    showSeconds: false,
-                    minuteStep: 1,
-                    showMeridian: false
-                });
-            } else if (columnInformation.isConst()) {
-                formField.chosen({width: '300px'});
-            } else if (columnInformation.foreignKey !== null) {
-                formField.chosen({width: '300px'});
-            }
-        }
-
-        // esto lo tengo que hacer aca porque sino no puedo distinguir entre
-        // los textos comunes y los textare
-        this.$element.find('textarea').cleditor({
-                controls: "bold italic underline | " +
-                          "font size | "  +
-                          "color highlight | " +
-                          "alignleft center alignright justify | " +
-                          "bullets numbering"
-        });
-
+        utils.applyJavascriptPluginsToForm(this.columnsInformation,
+                                           this.$element);
 
         if (objectData !== null) {
             utils.renderFormData(this.$element,

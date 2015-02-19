@@ -29,3 +29,16 @@
 .flechas-div {
     margin-bottom: 20px;
 }
+
+/**
+ * Para que las imagenes en el chosen correspondiente se muestren un poco
+ * mas grande que el default en el que se muestran ahora
+ */
+.chosen-with-image .chose-image-small {
+    width: 55px;
+    height: 55px; 
+}
+
+.chosen-with-image .chosen-single {
+    height: 60px;
+}

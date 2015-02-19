@@ -32,7 +32,7 @@
         <span class="filter-field">
             {{#if fkValues }}
                 {{#if hasImagePath }}
-                    <select class="value" multiple="true">
+                    <select class="value chosen-with-image">
                         {{# each fkValues }}
                             {{#if this.imagePath}}
                                 <option value="{{ this.id}}" data-img-src="/uploads/{{ this.imagePath }}">{{ this.value }}</option>

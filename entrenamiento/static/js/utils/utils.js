@@ -117,7 +117,8 @@ var utils = {
             } else if (columnInformation.foreignKey !== null) {
                 formField.chosen({
                     width: '300px',
-                    placeholder_text_single: columnInformation.frontendName
+                    placeholder_text_single: columnInformation.frontendName,
+                    inherit_select_classes: true
                 });
             }
         }

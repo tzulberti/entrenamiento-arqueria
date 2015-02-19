@@ -90,7 +90,7 @@ var FilterView = Class.$extend({
             if (hasImagePath) {
                 this.$element.find('.value').chosen({
                             width: '300px',
-                            max_selected_options: 1
+                            inherit_select_classes: true
                 });
             } else {
                 this.$element.find('.value').chosen({
