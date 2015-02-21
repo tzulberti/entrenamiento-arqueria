@@ -9,6 +9,7 @@ var ArqueroCrudApplication = FieldCrudApp.$extend({
             new FormFieldData('nombre', null),
             new FormFieldData('apellido', null),
             new FormFieldData('email', null),
+            new FormInputData('mandar_invitacion', 'checkbox', 'Mandarle una invitacion al sistema cuando se crea el usuario'),
             new FormFieldData('fecha_ingreso', null),
             new FormFieldData('fecha_abandono', null),
             new FormFieldData('fecha_nacimiento', null),

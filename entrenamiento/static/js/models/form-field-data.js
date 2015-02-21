@@ -40,5 +40,30 @@ var FieldsetFieldData = Class.$extend({
         this.open = open;
 
     }
+});
 
+/**
+ * Tiene toda la informacion para renderar un campo en el form cuando
+ * el mismo no es una columna de la base de datos.
+ *
+ */
+var FormInputData = Class.$extend({
+
+    /**
+     * Constructor
+     *
+     * @param {String} name: el nombre del campo como se le va a mostrar al
+     *                       usuario y como lo va a ver el mismo si hace un
+     *                       post
+     *
+     * @param {String} inputType: indica si es un checkbox, input, textarea, etc...
+     *
+     * @param {String} helpText: el mensaje de ayuda que se le tiene que mostrar
+     *                           al usuario
+     */
+    __init__: function(name, inputType, helpText) {
+        this.name = name;
+        this.inputType = inputType;
+        this.helpText = helpText;
+    }
 });

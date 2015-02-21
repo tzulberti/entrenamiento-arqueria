@@ -79,6 +79,32 @@ Handlebars.registerHelper('renderFormField', function(fieldData, columnsInformat
         return new Handlebars.SafeString(res);
     }
 
+    if (fieldData instanceof FormInputData) {
+        var templateRes = null;
+        if (fieldData.inputType === 'checkbox') {
+            templateRes = '<div class="form-group">' +
+                '<div class="col-sm-10 col-sm-offset-2">' +
+                    '<div clas="checkbox">' +
+                        '<label>' +
+                            '<input type="checkbox" name="{{ fieldData.name }}" id="{{ fieldData.name }}">' +
+                            '{{ fieldData.name }}' +
+                            '{{#if fieldData.helpText }}' +
+                                '<span class="help-block">{{ fieldData.helpText }}</span>' +
+                            '{{/if}}'+
+                        '</label>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+        } else {
+            throw Error('No hice esto todavia');
+        }
+
+        var res = Handlebars.render(templateRes, {
+            fieldData: fieldData
+        });
+        return new Handlebars.SafeString(res);
+    }
+
 
     for (var i = 0; i < columnsInformation.length; i++) {
         if (columnsInformation[i].databaseName === fieldData.databaseName) {

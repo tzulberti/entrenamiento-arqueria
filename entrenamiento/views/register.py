@@ -136,7 +136,9 @@ def register_views(app, db, bcrypt):
 
     register_url(app, db, 'lugar', Lugar, LugarForm)
     register_url(app, db, 'usuario', Usuario, UserForm)
-    register_url(app, db, 'arquero', Arquero, ArqueroForm, ArqueroListCrudView)
+    register_url(app, db, 'arquero', Arquero, ArqueroForm, ArqueroListCrudView,
+                list_crud_view_kwargs=dict(mail_sender=mail_sender,
+                                           running_host=app.config['RUNNING_HOST']))
 
     # TODO en esta view solo se deberia permitir el tema de la lectura
     # TODO en esta view solo se deberia permitir el tema de la lectura
