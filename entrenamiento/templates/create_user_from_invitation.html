@@ -1,7 +1,8 @@
-{% extends "base.html" %}
+{% extends "base_not_crud.html" %}
 
 
 {% block content %}
+    {{ super() }}
     <div class="container">
         {% if error_invitacion %}
             <div class="alert alert-danger" id="javascript-error">
