@@ -20,8 +20,10 @@ class ChangeMyDataView(UserRequiredView):
             os.makedirs(self.upload_folder)
 
     def get(self):
+        logged_user = get_logged_user_data()
+        arquero = Arquero.query.filter(Arquero.id == logged_user.id_arquero).first()
         return render_template('change_my_data.html',
-                               form=ArqueroForm(Arquero))
+                               form=ArqueroForm(Arquero, arquero.id, obj=arquero))
 
     def post(self):
         ''' Se encarga de crear el usuario siempre y cuando el hash de la envitacion
